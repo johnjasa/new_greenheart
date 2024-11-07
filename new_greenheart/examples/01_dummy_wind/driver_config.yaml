@@ -1,0 +1,5 @@
+name: "driver_config"
+description: "This analysis runs a single wind turbine"
+
+general:
+  folder_output: wind_plant_run

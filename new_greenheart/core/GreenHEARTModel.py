@@ -2,6 +2,10 @@ import numpy as np
 import yaml
 import openmdao.api as om
 
+from new_greenheart.resources.wind.dummy_wind import DummyWindResource
+from new_greenheart.converters.wind.dummy_wind_turbine import DummyWindTurbine
+
+
 
 class GreenHEARTModel(object):
 
@@ -12,6 +16,10 @@ class GreenHEARTModel(object):
         # validate inputs
         # Will we need schema for each wrapper individually? Presumably yes
         self.validate_inputs()
+
+        # create site-level model
+        # this is an OpenMDAO group that contains all the site information
+        self.create_site_model()
 
         # create plant-level model
         # this is an OpenMDAO group that contains all the technologies
@@ -54,6 +62,42 @@ class GreenHEARTModel(object):
         self.validate_driver_config()
         self.validate_technology_config()
         self.validate_plant_config()
+
+    def validate_driver_config(self):
+        pass
+
+    def validate_technology_config(self):
+        pass
+
+    def validate_plant_config(self):
+        pass
+
+    def create_site_model(self):
+        # Create a site-level component
+        site_config = self.plant_config.get('site', {})
+        site_component = om.IndepVarComp()
+        site_component.add_output('latitude', val=site_config.get('latitude', 0.0))
+        site_component.add_output('longitude', val=site_config.get('longitude', 0.0))
+        site_component.add_output('elevation_m', val=site_config.get('elevation_m', 0.0))
+        site_component.add_output('time_zone', val=site_config.get('time_zone', 0))
+
+        # Add boundaries if they exist
+        site_config = self.plant_config.get('site', {})
+        boundaries = site_config.get('boundaries', [])
+        for i, boundary in enumerate(boundaries):
+            site_component.add_output(f'boundary_{i}_x', val=np.array(boundary.get('x', [])))
+            site_component.add_output(f'boundary_{i}_y', val=np.array(boundary.get('y', [])))
+
+        # loop through energy_resources and make IVCs for each resource
+        energy_resources = self.plant_config.get('energy_resources', [])
+        for resource_name, resource_config in energy_resources.items():
+            if resource_name == 'wind':
+                outputs = DummyWindResource().define_outputs()
+                site_component.add_output('wind_speed', val=outputs['wind']['value'], units=outputs['wind']['units'])
+
+        self.prob = om.Problem()
+        self.model = self.prob.model
+        self.model.add_subsystem('site', site_component, promotes=['*'])
     
     def create_plant_model(self):
         """
@@ -66,33 +110,20 @@ class GreenHEARTModel(object):
         the same for each technology. This includes site information, project parameters,
         control strategy, and finance parameters.
         """
-
-        # Create a site-level component
-        site_config = self.plant_config.get('site', {})
-        site_component = om.IndepVarComp()
-        site_component.add_output('latitude', val=site_config.get('latitude', 0.0))
-        site_component.add_output('longitude', val=site_config.get('longitude', 0.0))
-        site_component.add_output('elevation_m', val=site_config.get('elevation_m', 0.0))
-        site_component.add_output('time_zone', val=site_config.get('time_zone', 0))
-
-        # Add boundaries if they exist
-        boundaries = site_config.get('boundaries', [])
-        for i, boundary in enumerate(boundaries):
-            site_component.add_output(f'boundary_{i}_x', val=np.array(boundary.get('x', [])))
-            site_component.add_output(f'boundary_{i}_y', val=np.array(boundary.get('y', [])))
-
         # Create a plant-level component
+        plant_component = om.IndepVarComp()
+        plant_component.add_output('dummy_val', val=1.)
         project_parameters = self.plant_config.get('project_parameters', {})
         for key, value in project_parameters.items():
             plant_component.add_output(key, val=value)
 
         # Add control strategy parameters
-        control_strategy = plant_config.get('control_strategy', {})
+        control_strategy = self.plant_config.get('control_strategy', {})
         for key, value in control_strategy.items():
             plant_component.add_output(key, val=value)
 
         # Add finance parameters
-        finance_parameters = plant_config.get('finance_parameters', {})
+        finance_parameters = self.plant_config.get('finance_parameters', {})
         for key, value in finance_parameters.items():
             plant_component.add_output(key, val=value)
 
@@ -100,12 +131,21 @@ class GreenHEARTModel(object):
         plant_group.add_subsystem('plant_info', plant_component, promotes=['*'])
 
         # Create the plant model group and add components
-        self.model = om.Group()
-        self.model.add_subsystem('site', site_component, promotes=['*'])
         self.plant = self.model.add_subsystem('plant', plant_group, promotes=['*'])
 
     def create_technology_models(self):
-        pass
+        # Example technology config:
+        # name: "technology_config"
+        # description: "This plant has a wind turbine, just one"
+
+        # loop through each technology and instantiate an OpenMDAO object (assume it exists)
+        # for each technology
+
+        # Create a technology group for each technology
+        for tech_name, tech_config in self.technology_config['technologies'].items():
+            if tech_name == 'wind':
+                if tech_config['performance_model']['model'] == 'dummy_wind':
+                    self.plant.add_subsystem(tech_name, DummyWindTurbine().get_performance_model(), promotes=['wind_speed'])
 
     def connect_technologies(self):
         technology_interconnections = self.plant_config.get('technology_interconnections', [])
@@ -127,6 +167,12 @@ class GreenHEARTModel(object):
             # Connect the connection component to the destination technology
             self.plant.connect(f'{connection_name}.{transport_item}_output', f'{dest_tech}.{transport_item}_input')
 
+    def create_driver_model(self):
+        """
+        Add the driver to the OpenMDAO model.
+        """
+        pass
+
     def run(self):
         self.validate_inputs()
         # do model setup based on the driver config
@@ -138,9 +184,9 @@ class GreenHEARTModel(object):
             recorder = om.SqliteRecorder(recorder_config['file'])
             self.model.add_recorder(recorder)
 
-        self.model.setup()
+        self.prob.setup()
 
-        self.model.run_model()
+        self.prob.run_model()
 
 
     def post_process(self):
