@@ -73,3 +73,9 @@ class DummyWindTurbine(ConverterBaseClass):
         Returns an OpenMDAO System.
         """
         pass
+
+    def post_process(self):
+        """
+        Post process the results of the wind turbine.
+        """
+        print("Wind turbine did great!")

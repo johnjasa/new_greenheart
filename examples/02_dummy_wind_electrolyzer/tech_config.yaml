@@ -11,3 +11,8 @@ technologies:
       model: "dummy_wind_turbine"
     cost_model:
       model: "dummy_wind_turbine"
+  electrolyzer:
+    performance_model:
+      model: "dummy_electrolyzer"
+    cost_model:
+      model: "dummy_electrolyzer"

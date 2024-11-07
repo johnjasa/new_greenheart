@@ -53,4 +53,8 @@ class ConverterBaseClass(object):
         Returns an OpenMDAO System.
         """
 
-    
+    def post_process(self):
+        """
+        Post process the results of the converter.
+        """
+        pass

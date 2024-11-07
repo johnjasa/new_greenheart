@@ -2,6 +2,7 @@ import numpy as np
 import yaml
 import openmdao.api as om
 
+from new_greenheart.core.supported_models import supported_models
 from new_greenheart.resources.wind.dummy_wind import DummyWindResource
 from new_greenheart.converters.wind.dummy_wind_turbine import DummyWindTurbine
 
@@ -141,11 +142,13 @@ class GreenHEARTModel(object):
         # loop through each technology and instantiate an OpenMDAO object (assume it exists)
         # for each technology
 
+        self.technology_objects = []
+
         # Create a technology group for each technology
         for tech_name, tech_config in self.technology_config['technologies'].items():
-            if tech_name == 'wind':
-                if tech_config['performance_model']['model'] == 'dummy_wind':
-                    self.plant.add_subsystem(tech_name, DummyWindTurbine().get_performance_model(), promotes=['wind_speed'])
+            tech_object = supported_models[tech_config['performance_model']['model']]()
+            self.technology_objects.append(tech_object)
+            self.plant.add_subsystem(tech_name, tech_object.get_performance_model())
 
     def connect_technologies(self):
         technology_interconnections = self.plant_config.get('technology_interconnections', [])
@@ -156,16 +159,21 @@ class GreenHEARTModel(object):
             source_tech, dest_tech, transport_item, transport_type = connection
 
             # make the connection_name based on source, dest, item, type
-            connection_name = f'{source_tech}_to_{dest_tech}_{transport_item}'
+            connection_name = f'{source_tech}_to_{dest_tech}_{transport_type}'
+
+            # Create the connection component
+            connection_component = supported_models[transport_type]()
 
             # Add the connection component to the model
-            self.plant.add_subsystem(connection_name, connection_component, promotes=['*'])
+            self.plant.add_subsystem(connection_name, connection_component)
 
             # Connect the source technology to the connection component
-            self.plant.connect(f'{source_tech}.{transport_item}_output', f'{connection_name}.{transport_item}_input')
+            self.plant.connect(f'{source_tech}.{transport_item}', f'{connection_name}.{transport_item}_input')
 
             # Connect the connection component to the destination technology
-            self.plant.connect(f'{connection_name}.{transport_item}_output', f'{dest_tech}.{transport_item}_input')
+            self.plant.connect(f'{connection_name}.{transport_item}_output', f'{dest_tech}.{transport_item}')
+
+        self.plant.options['auto_order'] = True
 
     def create_driver_model(self):
         """
@@ -188,7 +196,8 @@ class GreenHEARTModel(object):
 
         self.prob.run_model()
 
-
     def post_process(self):
-        pass
+        # loop through technologies and post process outputs
+        for idx_tech, (tech_name, tech_config) in enumerate(self.technology_config['technologies'].items()):
+            self.technology_objects[idx_tech].post_process()
 
