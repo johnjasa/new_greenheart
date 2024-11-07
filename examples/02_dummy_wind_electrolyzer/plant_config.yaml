@@ -21,9 +21,10 @@ site:
 
 # dictionary of energy resources; you only need to include
 # resource files for technologies that are being used
-energy_resources: {
-  wind: "dummy_wind"
-}
+energy_resources:
+  wind: 
+    type: "dummy_wind"
+    wind_speed: 9.
 
 # array of arrays containing left-to-right technology
 # interconnections; can support bidirectional connections

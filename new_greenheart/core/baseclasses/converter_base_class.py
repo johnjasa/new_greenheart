@@ -5,8 +5,8 @@ class ConverterBaseClass(object):
     Base class for all converter classes.
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, energy_resources={}):
+        self.energy_resources = energy_resources
 
     def define_inputs(self):
         """

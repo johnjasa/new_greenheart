@@ -89,13 +89,6 @@ class GreenHEARTModel(object):
             site_component.add_output(f'boundary_{i}_x', val=np.array(boundary.get('x', [])))
             site_component.add_output(f'boundary_{i}_y', val=np.array(boundary.get('y', [])))
 
-        # loop through energy_resources and make IVCs for each resource
-        energy_resources = self.plant_config.get('energy_resources', [])
-        for resource_name, resource_config in energy_resources.items():
-            if resource_name == 'wind':
-                outputs = DummyWindResource().define_outputs()
-                site_component.add_output('wind_speed', val=outputs['wind']['value'], units=outputs['wind']['units'])
-
         self.prob = om.Problem()
         self.model = self.prob.model
         self.model.add_subsystem('site', site_component, promotes=['*'])
@@ -144,9 +137,17 @@ class GreenHEARTModel(object):
 
         self.technology_objects = []
 
+        energy_resources = self.plant_config.get('energy_resources', [])
+
         # Create a technology group for each technology
         for tech_name, tech_config in self.technology_config['technologies'].items():
-            tech_object = supported_models[tech_config['performance_model']['model']]()
+            tech_class = supported_models[tech_config['performance_model']['model']]
+            
+            if tech_name in energy_resources:
+                tech_object = tech_class(energy_resources[tech_name])
+            else:
+                tech_object = tech_class()
+
             self.technology_objects.append(tech_object)
             self.plant.add_subsystem(tech_name, tech_object.get_performance_model())
 
