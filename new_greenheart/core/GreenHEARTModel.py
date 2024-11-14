@@ -142,7 +142,7 @@ class GreenHEARTModel(object):
         # Create a technology group for each technology
         for tech_name, tech_config in self.technology_config['technologies'].items():
             tech_class = supported_models[tech_config['performance_model']['model']]
-            
+
             if tech_name in energy_resources:
                 tech_object = tech_class(energy_resources[tech_name])
             else:
