@@ -198,6 +198,9 @@ class GreenHEARTModel(object):
         self.prob.run_model()
 
     def post_process(self):
+        self.prob.model.list_inputs(print_arrays=True, units=True)
+        self.prob.model.list_outputs(print_arrays=True, units=True)
+
         # loop through technologies and post process outputs
         for idx_tech, (tech_name, tech_config) in enumerate(self.technology_config['technologies'].items()):
             self.technology_objects[idx_tech].post_process()

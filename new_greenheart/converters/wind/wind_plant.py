@@ -126,5 +126,4 @@ class WindPlantConverter(ConverterBaseClass):
 
         This function could include summary statistics, data exports, or other processing.
         """
-        power_output = self.wind_plant.system_capacity_kw
-        print(f"Wind plant post-process: total power output was {power_output} kW.")
+        pass
