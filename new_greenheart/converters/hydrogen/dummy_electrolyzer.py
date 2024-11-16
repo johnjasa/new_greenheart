@@ -19,8 +19,8 @@ class ElectrolyzerPerformanceModel(om.ExplicitComponent):
         outputs['oxygen'] = 0.8 * electricity
 
 class DummyElectrolyzer(ConverterBaseClass):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, plant_config, tech_config):
+        super().__init__(plant_config, tech_config)
 
     def get_performance_model(self):
         """

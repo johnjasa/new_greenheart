@@ -9,14 +9,14 @@ class WindTurbineComponent(om.ExplicitComponent):
     It takes in wind speed and outputs power.
     """
     def initialize(self):
-        self.options.declare('energy_resources', types=dict)
+        self.options.declare('wind_speed', types=float)
 
     def setup(self):
         # Outputs
         self.add_output('electricity', val=0.0, units='kW', desc='Power output')
 
     def compute(self, inputs, outputs):
-        wind_speed = self.options['energy_resources']['wind_speed']
+        wind_speed = self.options['wind_speed']
         
         # Simple power curve: P = 0.5 * Cp * rho * A * V^3
         Cp = 0.4  # Power coefficient
@@ -29,8 +29,8 @@ class DummyWindTurbine(ConverterBaseClass):
     """
     Dummy wind turbine class.
     """
-    def __init__(self, energy_resources):
-        super().__init__(energy_resources)
+    def __init__(self, plant_config, tech_config):
+        super().__init__(plant_config, tech_config)
 
     def get_performance_model(self):
         """
@@ -40,7 +40,7 @@ class DummyWindTurbine(ConverterBaseClass):
 
         Returns an OpenMDAO System.
         """
-        return WindTurbineComponent(energy_resources=self.energy_resources)
+        return WindTurbineComponent(wind_speed=self.tech_config['resource']['wind_speed'])
 
     def get_cost_model(self):
         """

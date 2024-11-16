@@ -5,8 +5,9 @@ class ConverterBaseClass(object):
     Base class for all converter classes.
     """
 
-    def __init__(self, tech_config={}):
+    def __init__(self, plant_config={}, tech_config={}):
         self.tech_config = tech_config
+        self.plant_config = plant_config
 
     def get_performance_model(self):
         """

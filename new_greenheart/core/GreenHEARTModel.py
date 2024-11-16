@@ -141,7 +141,7 @@ class GreenHEARTModel(object):
         for tech_name, tech_config in self.technology_config['technologies'].items():
             tech_class = supported_models[tech_config['performance_model']['model']]
 
-            tech_object = tech_class(tech_config)
+            tech_object = tech_class(self.plant_config, tech_config)
 
             self.technology_objects.append(tech_object)
             self.plant.add_subsystem(tech_name, tech_object.get_performance_model())
@@ -193,8 +193,8 @@ class GreenHEARTModel(object):
         self.prob.run_model()
 
     def post_process(self):
-        self.prob.model.list_inputs(print_arrays=True, units=True)
-        self.prob.model.list_outputs(print_arrays=True, units=True)
+        self.prob.model.list_inputs(units=True)
+        self.prob.model.list_outputs(units=True)
 
         # loop through technologies and post process outputs
         for idx_tech, (tech_name, tech_config) in enumerate(self.technology_config['technologies'].items()):

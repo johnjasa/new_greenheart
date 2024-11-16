@@ -19,6 +19,9 @@ site:
     }
   ]
 
+plant:
+  plant_life: 30.
+
 # array of arrays containing left-to-right technology
 # interconnections; can support bidirectional connections
 # with the reverse definition.

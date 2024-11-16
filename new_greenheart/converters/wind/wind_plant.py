@@ -1,7 +1,6 @@
 from new_greenheart.core.baseclasses.converter_base_class import ConverterBaseClass
 from hopp.simulation.technologies.wind.floris import Floris
 from hopp.simulation.technologies.wind.wind_plant import WindPlant
-from hopp.simulation.technologies.resource import WindResource
 from hopp.simulation.technologies.sites import SiteInfo, flatirons_site
 
 import openmdao.api as om
@@ -22,6 +21,7 @@ class WindPlantComponent(om.ExplicitComponent):
     """
     def initialize(self):
         self.options.declare('wind_plant', types=WindPlant)
+        self.options.declare('plant_life')
 
     def setup(self):
         # Outputs: Power generation in kW
@@ -29,14 +29,15 @@ class WindPlantComponent(om.ExplicitComponent):
 
     def compute(self, inputs, outputs):
         # Assumes the WindPlant instance has a method to simulate and return power output
-        self.options['wind_plant'].simulate_power(30)
+        plant_life = self.options['plant_life']
+        self.options['wind_plant'].simulate_power(plant_life)
         outputs['electricity'] = self.options['wind_plant']._system_model.value("gen")
 
 class WindPlantConverter(ConverterBaseClass):
     """
     Wrapper class for WindPlant in the new_greenheart framework, inheriting from ConverterBaseClass.
     """
-    def __init__(self, tech_config, site_info=SiteInfo(flatirons_site)):
+    def __init__(self, plant_config, tech_config, site_info=SiteInfo(flatirons_site)):
         """
         Initialize the WindPlantConverter.
 
@@ -45,8 +46,7 @@ class WindPlantConverter(ConverterBaseClass):
             site_info (SiteInfo): Site information for the wind plant (location, elevation, etc.).
             config (WindConfig): Configuration for the WindPlant instance.
         """
-        super().__init__(tech_config)
-        self.config = tech_config
+        super().__init__(plant_config, tech_config)
         self.site = site_info
         wind_config = WindConfig(tech_config['details'])
         self.wind_plant = WindPlant(self.site, wind_config)
@@ -58,7 +58,7 @@ class WindPlantConverter(ConverterBaseClass):
         Returns:
             OpenMDAO System: The performance model as an OpenMDAO component.
         """
-        return WindPlantComponent(wind_plant=self.wind_plant)
+        return WindPlantComponent(wind_plant=self.wind_plant, plant_life=self.plant_config['plant']['plant_life'])
 
     def get_cost_model(self):
         """

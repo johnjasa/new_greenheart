@@ -21,28 +21,27 @@ class ElectrolyzerPerformanceModel(om.ExplicitComponent):
     def setup(self):
         # Define inputs for electricity and outputs for hydrogen and oxygen generation
         self.add_input('electricity', val=0.0, shape_by_conn=True, copy_shape='hydrogen', units='kW')
-        self.add_output('hydrogen', val=0.0, shape_by_conn=True, copy_shape='electricity', units='kg/s')
+        self.add_output('hydrogen', val=0.0, shape_by_conn=True, copy_shape='electricity', units='kg/h')
 
     def compute(self, inputs, outputs):
         # Run the PEM electrolyzer model using the input power signal
-        power_signal = np.full((8760,), inputs['electricity'])  # Example constant power
-        h2_results, _ = self.options['electrolyzer'].run(power_signal)
+        h2_results, _ = self.options['electrolyzer'].run(inputs['electricity'])
         
         # Assuming `h2_results` includes hydrogen and oxygen rates per timestep
-        outputs['hydrogen'] = h2_results['hydrogen_hourly_production'] / 3600  # Convert from kg/h to kg/s
+        outputs['hydrogen'] = h2_results['hydrogen_hourly_production']
 
 class PEMElectrolyzer(ConverterBaseClass):
     """
     Wrapper class for the PEM electrolyzer in the new_greenheart framework, inheriting from ConverterBaseClass.
     """
-    def __init__(self, tech_config):
+    def __init__(self, plant_config, tech_config):
         """
         Initialize the PEMElectrolyzer.
 
         Args:
             config (ElectrolyzerConfig): Configuration for the PEM electrolyzer instance.
         """
-        super().__init__(tech_config)
+        super().__init__(plant_config, tech_config)
         electrolyzer_config = ElectrolyzerConfig(tech_config['details'])
         self.electrolyzer = PEM_H2_Clusters(
             electrolyzer_config.cluster_size_mw,

@@ -6,7 +6,8 @@ technologies:
   # definitions for a specific tech, e.g. multiple
   # battery types.
   wind:
-    wind_location: "onshore"
+    resource: 
+      wind_speed: 9.
     performance_model:
       model: "dummy_wind_turbine"
     cost_model:

@@ -6,11 +6,33 @@ technologies:
   # definitions for a specific tech, e.g. multiple
   # battery types.
   wind:
-    wind_location: "onshore"
     performance_model:
       model: "wind_plant"
     cost_model:
       model: "wind_plant"
+    resource: 
+      type: "pysam_wind"
+      wind_speed: 9.
+    details:  # need a much better name for this
+      num_turbines: 20
+      turbine_rating_kw: 3000.0
+      rotor_diameter: 120.0
+      hub_height: 100.0
+      layout_mode: "grid"
+      model_name: "pysam"
+      model_input_file: null
+      layout_params:
+        border_spacing: 0.5
+        border_offset: 0.5
+        grid_angle: 2.0
+        grid_aspect_power: 4.0
+        row_phase_offset: 0.2
+      rating_range_kw: [1000, 5000]
+      floris_config: null
+      operational_losses: 10.0
+      timestep: [1, 60]
+      fin_model: "default"
+      name: "UtilityScaleWindPlant"
   electrolyzer:
     performance_model:
       model: "dummy_electrolyzer"
