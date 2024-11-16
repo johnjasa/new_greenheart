@@ -7,12 +7,6 @@ class DummyWindResource(ResourceBaseClass):
     def __init__(self):
         super().__init__()
 
-    def define_outputs(self):
-        """
-        Define the outputs for the wind resource.
-        """
-        return {'wind' : {'value' : 9., 'units' : 'm/s'}}
-
     def get_performance_model(self):
         """
         Describes how the wind resource performs its function.

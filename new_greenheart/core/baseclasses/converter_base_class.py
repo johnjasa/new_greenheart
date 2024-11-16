@@ -8,20 +8,6 @@ class ConverterBaseClass(object):
     def __init__(self, energy_resources={}):
         self.energy_resources = energy_resources
 
-    def define_inputs(self):
-        """
-        Define the inputs for the converter.
-        This would the resources that come into the converter.
-        """
-        pass
-
-    def define_outputs(self):
-        """
-        Define the outputs for the converter.
-        This would be the resources that leave the converter
-        """
-        pass
-
     def get_performance_model(self):
         """
         Describes how the converter performs its function.

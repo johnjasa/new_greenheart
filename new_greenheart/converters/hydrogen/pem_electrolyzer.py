@@ -55,19 +55,6 @@ class PEMElectrolyzer(ConverterBaseClass):
             **self.config.model_parameters
         )
 
-    def define_inputs(self):
-        """
-        Define the inputs for the electrolyzer.
-        """
-        return {'electricity': {'value': 0.0, 'units': 'kW'}}
-
-    def define_outputs(self):
-        """
-        Define the outputs for the electrolyzer.
-        """
-        return {'hydrogen': {'value': 0.0, 'units': 'kg/s'},
-                'oxygen': {'value': 0.0, 'units': 'kg/s'}}
-
     def get_performance_model(self):
         """
         Describes how the electrolyzer performs its function.

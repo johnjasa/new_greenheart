@@ -69,16 +69,6 @@ class WindPlantConverter(ConverterBaseClass):
         self.config = config
         self.wind_plant = WindPlant(self.site, self.config)
 
-    def define_outputs(self):
-        """
-        Define the outputs for the wind plant.
-
-        Returns:
-            dict: Output dictionary with electricity generation.
-        """
-        # The output value here is representative; typically, the value might be calculated dynamically.
-        return {'electricity': {'value': 1000.0, 'units': 'kW'}}
-
     def get_performance_model(self):
         """
         Describes how the wind plant performs its function.
@@ -92,12 +82,12 @@ class WindPlantConverter(ConverterBaseClass):
         """
         Describes the costs associated with the wind plant.
 
-        This can be extended with a financial cost model.
+        This can be extended with a cost model.
 
         Returns:
-            Optional[OpenMDAO System]: Placeholder for financial model in OpenMDAO.
+            Optional[OpenMDAO System]: Placeholder for cost model in OpenMDAO.
         """
-        # Implement a financial cost model if available, or leave as placeholder
+        # Implement a cost model if available, or leave as placeholder
         pass
 
     def get_control_strategy(self):

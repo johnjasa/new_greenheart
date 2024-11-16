@@ -22,21 +22,6 @@ class DummyElectrolyzer(ConverterBaseClass):
     def __init__(self):
         super().__init__()
 
-    def define_inputs(self):
-        """
-        Define the inputs for the converter.
-        This would the resources that come into the converter.
-        """
-        return {'electricity' : {'value' : 0., 'units' : 'kW'},
-                'water' : {'value' : 0., 'units' : 'kg/s'}}
-
-    def define_outputs(self):
-        """
-        Define the outputs for the converter.
-        This would be the resources that leave the converter
-        """
-        return {'hydrogen' : {'value' : 0., 'units' : 'kg/s'}}
-
     def get_performance_model(self):
         """
         Describes how the converter performs its function.

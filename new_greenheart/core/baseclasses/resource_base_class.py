@@ -8,12 +8,6 @@ class ResourceBaseClass:
     def __init__(self):
         pass
 
-    def define_outputs(self):
-        """
-        Define the outputs for the resource.
-        """
-        pass
-
     def get_performance_model(self):
         """
         Describes how the resource performs its function.

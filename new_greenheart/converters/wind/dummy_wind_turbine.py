@@ -32,12 +32,6 @@ class DummyWindTurbine(ConverterBaseClass):
     def __init__(self, energy_resources):
         super().__init__(energy_resources)
 
-    def define_outputs(self):
-        """
-        Define the outputs for the wind turbine.
-        """
-        return {'electricity' : {'value' : 1000., 'units' : 'kW'}}
-
     def get_performance_model(self):
         """
         Describes how the wind turbine performs its function.
