@@ -8,30 +8,11 @@ import openmdao.api as om
 
 n_timesteps = 8760
 
-
 class WindConfig:
-    def __init__(self):
-        self.num_turbines = 20
-        self.turbine_rating_kw = 3000.0
-        self.rotor_diameter = 120.0
-        self.hub_height = 100.0
-        self.layout_mode = "grid"
-        self.model_name = "pysam"
-        self.model_input_file = None
-        self.layout_params = {
-            "border_spacing": 0.5,          # spacing along border = (1 + border_spacing) * min spacing
-            "border_offset": 0.5,           # turbine border spacing offset as ratio of border spacing (0, 1)
-            "grid_angle": 2.0,              # turbine inner grid rotation (0, pi) [radians]
-            "grid_aspect_power": 4.0,       # grid aspect ratio [cols / rows] = 2^grid_aspect_power
-            "row_phase_offset": 0.2         # inner grid phase offset (0,1) (20% suggested)
-        }
-        self.rating_range_kw = (1000, 5000)
-        self.floris_config = None
-        self.operational_losses = 10.0
-        self.timestep = (1, 60)
-        self.fin_model = "default"
-        self.name = "UtilityScaleWindPlant"
-
+    def __init__(self, config_details):
+        # Dynamically set attributes based on the YAML keys
+        for key, value in config_details.items():
+            setattr(self, key, value)
 
 
 class WindPlantComponent(om.ExplicitComponent):
@@ -55,19 +36,20 @@ class WindPlantConverter(ConverterBaseClass):
     """
     Wrapper class for WindPlant in the new_greenheart framework, inheriting from ConverterBaseClass.
     """
-    def __init__(self, energy_resources, site_info=SiteInfo(flatirons_site), config=WindConfig()):
+    def __init__(self, tech_config, site_info=SiteInfo(flatirons_site)):
         """
         Initialize the WindPlantConverter.
 
         Args:
-            energy_resources (dict): Environmental parameters, e.g., wind speed, temperature.
+            tech_config (dict): Environmental parameters, e.g., wind speed, temperature.
             site_info (SiteInfo): Site information for the wind plant (location, elevation, etc.).
             config (WindConfig): Configuration for the WindPlant instance.
         """
-        super().__init__(energy_resources)
+        super().__init__(tech_config)
+        self.config = tech_config
         self.site = site_info
-        self.config = config
-        self.wind_plant = WindPlant(self.site, self.config)
+        wind_config = WindConfig(tech_config['details'])
+        self.wind_plant = WindPlant(self.site, wind_config)
 
     def get_performance_model(self):
         """
