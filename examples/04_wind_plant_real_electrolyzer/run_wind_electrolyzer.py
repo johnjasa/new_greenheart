@@ -1,4 +1,4 @@
-from new_greenheart.core.GreenHEARTModel import GreenHEARTModel
+from new_greenheart.core.greenheart_model import GreenHEARTModel
 
 
 # Create a GreenHEART model

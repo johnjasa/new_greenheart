@@ -5,7 +5,7 @@ import openmdao.api as om
 from new_greenheart.core.supported_models import supported_models
 from new_greenheart.resources.wind.dummy_wind import DummyWindResource
 from new_greenheart.converters.wind.dummy_wind_turbine import DummyWindTurbine
-
+from new_greenheart.core.pose_optimization import PoseOptimization
 
 
 class GreenHEARTModel(object):
@@ -128,10 +128,6 @@ class GreenHEARTModel(object):
         self.plant = self.model.add_subsystem('plant', plant_group, promotes=['*'])
 
     def create_technology_models(self):
-        # Example technology config:
-        # name: "technology_config"
-        # description: "This plant has a wind turbine, just one"
-
         # loop through each technology and instantiate an OpenMDAO object (assume it exists)
         # for each technology
 
@@ -175,7 +171,11 @@ class GreenHEARTModel(object):
         """
         Add the driver to the OpenMDAO model.
         """
-        pass
+        myopt = PoseOptimization(self.driver_config)
+        myopt.set_driver(self.prob)
+        myopt.set_objective(self.prob)
+        myopt.set_design_variables(self.prob)
+        myopt.set_constraints(self.prob)
 
     def run(self):
         self.validate_inputs()
@@ -190,7 +190,7 @@ class GreenHEARTModel(object):
 
         self.prob.setup()
 
-        self.prob.run_model()
+        self.prob.run_driver()
 
     def post_process(self):
         self.prob.model.list_inputs(units=True)

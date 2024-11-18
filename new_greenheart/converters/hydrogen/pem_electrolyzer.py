@@ -23,12 +23,17 @@ class ElectrolyzerPerformanceModel(om.ExplicitComponent):
         self.add_input('electricity', val=0.0, shape_by_conn=True, copy_shape='hydrogen', units='kW')
         self.add_output('hydrogen', val=0.0, shape_by_conn=True, copy_shape='electricity', units='kg/h')
 
+        self.add_input('cluster_size', val=1.0, units='MW')
+        self.add_output('total_hydrogen_produced', val=0.0, units='kg')
+
     def compute(self, inputs, outputs):
         # Run the PEM electrolyzer model using the input power signal
-        h2_results, _ = self.options['electrolyzer'].run(inputs['electricity'])
+        self.options['electrolyzer'].max_stacks = inputs['cluster_size']
+        h2_results, h2_results_aggregates = self.options['electrolyzer'].run(inputs['electricity'])
         
         # Assuming `h2_results` includes hydrogen and oxygen rates per timestep
         outputs['hydrogen'] = h2_results['hydrogen_hourly_production']
+        outputs['total_hydrogen_produced'] = h2_results_aggregates['Total H2 Production [kg]']
 
 class PEMElectrolyzer(ConverterBaseClass):
     """

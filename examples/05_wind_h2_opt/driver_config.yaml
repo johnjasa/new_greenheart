@@ -1,0 +1,27 @@
+name: "driver_config"
+description: "Runs a wind plant and electrolyzer with simple optimization"
+
+general:
+  folder_output: wind_plant_run
+
+driver:
+  optimization:
+    flag: True
+    tol: 1.e-5
+    max_iter: 100
+    solver: SLSQP
+    step_size: 1.e-3
+    form: forward
+    debug_print: True
+    
+design_variables:
+  electrolyzer:
+    cluster_size:
+      flag: True
+      lower: 0.5
+      upper: 1.5
+      units: MW
+
+objective:
+  name: electrolyzer.total_hydrogen_produced
+  ref: -100.
