@@ -171,11 +171,12 @@ class GreenHEARTModel(object):
         """
         Add the driver to the OpenMDAO model.
         """
-        myopt = PoseOptimization(self.driver_config)
-        myopt.set_driver(self.prob)
-        myopt.set_objective(self.prob)
-        myopt.set_design_variables(self.prob)
-        myopt.set_constraints(self.prob)
+        if 'driver' in self.driver_config:
+            myopt = PoseOptimization(self.driver_config)
+            myopt.set_driver(self.prob)
+            myopt.set_objective(self.prob)
+            myopt.set_design_variables(self.prob)
+            myopt.set_constraints(self.prob)
 
     def run(self):
         self.validate_inputs()
