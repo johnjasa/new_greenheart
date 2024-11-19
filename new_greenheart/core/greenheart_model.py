@@ -6,6 +6,7 @@ from new_greenheart.core.supported_models import supported_models
 from new_greenheart.resources.wind.dummy_wind import DummyWindResource
 from new_greenheart.converters.wind.dummy_wind_turbine import DummyWindTurbine
 from new_greenheart.core.pose_optimization import PoseOptimization
+from new_greenheart.core.inputs.validation import load_yaml, load_plant_yaml, load_tech_yaml, load_driver_yaml
 
 
 class GreenHEARTModel(object):
@@ -13,10 +14,6 @@ class GreenHEARTModel(object):
     def __init__(self, config_file):
         # read in config file; it's a yaml dict that looks like this:
         self.load_config(config_file)
-
-        # validate inputs
-        # Will we need schema for each wrapper individually? Presumably yes
-        self.validate_inputs()
 
         # create site-level model
         # this is an OpenMDAO group that contains all the site information
@@ -49,29 +46,9 @@ class GreenHEARTModel(object):
         self.system_summary = config.get('system_summary')
 
         # Load each config file as yaml and save as dict on this object
-        with open(config.get('driver_config'), 'r') as file:
-            self.driver_config = yaml.safe_load(file)
-
-        with open(config.get('technology_config'), 'r') as file:
-            self.technology_config = yaml.safe_load(file)
-
-        with open(config.get('plant_config'), 'r') as file:
-            self.plant_config = yaml.safe_load(file)
-
-    def validate_inputs(self):
-        # validate each config file
-        self.validate_driver_config()
-        self.validate_technology_config()
-        self.validate_plant_config()
-
-    def validate_driver_config(self):
-        pass
-
-    def validate_technology_config(self):
-        pass
-
-    def validate_plant_config(self):
-        pass
+        self.driver_config = load_driver_yaml(config.get('driver_config'))
+        self.technology_config = load_tech_yaml(config.get('technology_config'))
+        self.plant_config = load_plant_yaml(config.get('plant_config'))
 
     def create_site_model(self):
         # Create a site-level component
@@ -183,7 +160,6 @@ class GreenHEARTModel(object):
             myopt.set_constraints(self.prob)
 
     def run(self):
-        self.validate_inputs()
         # do model setup based on the driver config
         # might add a recorder, driver, set solver tolerances, etc
 

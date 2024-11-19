@@ -3,7 +3,7 @@ name = "new_greenheart"
 description = "new_greenheart example package"
 version = "0.1.0"
 authors = []
-dependencies = []
-
-[project.optional-dependencies]
-dev = []
+dependencies = [
+    "jsonschema",
+    "ruamel",
+]
