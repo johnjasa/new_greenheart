@@ -18,6 +18,7 @@ class ConverterBaseClass(object):
 
         Returns an OpenMDAO System.
         """
+        pass
 
     def get_cost_model(self):
         """
@@ -25,6 +26,7 @@ class ConverterBaseClass(object):
 
         Returns an OpenMDAO System.
         """
+        pass
 
     def get_control_strategy(self):
         """
@@ -32,6 +34,7 @@ class ConverterBaseClass(object):
 
         Returns an OpenMDAO System.
         """
+        pass
 
     def get_financial_model(self):
         """
@@ -39,6 +42,7 @@ class ConverterBaseClass(object):
 
         Returns an OpenMDAO System.
         """
+        pass
 
     def post_process(self):
         """

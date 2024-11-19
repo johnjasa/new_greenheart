@@ -145,6 +145,8 @@ class GreenHEARTModel(object):
     def connect_technologies(self):
         technology_interconnections = self.plant_config.get('technology_interconnections', [])
 
+        self.transport_objects = []
+
         # loop through each linkage and instantiate an OpenMDAO object (assume it exists) for
         # the connection type (e.g. cable, pipeline, etc)
         for connection in technology_interconnections:
@@ -153,8 +155,10 @@ class GreenHEARTModel(object):
             # make the connection_name based on source, dest, item, type
             connection_name = f'{source_tech}_to_{dest_tech}_{transport_type}'
 
-            # Create the connection component
-            connection_component = supported_models[transport_type]()
+            # Create the transport object
+            transport_object = supported_models[transport_type]()
+            self.transport_objects.append(transport_object)
+            connection_component = transport_object.get_performance_model()
 
             # Add the connection component to the model
             self.plant.add_subsystem(connection_name, connection_component)

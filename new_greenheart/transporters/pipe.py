@@ -1,4 +1,5 @@
 import openmdao.api as om
+from new_greenheart.core.baseclasses.transport_base_class import TransportBaseClass
 
 
 class Pipe(om.ExplicitComponent):
@@ -11,3 +12,7 @@ class Pipe(om.ExplicitComponent):
 
     def compute(self, inputs, outputs):
         outputs['resource_output'] = inputs['resource_input']
+
+class Pipe(TransportBaseClass):
+    def get_performance_model(self):
+        return PipeComponent()
