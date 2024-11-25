@@ -25,6 +25,18 @@ class WindTurbineComponent(om.ExplicitComponent):
         outputs['electricity'] = 0.5 * Cp * rho * A * wind_speed ** 3
 
 
+class WindTurbineCosts(om.ExplicitComponent):
+    """
+    A simple OpenMDAO component that represents the costs of a wind turbine.
+    """
+    def setup(self):
+        # Outputs
+        self.add_output('capital_cost', val=0.0, units='USD', desc='Capital cost of the wind turbine')
+
+    def compute(self, inputs, outputs):
+        outputs['capital_cost'] = 1000000.0
+
+
 class DummyWindTurbine(ConverterBaseClass):
     """
     Dummy wind turbine class.
@@ -36,8 +48,6 @@ class DummyWindTurbine(ConverterBaseClass):
         """
         Describes how the wind turbine performs its function.
         
-        This would be the equations that describe how the wind turbine is used.
-
         Returns an OpenMDAO System.
         """
         return WindTurbineComponent(wind_speed=self.tech_config['resource']['wind_speed'])
@@ -53,8 +63,6 @@ class DummyWindTurbine(ConverterBaseClass):
     def get_control_strategy(self):
         """
         Describes the control strategy for the wind turbine.
-
-        Returns an OpenMDAO System.
         """
         pass
 

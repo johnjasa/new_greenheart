@@ -13,7 +13,7 @@ class StorageBaseClass(object):
         
         Returns an OpenMDAO System.
         """
-        pass
+        return None
 
     def get_cost_model(self):
         """
@@ -21,7 +21,7 @@ class StorageBaseClass(object):
 
         Returns an OpenMDAO System.
         """
-        pass
+        return None
 
     def get_control_strategy(self):
         """
@@ -37,7 +37,7 @@ class StorageBaseClass(object):
 
         Returns an OpenMDAO System.
         """
-        pass
+        return None
 
     def post_process(self):
         """

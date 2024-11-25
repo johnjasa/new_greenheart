@@ -109,6 +109,7 @@ class GreenHEARTModel(object):
         # for each technology
 
         self.technology_objects = []
+        self.tech_names = []
 
         # Create a technology group for each technology
         for tech_name, tech_config in self.technology_config['technologies'].items():
@@ -117,7 +118,24 @@ class GreenHEARTModel(object):
             tech_object = tech_class(self.plant_config, tech_config)
 
             self.technology_objects.append(tech_object)
+            self.tech_names.append(tech_name)
             self.plant.add_subsystem(tech_name, tech_object.get_performance_model())
+
+    def create_cost_models(self):
+        # Loop through technology objects and add cost models
+        for idx, tech_object in enumerate(self.technology_objects):
+            tech_name = self.tech_names[idx]
+            cost_model = tech_object.get_cost_model()
+            if cost_model is not None:
+                self.plant.add_subsystem(f'{tech_name}_cost', cost_model)
+
+    def create_financial_models(self):
+        # Loop through technology objects and add financial models
+        for idx, tech_object in enumerate(self.technology_objects):
+            tech_name = self.tech_names[idx]
+            financial_model = tech_object.get_financial_model()
+            if financial_model is not None:
+                self.plant.add_subsystem(f'{tech_name}_financial', financial_model)
 
     def connect_technologies(self):
         technology_interconnections = self.plant_config.get('technology_interconnections', [])

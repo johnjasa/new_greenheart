@@ -16,7 +16,7 @@ class ResourceBaseClass:
 
         Returns an OpenMDAO System.
         """
-        pass
+        return None
 
     def get_cost_model(self):
         """
@@ -24,7 +24,7 @@ class ResourceBaseClass:
 
         Returns an OpenMDAO System.
         """
-        pass
+        return None
 
     def get_control_strategy(self):
         """
@@ -40,4 +40,4 @@ class ResourceBaseClass:
 
         Returns an OpenMDAO System.
         """
-        pass
+        return None

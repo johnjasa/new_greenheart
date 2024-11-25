@@ -13,7 +13,7 @@ class TransportBaseClass(object):
         
         Returns an OpenMDAO System.
         """
-        pass
+        return None
 
     def get_cost_model(self):
         """
@@ -21,7 +21,7 @@ class TransportBaseClass(object):
 
         Returns an OpenMDAO System.
         """
-        pass
+        return None
 
     def get_financial_model(self):
         """
@@ -29,7 +29,7 @@ class TransportBaseClass(object):
 
         Returns an OpenMDAO System.
         """
-        pass
+        return None
 
     def post_process(self):
         """
