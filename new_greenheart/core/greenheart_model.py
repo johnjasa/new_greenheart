@@ -29,6 +29,9 @@ class GreenHEARTModel(object):
         # they will need tech_config but not driver or plant config
         self.create_technology_models()
 
+        self.create_cost_models()
+        self.create_financial_models()
+
         # connect technologies
         # technologies are connected within the `technology_interconnections` section of the plant config
         self.connect_technologies()
@@ -122,18 +125,22 @@ class GreenHEARTModel(object):
             self.plant.add_subsystem(tech_name, tech_object.get_performance_model())
 
     def create_cost_models(self):
+        self.cost_models = []
         # Loop through technology objects and add cost models
         for idx, tech_object in enumerate(self.technology_objects):
             tech_name = self.tech_names[idx]
             cost_model = tech_object.get_cost_model()
+            self.cost_models.append(cost_model)
             if cost_model is not None:
                 self.plant.add_subsystem(f'{tech_name}_cost', cost_model)
 
     def create_financial_models(self):
+        self.financial_models = []
         # Loop through technology objects and add financial models
         for idx, tech_object in enumerate(self.technology_objects):
             tech_name = self.tech_names[idx]
             financial_model = tech_object.get_financial_model()
+            self.financial_models.append(financial_model)
             if financial_model is not None:
                 self.plant.add_subsystem(f'{tech_name}_financial', financial_model)
 
@@ -163,6 +170,8 @@ class GreenHEARTModel(object):
 
             # Connect the connection component to the destination technology
             self.plant.connect(f'{connection_name}.{transport_item}_output', f'{dest_tech}.{transport_item}')
+
+        # TODO: connect outputs of the technology models to the cost and financial models of the same name if the cost and financial models are not None
 
         self.plant.options['auto_order'] = True
 

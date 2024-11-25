@@ -1,9 +1,7 @@
-from new_greenheart.core.baseclasses.converter_base_class import ConverterBaseClass
-import openmdao.api as om
 import numpy as np
+import openmdao.api as om
+from new_greenheart.core.baseclasses.converter_base_class import ConverterBaseClass
 from new_greenheart.converters.hopp.hopp_mgmt import setup_hopp, run_hopp
-from hopp.utilities import load_yaml
-from greenheart.tools.eco.utilities import convert_relative_to_absolute_path
 
 
 n_timesteps = 8760

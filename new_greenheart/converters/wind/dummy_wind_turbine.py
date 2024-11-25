@@ -58,7 +58,7 @@ class DummyWindTurbine(ConverterBaseClass):
 
         Returns an OpenMDAO System.
         """
-        pass
+        return WindTurbineCosts()
 
     def get_control_strategy(self):
         """

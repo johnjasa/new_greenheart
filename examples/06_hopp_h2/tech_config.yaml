@@ -8,9 +8,6 @@ technologies:
       config: !include hopp_config.yaml
     cost_model:
       model: "hopp"
-    resource: 
-      type: "pysam_wind"
-      wind_speed: 9.
   electrolyzer:
     performance_model:
       model: "pem_electrolyzer"
