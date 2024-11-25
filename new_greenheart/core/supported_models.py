@@ -4,6 +4,7 @@ from new_greenheart.transporters.cable import Cable
 from new_greenheart.transporters.pipe import Pipe
 from new_greenheart.converters.wind.wind_plant import WindPlantConverter
 from new_greenheart.converters.hydrogen.pem_electrolyzer import PEMElectrolyzer
+from new_greenheart.converters.hopp.hopp_wrapper import HOPPModel
 
 
 supported_models = {
@@ -11,6 +12,7 @@ supported_models = {
     'dummy_electrolyzer': DummyElectrolyzer,
     'wind_plant': WindPlantConverter,
     'pem_electrolyzer': PEMElectrolyzer,
+    'hopp': HOPPModel,
 
     'cable': Cable,
     'pipe': Pipe,

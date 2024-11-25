@@ -6,30 +6,16 @@ import os
 import copy
 import numpy as np
 import jsonschema as json
+import yaml
 import ruamel.yaml as ry
 from functools import reduce
 import operator
+from hopp.utilities import load_yaml
 
 
 fschema_tech = os.path.join(os.path.dirname(os.path.realpath(__file__)), "tech_schema.yaml")
 fschema_plant = os.path.join(os.path.dirname(os.path.realpath(__file__)), "plant_schema.yaml")
 fschema_driver = os.path.join(os.path.dirname(os.path.realpath(__file__)), "driver_schema.yaml")
-
-
-def load_yaml(fname_input : str) -> dict:
-    """
-    Reads and parses a YAML file in a safe mode using the ruamel.yaml library.
-
-    Args:
-        fname_input (str): Path to the YAML file to be loaded.
-
-    Returns:
-        dict: Parsed YAML content as a dictionary.
-    """
-    reader = ry.YAML(typ="safe", pure=True)
-    with open(fname_input, "r", encoding="utf-8") as f:
-        input_yaml = reader.load(f)
-    return input_yaml
 
 def write_yaml(instance : dict, foutput : str) -> None:
     """
