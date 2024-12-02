@@ -29,9 +29,6 @@ class GreenHEARTModel(object):
         # they will need tech_config but not driver or plant config
         self.create_technology_models()
 
-        self.create_cost_models()
-        self.create_financial_models()
-
         # connect technologies
         # technologies are connected within the `technology_interconnections` section of the plant config
         self.connect_technologies()
@@ -113,36 +110,32 @@ class GreenHEARTModel(object):
 
         self.technology_objects = []
         self.tech_names = []
+        self.cost_models = []
+        self.financial_models = []
 
         # Create a technology group for each technology
         for tech_name, tech_config in self.technology_config['technologies'].items():
+            tech_group = self.plant.add_subsystem(tech_name, om.Group())
+
             tech_class = supported_models[tech_config['performance_model']['model']]
 
             tech_object = tech_class(self.plant_config, tech_config)
 
             self.technology_objects.append(tech_object)
             self.tech_names.append(tech_name)
-            self.plant.add_subsystem(tech_name, tech_object.get_performance_model())
+            tech_group.add_subsystem(tech_name, tech_object.get_performance_model(), promotes=['*'])
 
-    def create_cost_models(self):
-        self.cost_models = []
-        # Loop through technology objects and add cost models
-        for idx, tech_object in enumerate(self.technology_objects):
-            tech_name = self.tech_names[idx]
+            # Add cost model
             cost_model = tech_object.get_cost_model()
             self.cost_models.append(cost_model)
             if cost_model is not None:
-                self.plant.add_subsystem(f'{tech_name}_cost', cost_model)
+                tech_group.add_subsystem(f'{tech_name}_cost', cost_model, promotes=['*'])
 
-    def create_financial_models(self):
-        self.financial_models = []
-        # Loop through technology objects and add financial models
-        for idx, tech_object in enumerate(self.technology_objects):
-            tech_name = self.tech_names[idx]
+            # Add financial model
             financial_model = tech_object.get_financial_model()
             self.financial_models.append(financial_model)
             if financial_model is not None:
-                self.plant.add_subsystem(f'{tech_name}_financial', financial_model)
+                tech_group.add_subsystem(f'{tech_name}_financial', financial_model, promotes=['*'])
 
     def connect_technologies(self):
         technology_interconnections = self.plant_config.get('technology_interconnections', [])
