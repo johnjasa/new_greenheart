@@ -83,7 +83,7 @@ class GreenHEARTModel(object):
         """
         # Create a plant-level component
         plant_component = om.IndepVarComp()
-        plant_component.add_output('dummy_val', val=1.)
+        plant_component.add_output('plant_component_example_value', val=1.)
         project_parameters = self.plant_config.get('project_parameters', {})
         for key, value in project_parameters.items():
             plant_component.add_output(key, val=value)
