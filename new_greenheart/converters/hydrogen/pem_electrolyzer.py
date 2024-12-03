@@ -2,6 +2,7 @@ from new_greenheart.core.baseclasses.converter_base_class import ConverterBaseCl
 import openmdao.api as om
 import numpy as np
 from greenheart.simulation.technologies.hydrogen.electrolysis.PEM_H2_LT_electrolyzer_Clusters import PEM_H2_Clusters
+from greenheart.simulation.technologies.hydrogen.electrolysis.PEM_costs_Singlitico_model import PEMCostsSingliticoModel
 
 
 class ElectrolyzerConfig:
@@ -35,6 +36,35 @@ class ElectrolyzerPerformanceModel(om.ExplicitComponent):
         outputs['hydrogen'] = h2_results['hydrogen_hourly_production']
         outputs['total_hydrogen_produced'] = h2_results_aggregates['Total H2 Production [kg]']
 
+class ElectrolyzerCostModel(om.ExplicitComponent):
+    """
+    An OpenMDAO component that computes the cost of a PEM electrolyzer.
+    """
+    def initialize(self):
+        self.options.declare('cost_model', types=PEMCostsSingliticoModel)
+        self.options.declare('config_details', types=dict)
+
+    def setup(self):
+        # Define inputs: electrolyzer capacity and reference cost
+        config_details = self.options['config_details']
+        self.add_input('P_elec', val=config_details['cluster_size_mw'], units='MW', desc='Nominal capacity of the electrolyzer')
+        self.add_input('RC_elec', val=config_details['electrolyzer_cost'], units='MUSD/GW', desc='Reference cost of the electrolyzer')
+
+        # Define outputs: CapEx and OpEx costs
+        self.add_output('CapEx', val=0.0, units='MUSD', desc='Capital expenditure')
+        self.add_output('OpEx', val=0.0, units='MUSD', desc='Operational expenditure')
+
+    def compute(self, inputs, outputs):
+        # Call the cost model to compute costs
+        P_elec = inputs['P_elec'] * 1.e-3  # Convert MW to GW
+        RC_elec = inputs['RC_elec']
+        
+        cost_model = self.options['cost_model']
+        capex, opex = cost_model.run(P_elec, RC_elec)
+        
+        outputs['CapEx'] = capex
+        outputs['OpEx'] = opex
+
 class PEMElectrolyzer(ConverterBaseClass):
     """
     Wrapper class for the PEM electrolyzer in the new_greenheart framework, inheriting from ConverterBaseClass.
@@ -53,6 +83,7 @@ class PEMElectrolyzer(ConverterBaseClass):
             electrolyzer_config.plant_life,
             **electrolyzer_config.model_parameters
         )
+        self.cost_model = PEMCostsSingliticoModel(elec_location=1)
 
     def get_performance_model(self):
         """
@@ -66,7 +97,7 @@ class PEMElectrolyzer(ConverterBaseClass):
         """
         Placeholder for electrolyzer cost model.
         """
-        pass
+        return ElectrolyzerCostModel(cost_model=self.cost_model, config_details=self.tech_config['details'])
 
     def get_control_strategy(self):
         """

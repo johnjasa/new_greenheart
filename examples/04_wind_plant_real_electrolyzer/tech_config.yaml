@@ -36,7 +36,8 @@ technologies:
     cost_model:
       model: "pem_electrolyzer"
     details:
-      cluster_size_mw: 1.0
+      cluster_size_mw: 100.0
+      electrolyzer_cost: 2000.
       plant_life: 30
       model_parameters:
         eol_eff_percent_loss: 10
