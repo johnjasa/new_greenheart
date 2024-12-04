@@ -1,5 +1,20 @@
 # New GreenHEART planning
 
+## Getting started in this repo
+
+You'll need a Python environment that contains both the [development version of HOPP](https://github.com/NREL/HOPP/tree/develop) and the [development version of GreenHEART](https://github.com/NREL/greenheart).
+If you have that already, simply run:
+
+```
+pip install -e .
+```
+
+at the top level of this repo.
+Then you can try running any one of the to ensure your installation was successful.
+Currently, all necessary packages for this repo are already dependencies of either HOPP or GreenHEART.
+
+If you don't want to modify your existing environments, you can create a new conda environment, install the development versions of HOPP and GreenHEART, then install this package.
+
 ## Examples currently included
 
 ### 01_dummy_wind
