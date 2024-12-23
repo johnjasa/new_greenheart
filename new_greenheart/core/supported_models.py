@@ -6,9 +6,11 @@ from new_greenheart.converters.wind.wind_plant import WindPlantConverter
 from new_greenheart.converters.hydrogen.pem_electrolyzer import PEMElectrolyzer
 from new_greenheart.converters.hopp.hopp_wrapper import HOPPModel
 from new_greenheart.converters.ammonia.ammonia_converter import AmmoniaPlant
+from new_greenheart.storage.hydrogen.tank import HydrogenTank
 
 
 supported_models = {
+    # Converters
     'dummy_wind_turbine': DummyWindTurbine,
     'dummy_electrolyzer': DummyElectrolyzer,
     'wind_plant': WindPlantConverter,
@@ -16,7 +18,11 @@ supported_models = {
     'hopp': HOPPModel,
     'ammonia': AmmoniaPlant,
 
+    # Transport
     'cable': Cable,
     'pipe': Pipe,
+
+    # Storage
+    'hydrogen_tank': HydrogenTank,
 
 }

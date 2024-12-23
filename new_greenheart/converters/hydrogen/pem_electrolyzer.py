@@ -1,4 +1,4 @@
-from new_greenheart.core.baseclasses.converter_base_class import ConverterBaseClass
+from new_greenheart.converters.hydrogen.electrolyzer_baseclass import ElectrolyzerBaseClass
 import openmdao.api as om
 import numpy as np
 from greenheart.simulation.technologies.hydrogen.electrolysis.PEM_H2_LT_electrolyzer_Clusters import PEM_H2_Clusters
@@ -65,9 +65,9 @@ class ElectrolyzerCostModel(om.ExplicitComponent):
         outputs['CapEx'] = capex
         outputs['OpEx'] = opex
 
-class PEMElectrolyzer(ConverterBaseClass):
+class PEMElectrolyzer(ElectrolyzerBaseClass):
     """
-    Wrapper class for the PEM electrolyzer in the new_greenheart framework, inheriting from ConverterBaseClass.
+    Wrapper class for the PEM electrolyzer in the new_greenheart framework, inheriting from ElectrolyzerBaseClass.
     """
     def __init__(self, plant_config, tech_config):
         """

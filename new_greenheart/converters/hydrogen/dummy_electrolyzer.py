@@ -1,4 +1,4 @@
-from new_greenheart.core.baseclasses.converter_base_class import ConverterBaseClass
+from new_greenheart.converters.hydrogen.electrolyzer_baseclass import ElectrolyzerBaseClass
 
 import openmdao.api as om
 
@@ -18,7 +18,7 @@ class ElectrolyzerPerformanceModel(om.ExplicitComponent):
         outputs['hydrogen'] = 0.1 * electricity
         outputs['oxygen'] = 0.8 * electricity
 
-class DummyElectrolyzer(ConverterBaseClass):
+class DummyElectrolyzer(ElectrolyzerBaseClass):
     def __init__(self, plant_config, tech_config):
         super().__init__(plant_config, tech_config)
 

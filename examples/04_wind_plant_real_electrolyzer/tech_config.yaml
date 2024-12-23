@@ -44,3 +44,10 @@ technologies:
         uptime_hours_until_eol: 77600
         include_degradation_penalty: True
         turndown_ratio: 0.1
+  tank:
+    performance_model:
+      model: "hydrogen_tank"
+    cost_model:
+      model: "hydrogen_tank"
+    details:
+      total_capacity: 10.e3
