@@ -65,6 +65,16 @@ class ElectrolyzerCostModel(om.ExplicitComponent):
         outputs['CapEx'] = capex
         outputs['OpEx'] = opex
 
+class ElectrolyzerFinanceModel(om.ExplicitComponent):
+    """
+    Placeholder for the financial model of the PEM electrolyzer.
+    """
+    def setup(self):
+        self.add_output('LCOH', val=0.0, units='USD/kg', desc='Levelized cost of hydrogen')
+
+    def compute(self, inputs, outputs):
+        outputs['LCOH'] = 4.11  # Placeholder value
+
 class PEMElectrolyzer(ElectrolyzerBaseClass):
     """
     Wrapper class for the PEM electrolyzer in the new_greenheart framework, inheriting from ElectrolyzerBaseClass.
@@ -109,7 +119,7 @@ class PEMElectrolyzer(ElectrolyzerBaseClass):
         """
         Placeholder for financial model.
         """
-        pass
+        return ElectrolyzerFinanceModel()
 
     def post_process(self):
         """

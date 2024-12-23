@@ -145,24 +145,36 @@ class GreenHEARTModel(object):
         # loop through each linkage and instantiate an OpenMDAO object (assume it exists) for
         # the connection type (e.g. cable, pipeline, etc)
         for connection in technology_interconnections:
-            source_tech, dest_tech, transport_item, transport_type = connection
+            if len(connection) == 4:
+                source_tech, dest_tech, transport_item, transport_type = connection
 
-            # make the connection_name based on source, dest, item, type
-            connection_name = f'{source_tech}_to_{dest_tech}_{transport_type}'
+                # make the connection_name based on source, dest, item, type
+                connection_name = f'{source_tech}_to_{dest_tech}_{transport_type}'
 
-            # Create the transport object
-            transport_object = supported_models[transport_type]()
-            self.transport_objects.append(transport_object)
-            connection_component = transport_object.get_performance_model()
+                # Create the transport object
+                transport_object = supported_models[transport_type]()
+                self.transport_objects.append(transport_object)
+                connection_component = transport_object.get_performance_model()
 
-            # Add the connection component to the model
-            self.plant.add_subsystem(connection_name, connection_component)
+                # Add the connection component to the model
+                self.plant.add_subsystem(connection_name, connection_component)
 
-            # Connect the source technology to the connection component
-            self.plant.connect(f'{source_tech}.{transport_item}', f'{connection_name}.{transport_item}_input')
+                # Connect the source technology to the connection component
+                self.plant.connect(f'{source_tech}.{transport_item}', f'{connection_name}.{transport_item}_input')
 
-            # Connect the connection component to the destination technology
-            self.plant.connect(f'{connection_name}.{transport_item}_output', f'{dest_tech}.{transport_item}')
+                # Connect the connection component to the destination technology
+                self.plant.connect(f'{connection_name}.{transport_item}_output', f'{dest_tech}.{transport_item}')
+
+            elif len(connection) == 3:
+                # connect directly from source to dest
+                source_tech, dest_tech, connected_parameter = connection
+
+                self.plant.connect(f'{source_tech}.{connected_parameter}', f'{dest_tech}.{connected_parameter}')
+
+            else:
+                err_msg = f'Invalid connection: {connection}'
+                raise ValueError(err_msg)
+
 
         # TODO: connect outputs of the technology models to the cost and financial models of the same name if the cost and financial models are not None
 
