@@ -10,17 +10,19 @@ class AmmoniaPerformanceModel(om.ExplicitComponent):
     Computes annual ammonia production based on plant capacity and capacity factor.
     """
     def initialize(self):
-        self.options.declare('config', types=AmmoniaCapacityModelConfig)
+        self.options.declare('plant_capacity', types=float)
+        self.options.declare('capacity_factor', types=float)
 
     def setup(self):
-        self.add_input('plant_capacity_kgpy', val=0.0, units='kg/year', desc='Annual plant capacity in kilograms')
-        self.add_input('plant_capacity_factor', val=0.0, units=None, desc='Capacity factor of the plant')
-        self.add_output('ammonia_production_kgpy', val=0.0, units='kg/year', desc='Annual ammonia production')
+        self.add_input('electricity', val=0.0, shape_by_conn=True, copy_shape='hydrogen', units='kW')
+        self.add_input('hydrogen', val=0.0, shape_by_conn=True, copy_shape='hydrogen', units='kg/h')
+        self.add_output('ammonia', val=0.0, shape_by_conn=True, copy_shape='electricity', units='kg/h')
 
     def compute(self, inputs, outputs):
-        plant_capacity = inputs['plant_capacity_kgpy']
-        capacity_factor = inputs['plant_capacity_factor']
-        outputs['ammonia_production_kgpy'] = run_ammonia_model(plant_capacity, capacity_factor)
+        plant_capacity = self.options['plant_capacity']
+        capacity_factor = self.options['capacity_factor']
+        ammonia_production_kgpy = run_ammonia_model(plant_capacity, capacity_factor)
+        outputs['ammonia'] = ammonia_production_kgpy / len(inputs['electricity'])
 
 class AmmoniaCostModel(om.ExplicitComponent):
     """
@@ -58,12 +60,6 @@ class AmmoniaPlant(ConverterBaseClass):
 
         feedstocks = Feedstocks(**tech_config['details']['feedstocks'])
 
-        self.model_config = AmmoniaCapacityModelConfig(
-            input_capacity_factor_estimate=tech_config['details']['capacity_factor'],
-            feedstocks=feedstocks,
-            hydrogen_amount_kgpy=tech_config['details']['hydrogen_amount_kgpy'],
-        )
-
         self.cost_config = AmmoniaCostModelConfig(
             plant_capacity_factor=tech_config['details']['capacity_factor'],
             feedstocks=feedstocks,
@@ -74,7 +70,7 @@ class AmmoniaPlant(ConverterBaseClass):
         """
         Returns the performance model for ammonia production.
         """
-        return AmmoniaPerformanceModel(config=self.model_config)
+        return AmmoniaPerformanceModel(plant_capacity=self.tech_config['details']['plant_capacity_kgpy'], capacity_factor=self.tech_config['details']['capacity_factor'])
 
     def get_cost_model(self):
         """
