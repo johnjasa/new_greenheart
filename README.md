@@ -1,5 +1,9 @@
 # New GreenHEART planning
 
+## Docs for new GreenHEART
+
+https://johnjasa.github.io/new_greenheart/intro.html
+
 ## Getting started in this repo
 
 You'll need a Python environment that contains both the [development version of HOPP](https://github.com/NREL/HOPP/tree/develop) and the [development version of GreenHEART](https://github.com/NREL/greenheart).
