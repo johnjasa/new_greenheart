@@ -36,7 +36,7 @@ class AmmoniaCostModel(om.ExplicitComponent):
         # Inputs for cost model configuration
         self.add_input('plant_capacity_kgpy', val=0.0, units='kg/year', desc='Annual plant capacity')
         self.add_input('plant_capacity_factor', val=0.0, units=None, desc='Capacity factor')
-        self.add_output('capex_total', val=0.0, units='USD', desc='Total capital expenditures')
+        self.add_output('CapEx', val=0.0, units='USD', desc='Total capital expenditures')
         self.add_output('total_fixed_operating_cost', val=0.0, units='USD', desc='Total fixed operating costs')
         self.add_output('variable_cost_in_startup_year', val=0.0, units='USD', desc='Variable costs')
         self.add_output('credits_byproduct', val=0.0, units='USD', desc='Byproduct credits')
@@ -45,7 +45,7 @@ class AmmoniaCostModel(om.ExplicitComponent):
         config = self.options['config']
         cost_model_outputs = run_ammonia_cost_model(config)
         
-        outputs['capex_total'] = cost_model_outputs.capex_total
+        outputs['CapEx'] = cost_model_outputs.capex_total
         outputs['total_fixed_operating_cost'] = cost_model_outputs.total_fixed_operating_cost
         outputs['variable_cost_in_startup_year'] = cost_model_outputs.variable_cost_in_startup_year
         outputs['credits_byproduct'] = cost_model_outputs.credits_byproduct

@@ -33,6 +33,33 @@ class WindPlantComponent(om.ExplicitComponent):
         self.options['wind_plant'].simulate_power(plant_life)
         outputs['electricity'] = self.options['wind_plant']._system_model.value("gen")
 
+
+class WindPlantCostComponent(om.ExplicitComponent):
+    """
+    An OpenMDAO component that calculates the capital expenditure (CapEx) for a wind plant.
+
+    Just a placeholder for now, but can be extended with more detailed cost models.
+    """
+    def initialize(self):
+        self.options.declare('cost_per_kw', types=float, default=1500.0, desc='Cost per kW of installed capacity')
+
+    def setup(self):
+        # Inputs: Number of turbines and turbine rating in kW
+        self.add_input('num_turbines', val=0, desc='Number of wind turbines')
+        self.add_input('turbine_rating_kw', val=0.0, units='kW', desc='Rating of each turbine in kW')
+
+        # Output: Capital expenditure in USD
+        self.add_output('CapEx', val=0.0, units='USD', desc='Capital expenditure for the wind plant')
+
+    def compute(self, inputs, outputs):
+        num_turbines = inputs['num_turbines']
+        turbine_rating_kw = inputs['turbine_rating_kw']
+        cost_per_kw = self.options['cost_per_kw']
+
+        # Calculate CapEx
+        total_capacity_kw = num_turbines * turbine_rating_kw
+        outputs['CapEx'] = total_capacity_kw * cost_per_kw
+
 class WindPlantConverter(ConverterBaseClass):
     """
     Wrapper class for WindPlant in the new_greenheart framework, inheriting from ConverterBaseClass.
@@ -69,8 +96,7 @@ class WindPlantConverter(ConverterBaseClass):
         Returns:
             Optional[OpenMDAO System]: Placeholder for cost model in OpenMDAO.
         """
-        # Implement a cost model if available, or leave as placeholder
-        pass
+        return WindPlantCostComponent(cost_per_kw=1500.0)
 
     def get_control_strategy(self):
         """

@@ -3,8 +3,7 @@ import yaml
 import openmdao.api as om
 
 from new_greenheart.core.supported_models import supported_models
-from new_greenheart.resources.wind.dummy_wind import DummyWindResource
-from new_greenheart.converters.wind.dummy_wind_turbine import DummyWindTurbine
+from new_greenheart.core.finances import AdjustedCapexComp
 from new_greenheart.core.pose_optimization import PoseOptimization
 from new_greenheart.core.inputs.validation import load_yaml, load_plant_yaml, load_tech_yaml, load_driver_yaml
 
@@ -28,6 +27,8 @@ class GreenHEARTModel(object):
         # these are OpenMDAO groups that contain all the components for each technology
         # they will need tech_config but not driver or plant config
         self.create_technology_models()
+
+        self.create_financial_model()
 
         # connect technologies
         # technologies are connected within the `technology_interconnections` section of the plant config
@@ -94,9 +95,11 @@ class GreenHEARTModel(object):
             plant_component.add_output(key, val=value)
 
         # Add finance parameters
-        finance_parameters = self.plant_config.get('finance_parameters', {})
-        for key, value in finance_parameters.items():
-            plant_component.add_output(key, val=value)
+        # Not using financial parameters through OpenMDAO right now; instead
+        # using the config dicts directly.
+        # finance_parameters = self.plant_config.get('finance_parameters', {})
+        # for key, value in finance_parameters.items():
+        #     plant_component.add_output(key, val=value)
 
         plant_group = om.Group()
         plant_group.add_subsystem('plant_info', plant_component, promotes=['*'])
@@ -136,6 +139,17 @@ class GreenHEARTModel(object):
             self.financial_models.append(financial_model)
             if financial_model is not None:
                 tech_group.add_subsystem(f'{tech_name}_financial', financial_model, promotes=['*'])
+
+    def create_financial_model(self):
+        # Create a financial model group
+        financial_model = om.Group()
+
+        # Add adjusted capex component
+        adjusted_capex_comp = AdjustedCapexComp(tech_config=self.technology_config, plant_config=self.plant_config)
+        financial_model.add_subsystem('adjusted_capex_comp', adjusted_capex_comp, promotes=['*'])
+
+        # Add other financial components here
+        self.plant.add_subsystem('financials', financial_model)
 
     def connect_technologies(self):
         technology_interconnections = self.plant_config.get('technology_interconnections', [])
@@ -178,6 +192,11 @@ class GreenHEARTModel(object):
 
         # TODO: connect outputs of the technology models to the cost and financial models of the same name if the cost and financial models are not None
 
+        # Connect the outputs of the technology models to the larger financial model
+        # loop through all the technologies and connect their capex outputs to the financials model as `capex_{tech}`
+        for tech_name in self.tech_names:
+            self.plant.connect(f'{tech_name}.CapEx', f'financials.capex_{tech_name}')
+        
         self.plant.options['auto_order'] = True
 
     def create_driver_model(self):

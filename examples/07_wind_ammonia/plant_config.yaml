@@ -19,9 +19,6 @@ site:
     }
   ]
 
-plant:
-  plant_life: 30.
-
 # array of arrays containing left-to-right technology
 # interconnections; can support bidirectional connections
 # with the reverse definition.
@@ -32,3 +29,45 @@ technology_interconnections: [
   ["electrolyzer", "ammonia", "hydrogen", "pipe"],
   # etc
 ]
+
+plant:
+  plant_life: 30
+  grid_connection: False # option, can be turned on or off
+  ppa_price: 0.025 # $/kWh based on 2022 land based wind market report (ERCOT area ppa prices) https://www.energy.gov/sites/default/files/2022-08/land_based_wind_market_report_2202.pdf
+  hybrid_electricity_estimated_cf: 0.492 #should equal 1 if grid_connection = True
+  atb_year: 2030
+  cost_year: 2020 # to match ATB
+  installation_time: 36 # months
+
+finance_parameters:
+  costing_general_inflation: 0.025 # used to adjust modeled costs to cost_year
+  profast_general_inflation: 0 # based on 2022 ATB
+  discount_rate: 0.0948 # nominal return based on 2022 ATB baseline workbook
+  debt_equity_split: False # 2022 ATB uses 68.5% debt
+  debt_equity_ratio: 1.72
+  property_tax: 0.01  # percent of CAPEX # combined with property insurance then between H2A and H2FAST defaults
+  property_insurance: 0.005 # percent of CAPEX # combined with property tax then between H2A and H2FAST defaults
+  total_income_tax_rate: 0.2574 # 0.257 tax rate in 2022 atb baseline workbook # current federal income tax rate, but proposed 2023 rate is 0.28. No state income tax in Texas
+  capital_gains_tax_rate: 0.15 # H2FAST default
+  sales_tax_rate: 0.0 #Verify that a different rate shouldn't be used # minimum total sales tax rate in Corpus Christi https://www.cctexas.com/detail/corpus-christi-type-fund-purpose - does this apply to H2?
+  debt_interest_rate: 0.046
+  debt_type: "Revolving debt" # can be "Revolving debt" or "One time loan". Revolving debt is H2FAST default and leads to much lower LCOH
+  loan_period: 0 # H2FAST default, not used for revolving debt
+  cash_onhand_months: 1 # H2FAST default
+  administrative_expense_percent_of_sales: 0.00 #Check this # percent of sales H2FAST default
+  depreciation_method: "MACRS" # can be "MACRS" or "Straight line" - MACRS may be better and can reduce LCOH by more than $1/kg and is spec'd in the IRS MACRS schedule https://www.irs.gov/publications/p946#en_US_2020_publink1000107507
+  depreciation_period: 7 # years - as specified by the IRS MACRS schedule https://www.irs.gov/publications/p946#en_US_2020_publink1000107507
+  depreciation_period_electrolyzer: 7 # based on PEM Electrolysis H2A Production Case Study Documentation estimate of 7 years. also see https://www.irs.gov/publications/p946#en_US_2020_publink1000107507
+  discount_years:
+    wind: 2020 # Updated for GS
+    wind_and_electrical: 2020 # Updated for GS
+    wave: 2020 # confirmed by Kaitlin Brunik 20240103
+    solar: 2020 # Updated for GS
+    battery: 2020 # Updated for GS
+    platform: 2022 # TODO ask Nick and Charlie
+    electrical_export_system: 2022 # also from ORBIT, so match wind assumptions. TODO ask Sophie Bradenkamp
+    desal: 2013 # from code citation: https://www.nrel.gov/docs/fy16osti/66073.pdf
+    electrolyzer: 2020 # 2020 for singlitico2021, 2016 # for simple h2 cost model in hopp (see https://www.hydrogen.energy.gov/pdfs/19009_h2_production_cost_pem_electrolysis_2019.pdf) ## 2020 # based on IRENA report https://www.irena.org/-/media/Files/IRENA/Agency/Publication/2020/Dec/IRENA_Green_hydrogen_cost_2020.pdf
+    ammonia: 2020
+  wind:
+    expected_plant_cost: 'none'
