@@ -3,7 +3,7 @@ import yaml
 import openmdao.api as om
 
 from new_greenheart.core.supported_models import supported_models
-from new_greenheart.core.finances import AdjustedCapexComp
+from new_greenheart.core.finances import AdjustedCapexOpexComp
 from new_greenheart.core.pose_optimization import PoseOptimization
 from new_greenheart.core.inputs.validation import load_yaml, load_plant_yaml, load_tech_yaml, load_driver_yaml
 
@@ -145,8 +145,8 @@ class GreenHEARTModel(object):
         financial_model = om.Group()
 
         # Add adjusted capex component
-        adjusted_capex_comp = AdjustedCapexComp(tech_config=self.technology_config, plant_config=self.plant_config)
-        financial_model.add_subsystem('adjusted_capex_comp', adjusted_capex_comp, promotes=['*'])
+        adjusted_capex_opex_comp = AdjustedCapexOpexComp(tech_config=self.technology_config, plant_config=self.plant_config)
+        financial_model.add_subsystem('adjusted_capex_opex_comp', adjusted_capex_opex_comp, promotes=['*'])
 
         # Add other financial components here
         self.plant.add_subsystem('financials', financial_model)
@@ -196,6 +196,7 @@ class GreenHEARTModel(object):
         # loop through all the technologies and connect their capex outputs to the financials model as `capex_{tech}`
         for tech_name in self.tech_names:
             self.plant.connect(f'{tech_name}.CapEx', f'financials.capex_{tech_name}')
+            self.plant.connect(f'{tech_name}.OpEx', f'financials.opex_{tech_name}')
         
         self.plant.options['auto_order'] = True
 

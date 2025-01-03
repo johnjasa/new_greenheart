@@ -52,7 +52,7 @@ class ElectrolyzerCostModel(om.ExplicitComponent):
 
         # Define outputs: CapEx and OpEx costs
         self.add_output('CapEx', val=0.0, units='MUSD', desc='Capital expenditure')
-        self.add_output('OpEx', val=0.0, units='MUSD', desc='Operational expenditure')
+        self.add_output('OpEx', val=0.0, units='MUSD/year', desc='Operational expenditure')
 
     def compute(self, inputs, outputs):
         # Call the cost model to compute costs

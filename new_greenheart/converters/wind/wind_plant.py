@@ -50,6 +50,7 @@ class WindPlantCostComponent(om.ExplicitComponent):
 
         # Output: Capital expenditure in USD
         self.add_output('CapEx', val=0.0, units='USD', desc='Capital expenditure for the wind plant')
+        self.add_output('OpEx', val=0.0, units='USD/year', desc='Operational expenditure for the wind plant')
 
     def compute(self, inputs, outputs):
         num_turbines = inputs['num_turbines']
@@ -59,6 +60,7 @@ class WindPlantCostComponent(om.ExplicitComponent):
         # Calculate CapEx
         total_capacity_kw = num_turbines * turbine_rating_kw
         outputs['CapEx'] = total_capacity_kw * cost_per_kw
+        outputs['OpEx'] = 0.1 * total_capacity_kw * cost_per_kw  #placeholder scalar value
 
 class WindPlantConverter(ConverterBaseClass):
     """
