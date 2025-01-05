@@ -35,6 +35,32 @@ def setup_hopp(hopp_config):
 def run_hopp(hi, project_lifetime, verbose=False):
     hi.simulate(project_life=project_lifetime)
 
+    capex = 0.
+    opex = 0.
+    try:
+        solar_capex = hi.system.pv.total_installed_cost
+        solar_opex = hi.system.pv.om_total_expense[0]
+        capex += solar_capex
+        opex += solar_opex
+    except AttributeError:
+        pass
+
+    try:
+        wind_capex = hi.system.wind.total_installed_cost
+        wind_opex = hi.system.wind.om_total_expense[0]
+        capex += wind_capex
+        opex += wind_opex
+    except AttributeError:
+        pass
+
+    try:
+        battery_capex = hi.system.battery.total_installed_cost
+        battery_opex = hi.system.battery.om_total_expense[0]
+        capex += battery_capex
+        opex += battery_opex
+    except AttributeError:
+        pass
+
     # store results for later use
     hopp_results = {
         "hopp_interface": hi,
@@ -48,6 +74,8 @@ def run_hopp(hi, project_lifetime, verbose=False):
         "npvs": hi.system.net_present_values,
         "lcoe": hi.system.lcoe_real,
         "lcoe_nom": hi.system.lcoe_nom,
+        "capex": capex,
+        "opex": opex,
     }
     if verbose:
         print("\nHOPP Results")
