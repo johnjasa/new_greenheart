@@ -72,3 +72,9 @@ finance_parameters:
     steel: 2020
   wind:
     expected_plant_cost: 'none'
+
+policy_parameters: # these should be adjusted for inflation prior to application - order of operations: rate in 1992 $, then prevailing wage multiplier if applicable, then inflation
+  electricity_itc: 0
+  electricity_ptc: 0
+  h2_ptc: 0
+  h2_storage_itc: 0

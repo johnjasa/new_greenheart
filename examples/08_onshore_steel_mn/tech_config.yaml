@@ -17,6 +17,7 @@ technologies:
       cluster_size_mw: 100.0
       electrolyzer_cost: 2000.
       plant_life: 30
+      replacement_cost_percent: 0.15 # percent of capex - H2A default case
       model_parameters:
         eol_eff_percent_loss: 10
         uptime_hours_until_eol: 77600

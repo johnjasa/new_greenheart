@@ -25,7 +25,7 @@ class ElectrolyzerPerformanceModel(om.ExplicitComponent):
         self.add_output('hydrogen', val=0.0, shape_by_conn=True, copy_shape='electricity', units='kg/h')
 
         self.add_input('cluster_size', val=1.0, units='MW')
-        self.add_output('total_hydrogen_produced', val=0.0, units='kg')
+        self.add_output('total_hydrogen_produced', val=0.0, units='kg/year')
 
     def compute(self, inputs, outputs):
         # Run the PEM electrolyzer model using the input power signal

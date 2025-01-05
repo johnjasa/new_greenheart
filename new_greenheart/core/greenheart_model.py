@@ -3,7 +3,7 @@ import yaml
 import openmdao.api as om
 
 from new_greenheart.core.supported_models import supported_models
-from new_greenheart.core.finances import AdjustedCapexOpexComp
+from new_greenheart.core.finances import AdjustedCapexOpexComp, ProFastComp
 from new_greenheart.core.pose_optimization import PoseOptimization
 from new_greenheart.core.inputs.validation import load_yaml, load_plant_yaml, load_tech_yaml, load_driver_yaml
 
@@ -148,6 +148,10 @@ class GreenHEARTModel(object):
         adjusted_capex_opex_comp = AdjustedCapexOpexComp(tech_config=self.technology_config, plant_config=self.plant_config)
         financial_model.add_subsystem('adjusted_capex_opex_comp', adjusted_capex_opex_comp, promotes=['*'])
 
+        # add profast component
+        profast_comp = ProFastComp(tech_config=self.technology_config, plant_config=self.plant_config)
+        financial_model.add_subsystem('profast_comp', profast_comp, promotes=['*'])
+
         # Add other financial components here
         self.plant.add_subsystem('financials', financial_model)
 
@@ -197,6 +201,9 @@ class GreenHEARTModel(object):
         for tech_name in self.tech_names:
             self.plant.connect(f'{tech_name}.CapEx', f'financials.capex_{tech_name}')
             self.plant.connect(f'{tech_name}.OpEx', f'financials.opex_{tech_name}')
+
+        if 'electrolyzer' in self.tech_names:
+            self.plant.connect('electrolyzer.total_hydrogen_produced', 'financials.total_hydrogen_produced')
         
         self.plant.options['auto_order'] = True
 
