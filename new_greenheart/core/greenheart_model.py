@@ -6,6 +6,12 @@ from new_greenheart.core.supported_models import supported_models
 from new_greenheart.core.finances import AdjustedCapexOpexComp, ProFastComp
 from new_greenheart.core.pose_optimization import PoseOptimization
 from new_greenheart.core.inputs.validation import load_yaml, load_plant_yaml, load_tech_yaml, load_driver_yaml
+from new_greenheart.core.utilities import create_xdsm_from_config
+
+try:
+    import pyxdsm
+except ImportError:
+    pyxdsm = None
 
 
 class GreenHEARTModel(object):
@@ -206,6 +212,9 @@ class GreenHEARTModel(object):
             self.plant.connect('electrolyzer.total_hydrogen_produced', 'financials.total_hydrogen_produced')
         
         self.plant.options['auto_order'] = True
+
+        if pyxdsm is not None:
+            create_xdsm_from_config(self.plant_config)
 
     def create_driver_model(self):
         """
