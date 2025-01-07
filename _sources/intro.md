@@ -1,11 +1,11 @@
-# Welcome to your Jupyter Book
+# Welcome to new GreenHEART
 
-This is a small sample book to give you a feel for how book content is
-structured.
-It shows off a few of the major file types, as well as some sample content.
-It does not go in-depth into any particular topic - check out [the Jupyter Book documentation](https://jupyterbook.org) for more information.
+This collection of docs is focused on presenting the next iteration of GreenHEART, acknowledging where we are now and where we want to be in the future.
+Most of these docs are written in a way that we'll be able to reuse them immediately as proper docs in the actual GreenHEART repo.
+For now, to reduce development overhead and encourage rapid iteration, we'll continue to work in this sandbox repo.
 
-Check out the content pages bundled with this sample book to see more.
+Our goal with these doc pages is to communicate ideas that exist in our heads, put them to paper, and provide diagrams where helpful.
+These docs are a work in progress; please ask questions about any and all parts presented here.
 
 ```{tableofcontents}
 ```
