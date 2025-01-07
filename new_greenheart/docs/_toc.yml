@@ -8,3 +8,4 @@ chapters:
 - file: features_not_currently_implemented
 - file: class_structure
 - file: describing_whats_in_classes
+- file: development_guidelines

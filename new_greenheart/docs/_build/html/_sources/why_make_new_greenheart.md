@@ -57,3 +57,15 @@ The current setup of new GreenHEART largely works in the same way.
 
 The end-goal of new GreenHEART is to remove this call to HOPP as a monolith and instead break out the individual technologies so they are all exposed equally to GreenHEART.
 This would entail reworking the dispatch implementation so it is controlled by GreenHEART and not by HOPP, which is a non-trivial task.
+
+## Where should code I develop and implement live?
+
+Historically, GreenHEART has been a sort of hybrid itself, where it contains both the tool itself as well as project-specific code.
+Additionally, HOPP has been a separate tool that GreenHEART calls to obtain electricity production data and has been developed alongside GreenHEART.
+This has led to a somewhat disjoint codebase that is difficult to maintain and understand.
+
+To address this, here are guidelines for where code you develop should live:
+- If the code is specific to a project, it should live in the project's repository.
+- If the code is generalizable, could be used in multiple projects, or is a useful addition to the GreenHEART tool, it should live in the GreenHEART repository.
+- Wrappers to models that are used in GreenHEART should live in the GreenHEART repository.
+- The actual models (physics, costs, financials) should live **outside** the GreenHEART repository. Complex models might live in their own repo (e.g. BERT), whereas other models might live in the project's repository.
