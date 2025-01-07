@@ -500,6 +500,11 @@ title="Print to PDF"
    Financial model (optional)
   </a>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#control-model-optional-unused">
+   Control model (optional, unused)
+  </a>
+ </li>
 </ul>
 
             </nav>
@@ -532,6 +537,17 @@ These values are later used in financial modeled and cost breakdowns.</p>
 <p>Each technology class can define <code class="docutils literal notranslate"><span class="pre">get_financial_model()</span></code>, which returns an OpenMDAO system containing the financial model.
 This would override any plant level financial model, and is useful for technologies that have unique financial considerations.
 This will also be more relevant as we develop non-single-owner capabilities.</p>
+</section>
+<section id="control-model-optional-unused">
+<h2>Control model (optional, unused)<a class="headerlink" href="#control-model-optional-unused" title="Permalink to this heading">#</a></h2>
+<p>Each technology class can define <code class="docutils literal notranslate"><span class="pre">get_control_strategy()</span></code>.
+We do not currently use this method and instead use a top-level control strategy.
+In the future, individual technologies may have unique control strategies.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is possible to have a combined performance, cost, and financial model within a single OpenMDAO system, provided that it returns all the necessary values.
+For example, in the HOPP wrapper, we use a combined performance and cost model to reduce computational cost.</p>
+</div>
 </section>
 </section>
 
@@ -599,6 +615,11 @@ This will also be more relevant as we develop non-single-owner capabilities.</p>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#financial-model-optional">
    Financial model (optional)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#control-model-optional-unused">
+   Control model (optional, unused)
   </a>
  </li>
 </ul>

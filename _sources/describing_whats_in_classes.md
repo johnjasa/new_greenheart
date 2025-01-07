@@ -23,3 +23,14 @@ These values are later used in financial modeled and cost breakdowns.
 Each technology class can define `get_financial_model()`, which returns an OpenMDAO system containing the financial model.
 This would override any plant level financial model, and is useful for technologies that have unique financial considerations.
 This will also be more relevant as we develop non-single-owner capabilities.
+
+## Control model (optional, unused)
+
+Each technology class can define `get_control_strategy()`.
+We do not currently use this method and instead use a top-level control strategy.
+In the future, individual technologies may have unique control strategies.
+
+```{note}
+It is possible to have a combined performance, cost, and financial model within a single OpenMDAO system, provided that it returns all the necessary values.
+For example, in the HOPP wrapper, we use a combined performance and cost model to reduce computational cost.
+```
