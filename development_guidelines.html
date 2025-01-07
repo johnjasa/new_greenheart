@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Expected methods and attributes of classes &#8212; New GreenHEART docs</title>
+    <title>Development guidelines &#8212; New GreenHEART docs</title>
   
   
   
@@ -58,11 +58,10 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'describing_whats_in_classes';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'development_guidelines';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Development guidelines" href="development_guidelines.html" />
-    <link rel="prev" title="Class structure in new GreenHEART" href="class_structure.html" />
+    <link rel="prev" title="Expected methods and attributes of classes" href="describing_whats_in_classes.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="docsearch:language" content="en">
   </head>
@@ -157,15 +156,15 @@ const thebe_selector_output = ".output, .cell_output"
                     </li>
                 
 
-                    <li class="nav-item current active">
-                      <a class="nav-link nav-internal" href="#">
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="describing_whats_in_classes.html">
                         Expected methods and attributes of classes
                       </a>
                     </li>
                 
 
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="development_guidelines.html">
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="#">
                         Development guidelines
                       </a>
                     </li>
@@ -261,15 +260,15 @@ const thebe_selector_output = ".output, .cell_output"
                     </li>
                 
 
-                    <li class="nav-item current active">
-                      <a class="nav-link nav-internal" href="#">
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="describing_whats_in_classes.html">
                         Expected methods and attributes of classes
                       </a>
                     </li>
                 
 
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="development_guidelines.html">
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="#">
                         Development guidelines
                       </a>
                     </li>
@@ -346,8 +345,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="why_make_new_greenheart.html">Why make new GreenHEART?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="features_not_currently_implemented.html">Features not currently implemented</a></li>
 <li class="toctree-l1"><a class="reference internal" href="class_structure.html">Class structure in new GreenHEART</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Expected methods and attributes of classes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="development_guidelines.html">Development guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="describing_whats_in_classes.html">Expected methods and attributes of classes</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Development guidelines</a></li>
 </ul>
 
     </div>
@@ -423,7 +422,7 @@ title="Source repository"
 </a>
 </a>
       
-      <li><a href="https://github.com/johnjasa/new_greenheart//issues/new?title=Issue%20on%20page%20%2Fdescribing_whats_in_classes.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/johnjasa/new_greenheart//issues/new?title=Issue%20on%20page%20%2Fdevelopment_guidelines.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm dropdown-item"
    data-toggle="tooltip"
 data-placement="left"
@@ -448,7 +447,7 @@ title="Open an issue"
     <i class="fas fa-download"></i>
   </button>
   <ul class="dropdown-menu">
-      <li><a href="_sources/describing_whats_in_classes.md" target="_blank"
+      <li><a href="_sources/development_guidelines.md" target="_blank"
    class="btn btn-sm dropdown-item"
    data-toggle="tooltip"
 data-placement="left"
@@ -491,7 +490,7 @@ title="Print to PDF"
             
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Expected methods and attributes of classes</h1>
+    <h1>Development guidelines</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -502,23 +501,18 @@ title="Print to PDF"
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#performance-model">
-   Performance model
+  <a class="reference internal nav-link" href="#test-development">
+   Test development
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#cost-model">
-   Cost model
+  <a class="reference internal nav-link" href="#documentation-development">
+   Documentation development
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#financial-model-optional">
-   Financial model (optional)
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#control-model-optional-unused">
-   Control model (optional, unused)
+  <a class="reference internal nav-link" href="#misc-development-guidelines">
+   Misc. development guidelines
   </a>
  </li>
 </ul>
@@ -530,40 +524,24 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section class="tex2jax_ignore mathjax_ignore" id="expected-methods-and-attributes-of-classes">
-<h1>Expected methods and attributes of classes<a class="headerlink" href="#expected-methods-and-attributes-of-classes" title="Permalink to this heading">#</a></h1>
-<p>Within each technology class, GreenHEART expects certain methods to be defined by the developer.
-This doc page briefly discusses those methods and their impact within GreenHEART.</p>
-<section id="performance-model">
-<h2>Performance model<a class="headerlink" href="#performance-model" title="Permalink to this heading">#</a></h2>
-<p>Each technology class must define <code class="docutils literal notranslate"><span class="pre">get_performance_model()</span></code>, which returns an OpenMDAO system.
-This system contains the physics model for the technology.
-For a converter, this computes the outputted resources based on the inputted resources.
-The input and output resources for the performance model are all arrays with length 8760 for hourly timestepped yearly data.</p>
-<p>For example, for an electrolyzer, the performance model is an OpenMDAO system whose inputs include electricity and whose outputs include hydrogen produced.</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="development-guidelines">
+<h1>Development guidelines<a class="headerlink" href="#development-guidelines" title="Permalink to this heading">#</a></h1>
+<p>we’ve already had divergent codebases in the future due to fast-paced project needs and tight timelines
+to make this better, we’re trying to standardize the way we develop code for GreenHEART in a way that’s beneficial for developers, does not slow progress, and is sustainable for the future
+this document outlines the guidelines for developing code for GreenHEART</p>
+<section id="test-development">
+<h2>Test development<a class="headerlink" href="#test-development" title="Permalink to this heading">#</a></h2>
 </section>
-<section id="cost-model">
-<h2>Cost model<a class="headerlink" href="#cost-model" title="Permalink to this heading">#</a></h2>
-<p>Each technology class must also define <code class="docutils literal notranslate"><span class="pre">get_cost_model()</span></code>, which returns an OpenMDAO system containing the cost model.
-Specifically, this system must output <code class="docutils literal notranslate"><span class="pre">CapEx</span></code> and <code class="docutils literal notranslate"><span class="pre">OpEx</span></code> values for the technology.
-These values are later used in financial modeled and cost breakdowns.</p>
+<section id="documentation-development">
+<h2>Documentation development<a class="headerlink" href="#documentation-development" title="Permalink to this heading">#</a></h2>
 </section>
-<section id="financial-model-optional">
-<h2>Financial model (optional)<a class="headerlink" href="#financial-model-optional" title="Permalink to this heading">#</a></h2>
-<p>Each technology class can define <code class="docutils literal notranslate"><span class="pre">get_financial_model()</span></code>, which returns an OpenMDAO system containing the financial model.
-This would override any plant level financial model, and is useful for technologies that have unique financial considerations.
-This will also be more relevant as we develop non-single-owner capabilities.</p>
-</section>
-<section id="control-model-optional-unused">
-<h2>Control model (optional, unused)<a class="headerlink" href="#control-model-optional-unused" title="Permalink to this heading">#</a></h2>
-<p>Each technology class can define <code class="docutils literal notranslate"><span class="pre">get_control_strategy()</span></code>.
-We do not currently use this method and instead use a top-level control strategy.
-In the future, individual technologies may have unique control strategies.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>It is possible to have a combined performance, cost, and financial model within a single OpenMDAO system, provided that it returns all the necessary values.
-For example, in the HOPP wrapper, we use a combined performance and cost model to reduce computational cost.</p>
-</div>
+<section id="misc-development-guidelines">
+<h2>Misc. development guidelines<a class="headerlink" href="#misc-development-guidelines" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>use numpydoc style for docstrings</p></li>
+<li><p>use numpy instead of lists for arrays</p></li>
+<li><p>use type hints for function arguments and return values</p></li>
+</ul>
 </section>
 </section>
 
@@ -595,19 +573,12 @@ For example, in the HOPP wrapper, we use a combined performance and cost model t
             <footer class="bd-footer-article">
                 <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-  <a class='left-prev' id="prev-link" href="class_structure.html" title="previous page">
+  <a class='left-prev' id="prev-link" href="describing_whats_in_classes.html" title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
           <p class="prev-next-subtitle">previous</p>
-          <p class="prev-next-title">Class structure in new GreenHEART</p>
+          <p class="prev-next-title">Expected methods and attributes of classes</p>
       </div>
-  </a>
-  <a class='right-next' id="next-link" href="development_guidelines.html" title="next page">
-  <div class="prev-next-info">
-      <p class="prev-next-subtitle">next</p>
-      <p class="prev-next-title">Development guidelines</p>
-  </div>
-  <i class="fa-solid fa-angle-right"></i>
   </a>
 </div>
             </footer>
@@ -626,23 +597,18 @@ For example, in the HOPP wrapper, we use a combined performance and cost model t
 <nav id="bd-toc-nav" class="page-toc">
     <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#performance-model">
-   Performance model
+  <a class="reference internal nav-link" href="#test-development">
+   Test development
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#cost-model">
-   Cost model
+  <a class="reference internal nav-link" href="#documentation-development">
+   Documentation development
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#financial-model-optional">
-   Financial model (optional)
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#control-model-optional-unused">
-   Control model (optional, unused)
+  <a class="reference internal nav-link" href="#misc-development-guidelines">
+   Misc. development guidelines
   </a>
  </li>
 </ul>

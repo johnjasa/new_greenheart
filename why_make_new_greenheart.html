@@ -163,6 +163,13 @@ const thebe_selector_output = ".output, .cell_output"
                       </a>
                     </li>
                 
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="development_guidelines.html">
+                        Development guidelines
+                      </a>
+                    </li>
+                
     </ul>
 </nav>
       </div>
@@ -260,6 +267,13 @@ const thebe_selector_output = ".output, .cell_output"
                       </a>
                     </li>
                 
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="development_guidelines.html">
+                        Development guidelines
+                      </a>
+                    </li>
+                
     </ul>
 </nav>
       </div>
@@ -333,6 +347,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="features_not_currently_implemented.html">Features not currently implemented</a></li>
 <li class="toctree-l1"><a class="reference internal" href="class_structure.html">Class structure in new GreenHEART</a></li>
 <li class="toctree-l1"><a class="reference internal" href="describing_whats_in_classes.html">Expected methods and attributes of classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development_guidelines.html">Development guidelines</a></li>
 </ul>
 
     </div>
@@ -501,6 +516,11 @@ title="Print to PDF"
    Where does HOPP come into play?
   </a>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#where-should-code-i-develop-and-implement-live">
+   Where should code I develop and implement live?
+  </a>
+ </li>
 </ul>
 
             </nav>
@@ -563,6 +583,19 @@ GreenHEART historically calls HOPP to obtain the plant’s outputted electricity
 The current setup of new GreenHEART largely works in the same way.</p>
 <p>The end-goal of new GreenHEART is to remove this call to HOPP as a monolith and instead break out the individual technologies so they are all exposed equally to GreenHEART.
 This would entail reworking the dispatch implementation so it is controlled by GreenHEART and not by HOPP, which is a non-trivial task.</p>
+</section>
+<section id="where-should-code-i-develop-and-implement-live">
+<h2>Where should code I develop and implement live?<a class="headerlink" href="#where-should-code-i-develop-and-implement-live" title="Permalink to this heading">#</a></h2>
+<p>Historically, GreenHEART has been a sort of hybrid itself, where it contains both the tool itself as well as project-specific code.
+Additionally, HOPP has been a separate tool that GreenHEART calls to obtain electricity production data and has been developed alongside GreenHEART.
+This has led to a somewhat disjoint codebase that is difficult to maintain and understand.</p>
+<p>To address this, here are guidelines for where code you develop should live:</p>
+<ul class="simple">
+<li><p>If the code is specific to a project, it should live in the project’s repository.</p></li>
+<li><p>If the code is generalizable, could be used in multiple projects, or is a useful addition to the GreenHEART tool, it should live in the GreenHEART repository.</p></li>
+<li><p>Wrappers to models that are used in GreenHEART should live in the GreenHEART repository.</p></li>
+<li><p>The actual models (physics, costs, financials) should live <strong>outside</strong> the GreenHEART repository. Complex models might live in their own repo (e.g. BERT), whereas other models might live in the project’s repository.</p></li>
+</ul>
 </section>
 </section>
 
@@ -637,6 +670,11 @@ This would entail reworking the dispatch implementation so it is controlled by G
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#where-does-hopp-come-into-play">
    Where does HOPP come into play?
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#where-should-code-i-develop-and-implement-live">
+   Where should code I develop and implement live?
   </a>
  </li>
 </ul>
