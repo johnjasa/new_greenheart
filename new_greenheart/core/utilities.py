@@ -2,20 +2,33 @@ import json
 from pyxdsm.XDSM import XDSM, FUNC
 from collections import OrderedDict
 
-# Function to create an XDSM diagram based on the given configuration
+
 def create_xdsm_from_config(config, output_file='connections_xdsm.pdf'):
+    """
+    Create an XDSM diagram from a given plant configuration and save it to a pdf file.
+
+    Parameters
+    ----------
+    config : dict
+        Configuration dictionary containing technology interconnections.
+    output_file : str, optional
+        The name of the output file where the XDSM diagram will be saved.
+    """
     # Create an XDSM object
     x = XDSM(use_sfmath=True)
 
     # Use an OrderedDict to keep the order of technologies
     technologies = OrderedDict()
+    if "technology_interconnections" not in config:
+        return
+
     for conn in config["technology_interconnections"]:
         technologies[conn[0]] = None  # Source
         technologies[conn[1]] = None  # Destination
 
     # Add systems to the XDSM
     for tech in technologies.keys():
-        x.add_system(tech, FUNC, tech)
+        x.add_system(tech, FUNC, rf"\text{{{tech}}}")
 
     # Add connections
     for conn in config["technology_interconnections"]:
@@ -32,13 +45,3 @@ def create_xdsm_from_config(config, output_file='connections_xdsm.pdf'):
     # Write the diagram to a file
     x.write(output_file)
     print(f"XDSM diagram written to {output_file}.tex")
-
-# Example usage
-if __name__ == "__main__":
-    config_path = "config.json"  # Path to the input JSON config file
-    output_path = "xdsm_diagram"  # Output XDSM file prefix (without extension)
-
-    with open(config_path, 'r') as f:
-        config = json.load(f)
-
-    create_xdsm_from_config(config, output_path)

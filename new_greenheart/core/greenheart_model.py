@@ -147,6 +147,9 @@ class GreenHEARTModel(object):
                 tech_group.add_subsystem(f'{tech_name}_financial', financial_model, promotes=['*'])
 
     def create_financial_model(self):
+        if 'finance_parameters' not in self.plant_config:
+            return
+
         # Create a financial model group
         financial_model = om.Group()
 
@@ -199,17 +202,16 @@ class GreenHEARTModel(object):
                 err_msg = f'Invalid connection: {connection}'
                 raise ValueError(err_msg)
 
-
         # TODO: connect outputs of the technology models to the cost and financial models of the same name if the cost and financial models are not None
+        if 'finance_parameters' in self.plant_config:
+            # Connect the outputs of the technology models to the larger financial model
+            # loop through all the technologies and connect their capex outputs to the financials model as `capex_{tech}`
+            for tech_name in self.tech_names:
+                self.plant.connect(f'{tech_name}.CapEx', f'financials.capex_{tech_name}')
+                self.plant.connect(f'{tech_name}.OpEx', f'financials.opex_{tech_name}')
 
-        # Connect the outputs of the technology models to the larger financial model
-        # loop through all the technologies and connect their capex outputs to the financials model as `capex_{tech}`
-        for tech_name in self.tech_names:
-            self.plant.connect(f'{tech_name}.CapEx', f'financials.capex_{tech_name}')
-            self.plant.connect(f'{tech_name}.OpEx', f'financials.opex_{tech_name}')
-
-        if 'electrolyzer' in self.tech_names:
-            self.plant.connect('electrolyzer.total_hydrogen_produced', 'financials.total_hydrogen_produced')
+            if 'electrolyzer' in self.tech_names:
+                self.plant.connect('electrolyzer.total_hydrogen_produced', 'financials.total_hydrogen_produced')
         
         self.plant.options['auto_order'] = True
 
