@@ -3,7 +3,7 @@ from pyxdsm.XDSM import XDSM, FUNC
 from collections import OrderedDict
 
 
-def create_xdsm_from_config(config, output_file='connections_xdsm.pdf'):
+def create_xdsm_from_config(config, output_file='connections_xdsm'):
     """
     Create an XDSM diagram from a given plant configuration and save it to a pdf file.
 

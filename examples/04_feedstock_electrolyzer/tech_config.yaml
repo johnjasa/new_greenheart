@@ -1,0 +1,31 @@
+name: "technology_config"
+description: "This plant has a wind turbine, just one"
+
+technologies:
+  feedstocks:
+    electricity:
+      rated_capacity: 50000.
+      capacity_units: "kW"
+      price: 0.09
+      price_units: "kWh"
+  electrolyzer:
+    performance_model:
+      model: "pem_electrolyzer"
+    cost_model:
+      model: "pem_electrolyzer"
+    details:
+      cluster_size_mw: 100.0
+      electrolyzer_cost: 2000.
+      plant_life: 30
+      model_parameters:
+        eol_eff_percent_loss: 10
+        uptime_hours_until_eol: 77600
+        include_degradation_penalty: True
+        turndown_ratio: 0.1
+  tank:
+    performance_model:
+      model: "hydrogen_tank"
+    cost_model:
+      model: "hydrogen_tank"
+    details:
+      total_capacity: 10.e3

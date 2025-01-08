@@ -7,6 +7,7 @@ from new_greenheart.core.finances import AdjustedCapexOpexComp, ProFastComp
 from new_greenheart.core.pose_optimization import PoseOptimization
 from new_greenheart.core.inputs.validation import load_yaml, load_plant_yaml, load_tech_yaml, load_driver_yaml
 from new_greenheart.core.utilities import create_xdsm_from_config
+from new_greenheart.core.feedstocks import FeedstockComponent
 
 try:
     import pyxdsm
@@ -123,28 +124,32 @@ class GreenHEARTModel(object):
         self.financial_models = []
 
         # Create a technology group for each technology
-        for tech_name, tech_config in self.technology_config['technologies'].items():
-            tech_group = self.plant.add_subsystem(tech_name, om.Group())
+        for tech_name, individual_tech_config in self.technology_config['technologies'].items():
+            if 'feedstocks' in tech_name:
+                feedstock_component = FeedstockComponent(feedstocks_config=individual_tech_config)
+                self.plant.add_subsystem(tech_name, feedstock_component)                
+            else:
+                tech_group = self.plant.add_subsystem(tech_name, om.Group())
 
-            tech_class = supported_models[tech_config['performance_model']['model']]
+                tech_class = supported_models[individual_tech_config['performance_model']['model']]
 
-            tech_object = tech_class(self.plant_config, tech_config)
+                tech_object = tech_class(self.plant_config, individual_tech_config)
 
-            self.technology_objects.append(tech_object)
-            self.tech_names.append(tech_name)
-            tech_group.add_subsystem(tech_name, tech_object.get_performance_model(), promotes=['*'])
+                self.technology_objects.append(tech_object)
+                self.tech_names.append(tech_name)
+                tech_group.add_subsystem(tech_name, tech_object.get_performance_model(), promotes=['*'])
 
-            # Add cost model
-            cost_model = tech_object.get_cost_model()
-            self.cost_models.append(cost_model)
-            if cost_model is not None:
-                tech_group.add_subsystem(f'{tech_name}_cost', cost_model, promotes=['*'])
+                # Add cost model
+                cost_model = tech_object.get_cost_model()
+                self.cost_models.append(cost_model)
+                if cost_model is not None:
+                    tech_group.add_subsystem(f'{tech_name}_cost', cost_model, promotes=['*'])
 
-            # Add financial model
-            financial_model = tech_object.get_financial_model()
-            self.financial_models.append(financial_model)
-            if financial_model is not None:
-                tech_group.add_subsystem(f'{tech_name}_financial', financial_model, promotes=['*'])
+                # Add financial model
+                financial_model = tech_object.get_financial_model()
+                self.financial_models.append(financial_model)
+                if financial_model is not None:
+                    tech_group.add_subsystem(f'{tech_name}_financial', financial_model, promotes=['*'])
 
     def create_financial_model(self):
         if 'finance_parameters' not in self.plant_config:
@@ -248,6 +253,6 @@ class GreenHEARTModel(object):
         self.prob.model.list_outputs(units=True)
 
         # loop through technologies and post process outputs
-        for idx_tech, (tech_name, tech_config) in enumerate(self.technology_config['technologies'].items()):
-            self.technology_objects[idx_tech].post_process()
+        for tech_object in self.technology_objects:
+            tech_object.post_process()
 
