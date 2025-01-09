@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Development guidelines &#8212; New GreenHEART docs</title>
+    <title>Miscellaneous Thoughts &#8212; New GreenHEART docs</title>
   
   
   
@@ -58,11 +58,10 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'development_guidelines';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'misc_thoughts';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Miscellaneous Thoughts" href="misc_thoughts.html" />
-    <link rel="prev" title="Expected methods and attributes of classes" href="describing_whats_in_classes.html" />
+    <link rel="prev" title="Development guidelines" href="development_guidelines.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="docsearch:language" content="en">
   </head>
@@ -164,8 +163,8 @@ const thebe_selector_output = ".output, .cell_output"
                     </li>
                 
 
-                    <li class="nav-item current active">
-                      <a class="nav-link nav-internal" href="#">
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="development_guidelines.html">
                         Development guidelines
                       </a>
                     </li>
@@ -176,8 +175,8 @@ const thebe_selector_output = ".output, .cell_output"
                 </button>
                 <div class="dropdown-menu">
                     
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="misc_thoughts.html">
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="#">
                         Miscellaneous Thoughts
                       </a>
                     </li>
@@ -283,8 +282,8 @@ const thebe_selector_output = ".output, .cell_output"
                     </li>
                 
 
-                    <li class="nav-item current active">
-                      <a class="nav-link nav-internal" href="#">
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="development_guidelines.html">
                         Development guidelines
                       </a>
                     </li>
@@ -295,8 +294,8 @@ const thebe_selector_output = ".output, .cell_output"
                 </button>
                 <div class="dropdown-menu">
                     
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="misc_thoughts.html">
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="#">
                         Miscellaneous Thoughts
                       </a>
                     </li>
@@ -377,8 +376,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="features_not_currently_implemented.html">Features not currently implemented</a></li>
 <li class="toctree-l1"><a class="reference internal" href="class_structure.html">Class structure in new GreenHEART</a></li>
 <li class="toctree-l1"><a class="reference internal" href="describing_whats_in_classes.html">Expected methods and attributes of classes</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Development guidelines</a></li>
-<li class="toctree-l1"><a class="reference internal" href="misc_thoughts.html">Miscellaneous Thoughts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development_guidelines.html">Development guidelines</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Miscellaneous Thoughts</a></li>
 </ul>
 
     </div>
@@ -454,7 +453,7 @@ title="Source repository"
 </a>
 </a>
       
-      <li><a href="https://github.com/johnjasa/new_greenheart//issues/new?title=Issue%20on%20page%20%2Fdevelopment_guidelines.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/johnjasa/new_greenheart//issues/new?title=Issue%20on%20page%20%2Fmisc_thoughts.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm dropdown-item"
    data-toggle="tooltip"
 data-placement="left"
@@ -479,7 +478,7 @@ title="Open an issue"
     <i class="fas fa-download"></i>
   </button>
   <ul class="dropdown-menu">
-      <li><a href="_sources/development_guidelines.md" target="_blank"
+      <li><a href="_sources/misc_thoughts.md" target="_blank"
    class="btn btn-sm dropdown-item"
    data-toggle="tooltip"
 data-placement="left"
@@ -522,7 +521,7 @@ title="Print to PDF"
             
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Development guidelines</h1>
+    <h1>Miscellaneous Thoughts</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -533,18 +532,8 @@ title="Print to PDF"
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#test-development">
-   Test development
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#documentation-development">
-   Documentation development
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#misc-development-guidelines">
-   Misc. development guidelines
+  <a class="reference internal nav-link" href="#action-items">
+   Action items:
   </a>
  </li>
 </ul>
@@ -556,28 +545,93 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section class="tex2jax_ignore mathjax_ignore" id="development-guidelines">
-<h1>Development guidelines<a class="headerlink" href="#development-guidelines" title="Permalink to this heading">#</a></h1>
-<p>W.e’ve already had divergent codebases in the future due to fast-paced project needs and tight timelines.
-To make this better, we’re trying to standardize the way we develop code for GreenHEART in a way that’s beneficial for developers, does not slow progress, and is sustainable for the future.
-This document outlines the guidelines for developing code for GreenHEART</p>
-<section id="test-development">
-<h2>Test development<a class="headerlink" href="#test-development" title="Permalink to this heading">#</a></h2>
-<p>Each new feature or bug fix should have a corresponding test.
-Additionally, to help users create subsystems with the correct methods and attributes, we should have tests that users can run to check their subsystem models.</p>
-</section>
-<section id="documentation-development">
-<h2>Documentation development<a class="headerlink" href="#documentation-development" title="Permalink to this heading">#</a></h2>
-<p>The key to making GreenHEART more user-friendly is to have clear and concise documentation.
-This includes docstrings for functions and classes, as well as high-level documentation for the tool itself.
-We should also have a clear way to document the expected methods and attributes of classes so that users can develop their own models.</p>
-</section>
-<section id="misc-development-guidelines">
-<h2>Misc. development guidelines<a class="headerlink" href="#misc-development-guidelines" title="Permalink to this heading">#</a></h2>
+  <section class="tex2jax_ignore mathjax_ignore" id="miscellaneous-thoughts">
+<h1>Miscellaneous Thoughts<a class="headerlink" href="#miscellaneous-thoughts" title="Permalink to this heading">#</a></h1>
+<p>This is a non-exhaustive collection of items that have come up in discussions about GreenHEART.
+It’s meant to be a place to jot down ideas and thoughts that don’t fit neatly into the other documents.
+Most of these will become issues in the repo once they’re fleshed out a bit more.</p>
 <ul class="simple">
-<li><p>use numpydoc style for docstrings</p></li>
-<li><p>use numpy instead of lists for arrays</p></li>
-<li><p>use type hints for function arguments and return values</p></li>
+<li><p><strong>Resource and LCA handling</strong></p>
+<ul>
+<li><p>Clearly define and differentiate between natural resources and feedstocks in the model.</p>
+<ul>
+<li><p>If it’s being used to produce power it should be a natural resource</p></li>
+<li><p>If it’s being used to produce something else, it’s a feedstock</p></li>
+</ul>
+</li>
+<li><p>Implement a structure to handle feedstocks at the site level, considering potential duplications for LCA purposes.</p></li>
+</ul>
+</li>
+<li><p><strong>Grid Connectivity</strong></p>
+<ul>
+<li><p>Add a clear indicator at the configuration level to specify whether a site is grid-connected, hybrid, or off-grid.</p></li>
+<li><p>Move forward with LCA as a postprocessing step to reduce computational costs while ensuring interpolation for Cambium data on a per-year basis.</p></li>
+<li><p>Investigate scenarios where optimizing for LCA directly might be necessary.</p></li>
+<li><p>Incorporate Dakota’s suggestion to ensure LCA postprocessing handles grid-connected assumptions for technologies like steel and ammonia; might be needed later.</p></li>
+</ul>
+</li>
+<li><p><strong>Technology and Resource Flow Diagram</strong></p>
+<ul>
+<li><p>Develop an example high-level flow diagram to illustrate relationships between technologies, feedstocks, and resources, once we have the definitions more fleshed out.</p></li>
+</ul>
+</li>
+<li><p><strong>Class structure within GreenHEART</strong></p>
+<ul>
+<li><p>We should have nested inheritance for technologies that will share methods; e.g. <code class="docutils literal notranslate"><span class="pre">ConverterBaseClass</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">ElectrolyzerBaseClass</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">BERTElectrolyzerWrapper</span></code></p></li>
+</ul>
+</li>
+<li><p><strong>Default config handling</strong></p>
+<ul>
+<li><p>We should have no default values; everything should be user-provided says Chris</p></li>
+</ul>
+</li>
+<li><p><strong>Future technology adds</strong></p>
+<ul>
+<li><p>Marine carbon capture, it’s currently implemented like ammonia and steel</p></li>
+</ul>
+</li>
+<li><p><strong>Steel handling</strong></p>
+<ul>
+<li><p>Currently the hydrogen and electricity inputs are considered feedstocks</p></li>
+<li><p>We need some way for LCOH to be passed from the electrolyzer</p></li>
+<li><p><a class="reference external" href="https://github.com/kbrunik/HOPP/tree/steel-model/greenheart/simulation/technologies/steel">Here’s the EAF to DRI split out model</a></p></li>
+</ul>
+</li>
+<li><p><strong>Electrolyzers</strong></p>
+<ul>
+<li><p>BERT should be the one-stop-shop for most electrolyzer models</p></li>
+<li><p>We want to have a standalone BERT config that can be passed wholesale through GreenHEART</p></li>
+</ul>
+</li>
+<li><p><strong>Financials</strong></p>
+<ul>
+<li><p>Very unclear how we’ll getting the timing of the financial calculations correct; there are some places in the current GreenHEART we we have a partial financial stackup, e.g. computing LCOH of a plant before passing it to a steel processing module</p></li>
+</ul>
+</li>
+</ul>
+<section id="action-items">
+<h2>Action items:<a class="headerlink" href="#action-items" title="Permalink to this heading">#</a></h2>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> make converters have an intermediary class (Electrolyzer example)</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> make a figure showing how this inheritance works</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> make docs online for new GreenHEART</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> make the ammonia model take in a flat hydrogen array and convert it to be time-based</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> change the ammonia model so it’s based on the amount of hydrogen produced (summed)</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> I suggest me drawing up a block diagram for these, show inputs/outputs</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> financials are unclear; give this more thought about how they’re connected</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> make figures for each of the examples showing the technologies and connections; could use XDSM for this, automate the process somewhat</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> add a logger note or warning that the ammonia’s assumed to be produced in a flat way</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> make an example of a class that has a method that returns cluster size, hub height, do this with an attr not the actual method now that I’m typing this</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> figure out how to make get_inputs and get_outputs in a good way</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> make the OM model use the get_inputs and get_outputs methods</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> figure out how to best handle the saved off data and reruns; OM pickle, something else, a flag on the compute method that just loads in the results?</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> start a yaml library</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> investigate Kaitlin’s intern steel model</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> add a notion of a splitter; wind producing electricity to be split out for use in example 7</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> differentiate between “inputs” and “outputs” in OpenMDAO parlance and what it means for the model; inputs or outputs to the tank, for example, might not be a literal input or output in the code sense</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> write a guide for how to make a technology wrapper in the current GreenHEART setup</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> figure out how to have inputs and outputs defined in a clear way, including required inputs and outputs for a given technology type</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> how to handle when a technology has an input and an output of the same energy type; like a tank storing hydrogen that has some coming in and some going out; can’t have the same OM variable name so should we just append _in or _out?</p></li>
 </ul>
 </section>
 </section>
@@ -610,19 +664,12 @@ We should also have a clear way to document the expected methods and attributes 
             <footer class="bd-footer-article">
                 <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-  <a class='left-prev' id="prev-link" href="describing_whats_in_classes.html" title="previous page">
+  <a class='left-prev' id="prev-link" href="development_guidelines.html" title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
           <p class="prev-next-subtitle">previous</p>
-          <p class="prev-next-title">Expected methods and attributes of classes</p>
+          <p class="prev-next-title">Development guidelines</p>
       </div>
-  </a>
-  <a class='right-next' id="next-link" href="misc_thoughts.html" title="next page">
-  <div class="prev-next-info">
-      <p class="prev-next-subtitle">next</p>
-      <p class="prev-next-title">Miscellaneous Thoughts</p>
-  </div>
-  <i class="fa-solid fa-angle-right"></i>
   </a>
 </div>
             </footer>
@@ -641,18 +688,8 @@ We should also have a clear way to document the expected methods and attributes 
 <nav id="bd-toc-nav" class="page-toc">
     <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#test-development">
-   Test development
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#documentation-development">
-   Documentation development
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#misc-development-guidelines">
-   Misc. development guidelines
+  <a class="reference internal nav-link" href="#action-items">
+   Action items:
   </a>
  </li>
 </ul>
