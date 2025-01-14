@@ -37,10 +37,10 @@ The electricity is coupled between the technologies through the framework's conn
 We're now running an actual wind plant and grabbing meaningful electricity outputs and those electricity values are being passed to a mock electrolyzer.
 This example helped work out how to pass in config data to a technology.
 
-### 04_wind_plant_real_electrolyzer
+### 04_feedstock_electrolyzer
 
-Now the electrolyzer is the actual PEM model that exists in ODIES.
-This provided another example of how to wrap a technology.
+This example is similar to the prior one, but we're now using a "feedstock" that's producing electricity instead of having a wind plant.
+This is a stepping stone to having a more complex feedstock technologies that can serve as drop-in replacements for other technologies.
 
 ### 05_wind_h2_opt
 
@@ -51,3 +51,12 @@ It's a simple optimization problem, but this shows how we can add a driver to th
 
 This example introduces HOPP as a single block in the ODIES paradigm.
 This isn't where we want to be in the end of this ODIES reformulation, but it is an important stepping stone as it allows us to focus on the rest of the framework and non-HOPP technologies while treating HOPP as a monolith.
+
+### 07_wind_ammonia
+
+This example is a simple ammonia plant that's being fed by a wind plant.
+
+### 08_onshore_steel_mn
+
+This example is a simple steel plant that's being fed by a hybrid plant and electrolyzer.
+This is akin to the 01 reference design in the GreenHEART repo.
