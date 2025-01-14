@@ -1,6 +1,6 @@
-# New GreenHEART planning
+# ODIES planning
 
-## Docs for new GreenHEART
+## Docs for ODIES
 
 https://johnjasa.github.io/new_greenheart/intro.html
 
@@ -15,9 +15,9 @@ pip install -e .
 
 at the top level of this repo.
 Then you can try running any one of the to ensure your installation was successful.
-Currently, all necessary packages for this repo are already dependencies of either HOPP or GreenHEART.
+Currently, all necessary packages for this repo are already dependencies of either HOPP or ODIES.
 
-If you don't want to modify your existing environments, you can create a new conda environment, install the development versions of HOPP and GreenHEART, then install this package.
+If you don't want to modify your existing environments, you can create a new conda environment, install the development versions of HOPP and ODIES, then install this package.
 
 ## Examples currently included
 
@@ -39,7 +39,7 @@ This example helped work out how to pass in config data to a technology.
 
 ### 04_wind_plant_real_electrolyzer
 
-Now the electrolyzer is the actual PEM model that exists in GreenHEART.
+Now the electrolyzer is the actual PEM model that exists in ODIES.
 This provided another example of how to wrap a technology.
 
 ### 05_wind_h2_opt
@@ -49,5 +49,5 @@ It's a simple optimization problem, but this shows how we can add a driver to th
 
 ### 06_hopp_h2
 
-This example introduces HOPP as a single block in the new GreenHEART paradigm.
-This isn't where we want to be in the end of this GreenHEART reformulation, but it is an important stepping stone as it allows us to focus on the rest of the framework and non-HOPP technologies while treating HOPP as a monolith.
+This example introduces HOPP as a single block in the ODIES paradigm.
+This isn't where we want to be in the end of this ODIES reformulation, but it is an important stepping stone as it allows us to focus on the rest of the framework and non-HOPP technologies while treating HOPP as a monolith.
