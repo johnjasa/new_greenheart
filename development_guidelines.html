@@ -536,6 +536,18 @@ title="Print to PDF"
   <a class="reference internal nav-link" href="#test-development">
    Test development
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#test-location">
+     Test location
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#regression-testing">
+     Regression testing
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#documentation-development">
@@ -558,13 +570,33 @@ title="Print to PDF"
               
   <section class="tex2jax_ignore mathjax_ignore" id="development-guidelines">
 <h1>Development guidelines<a class="headerlink" href="#development-guidelines" title="Permalink to this heading">#</a></h1>
-<p>W.e’ve already had divergent codebases in the future due to fast-paced project needs and tight timelines.
+<p>We’ve already had divergent codebases in the future due to fast-paced project needs and tight timelines.
 To make this better, we’re trying to standardize the way we develop code for GreenHEART in a way that’s beneficial for developers, does not slow progress, and is sustainable for the future.
 This document outlines the guidelines for developing code for GreenHEART</p>
 <section id="test-development">
 <h2>Test development<a class="headerlink" href="#test-development" title="Permalink to this heading">#</a></h2>
 <p>Each new feature or bug fix should have a corresponding test.
-Additionally, to help users create subsystems with the correct methods and attributes, we should have tests that users can run to check their subsystem models.</p>
+Additionally, to help users create subsystems with the correct methods and attributes, we should have tests that users can run to check their technology models.</p>
+<p>First, we will define different types of tests that we have in ODIES:</p>
+<ul class="simple">
+<li><p>Unit tests: tests for individual functions or methods</p></li>
+<li><p>Integration tests: tests for the interaction between different functions or methods</p></li>
+<li><p>Regression tests: tests for ensuring that new changes do not break existing functionality</p></li>
+</ul>
+<section id="test-location">
+<h3>Test location<a class="headerlink" href="#test-location" title="Permalink to this heading">#</a></h3>
+<p>Each folder within the <code class="docutils literal notranslate"><span class="pre">greenheart</span></code> package should have a corresponding <code class="docutils literal notranslate"><span class="pre">tests</span></code> folder.
+For example, the <code class="docutils literal notranslate"><span class="pre">greenheart/converters/hydrogen</span></code> folder should have a <code class="docutils literal notranslate"><span class="pre">greenheart/converters/hydrogen/tests</span></code> folder that contains tests for the functions and classes in the <code class="docutils literal notranslate"><span class="pre">hydrogen</span></code> folder.
+This makes it easier to track the corresponding tests for each file.
+This organization also allows you to easily run <code class="docutils literal notranslate"><span class="pre">pytest</span></code> on a specific folder as you’re modifying files in that folder.</p>
+</section>
+<section id="regression-testing">
+<h3>Regression testing<a class="headerlink" href="#regression-testing" title="Permalink to this heading">#</a></h3>
+<p>Optimally, the values used in regression tests should be change unless you’ve made modifications to the code that would change the expected output and you’re aware of the implications of that change.
+This is to ensure that the tests are consistent and that changes in the code are intentional.
+If a regression test fails when you modify the code and you did not expect it to, you should investigate why the test failed and update the test only if necessary.
+This should be explicitly mentioned in the PR process so others are aware of the change.</p>
+</section>
 </section>
 <section id="documentation-development">
 <h2>Documentation development<a class="headerlink" href="#documentation-development" title="Permalink to this heading">#</a></h2>
@@ -575,7 +607,7 @@ We should also have a clear way to document the expected methods and attributes 
 <section id="misc-development-guidelines">
 <h2>Misc. development guidelines<a class="headerlink" href="#misc-development-guidelines" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
-<li><p>use numpydoc style for docstrings</p></li>
+<li><p>use Google style for docstrings</p></li>
 <li><p>use numpy instead of lists for arrays</p></li>
 <li><p>use type hints for function arguments and return values</p></li>
 </ul>
@@ -644,6 +676,18 @@ We should also have a clear way to document the expected methods and attributes 
   <a class="reference internal nav-link" href="#test-development">
    Test development
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#test-location">
+     Test location
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#regression-testing">
+     Regression testing
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#documentation-development">
