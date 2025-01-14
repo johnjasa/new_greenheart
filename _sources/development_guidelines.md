@@ -1,8 +1,8 @@
 # Development guidelines
 
 We've already had divergent codebases in the future due to fast-paced project needs and tight timelines.
-To make this better, we're trying to standardize the way we develop code for GreenHEART in a way that's beneficial for developers, does not slow progress, and is sustainable for the future.
-This document outlines the guidelines for developing code for GreenHEART
+To make this better, we're trying to standardize the way we develop code for ODIES in a way that's beneficial for developers, does not slow progress, and is sustainable for the future.
+This document outlines the guidelines for developing code for ODIES
 
 ## Test development
 
@@ -16,8 +16,8 @@ First, we will define different types of tests that we have in ODIES:
 
 ### Test location
 
-Each folder within the `greenheart` package should have a corresponding `tests` folder.
-For example, the `greenheart/converters/hydrogen` folder should have a `greenheart/converters/hydrogen/tests` folder that contains tests for the functions and classes in the `hydrogen` folder.
+Each folder within the `ODIES` package should have a corresponding `tests` folder.
+For example, the `ODIES/converters/hydrogen` folder should have a `ODIES/converters/hydrogen/tests` folder that contains tests for the functions and classes in the `hydrogen` folder.
 This makes it easier to track the corresponding tests for each file.
 This organization also allows you to easily run `pytest` on a specific folder as you're modifying files in that folder.
 
@@ -30,7 +30,7 @@ This should be explicitly mentioned in the PR process so others are aware of the
 
 ## Documentation development
 
-The key to making GreenHEART more user-friendly is to have clear and concise documentation.
+The key to making ODIES more user-friendly is to have clear and concise documentation.
 This includes docstrings for functions and classes, as well as high-level documentation for the tool itself.
 We should also have a clear way to document the expected methods and attributes of classes so that users can develop their own models.
 

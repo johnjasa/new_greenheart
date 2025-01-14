@@ -1,6 +1,6 @@
 # Miscellaneous Thoughts
 
-This is a non-exhaustive collection of items that have come up in discussions about GreenHEART.
+This is a non-exhaustive collection of items that have come up in discussions about ODIES.
 It's meant to be a place to jot down ideas and thoughts that don't fit neatly into the other documents.
 Most of these will become issues in the repo once they're fleshed out a bit more.
 
@@ -16,7 +16,7 @@ Most of these will become issues in the repo once they're fleshed out a bit more
     - Incorporate Dakota's suggestion to ensure LCA postprocessing handles grid-connected assumptions for technologies like steel and ammonia; might be needed later.
 - **Technology and Resource Flow Diagram**
     - Develop an example high-level flow diagram to illustrate relationships between technologies, feedstocks, and resources, once we have the definitions more fleshed out.
-- **Class structure within GreenHEART**
+- **Class structure within ODIES**
 	- We should have nested inheritance for technologies that will share methods; e.g. `ConverterBaseClass` -> `ElectrolyzerBaseClass` -> `BERTElectrolyzerWrapper`
 - **Default config handling**
 	- We should have no default values; everything should be user-provided says Chris
@@ -25,17 +25,17 @@ Most of these will become issues in the repo once they're fleshed out a bit more
 - **Steel handling**
 	- Currently the hydrogen and electricity inputs are considered feedstocks
 	- We need some way for LCOH to be passed from the electrolyzer
-	- [Here's the EAF to DRI split out model](https://github.com/kbrunik/HOPP/tree/steel-model/greenheart/simulation/technologies/steel)
+	- [Here's the EAF to DRI split out model](https://github.com/kbrunik/HOPP/tree/steel-model/ODIES/simulation/technologies/steel)
 - **Electrolyzers**
 	- BERT should be the one-stop-shop for most electrolyzer models
-	- We want to have a standalone BERT config that can be passed wholesale through GreenHEART
+	- We want to have a standalone BERT config that can be passed wholesale through ODIES
 - **Financials**
-	- Very unclear how we'll getting the timing of the financial calculations correct; there are some places in the current GreenHEART we we have a partial financial stackup, e.g. computing LCOH of a plant before passing it to a steel processing module
+	- Very unclear how we'll getting the timing of the financial calculations correct; there are some places in the current ODIES we we have a partial financial stackup, e.g. computing LCOH of a plant before passing it to a steel processing module
 
 ### Action items:
 - [x] make converters have an intermediary class (Electrolyzer example)
 - [x] make a figure showing how this inheritance works
-- [x] make docs online for new GreenHEART
+- [x] make docs online for ODIES
 - [x] make the ammonia model take in a flat hydrogen array and convert it to be time-based
 - [x] change the ammonia model so it's based on the amount of hydrogen produced (summed)
 - [x] I suggest me drawing up a block diagram for these, show inputs/outputs
@@ -50,6 +50,6 @@ Most of these will become issues in the repo once they're fleshed out a bit more
 - [ ] investigate Kaitlin's intern steel model
 - [ ] add a notion of a splitter; wind producing electricity to be split out for use in example 7
 - [ ] differentiate between "inputs" and "outputs" in OpenMDAO parlance and what it means for the model; inputs or outputs to the tank, for example, might not be a literal input or output in the code sense
-- [ ] write a guide for how to make a technology wrapper in the current GreenHEART setup
+- [ ] write a guide for how to make a technology wrapper in the current ODIES setup
 - [ ] figure out how to have inputs and outputs defined in a clear way, including required inputs and outputs for a given technology type
 - [ ] how to handle when a technology has an input and an output of the same energy type; like a tank storing hydrogen that has some coming in and some going out; can't have the same OM variable name so should we just append _in or _out?

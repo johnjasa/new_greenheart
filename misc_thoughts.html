@@ -137,7 +137,7 @@ const thebe_selector_output = ".output, .cell_output"
         
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="why_make_new_greenheart.html">
-                        Why make new GreenHEART?
+                        Why make ODIES?
                       </a>
                     </li>
                 
@@ -151,7 +151,7 @@ const thebe_selector_output = ".output, .cell_output"
 
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="class_structure.html">
-                        Class structure in new GreenHEART
+                        Class structure in ODIES
                       </a>
                     </li>
                 
@@ -256,7 +256,7 @@ const thebe_selector_output = ".output, .cell_output"
         
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="why_make_new_greenheart.html">
-                        Why make new GreenHEART?
+                        Why make ODIES?
                       </a>
                     </li>
                 
@@ -270,7 +270,7 @@ const thebe_selector_output = ".output, .cell_output"
 
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="class_structure.html">
-                        Class structure in new GreenHEART
+                        Class structure in ODIES
                       </a>
                     </li>
                 
@@ -367,14 +367,14 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="intro.html">
-                    Welcome to new GreenHEART
+                    Welcome to ODIES
                 </a>
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="why_make_new_greenheart.html">Why make new GreenHEART?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="why_make_new_greenheart.html">Why make ODIES?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="features_not_currently_implemented.html">Features not currently implemented</a></li>
-<li class="toctree-l1"><a class="reference internal" href="class_structure.html">Class structure in new GreenHEART</a></li>
+<li class="toctree-l1"><a class="reference internal" href="class_structure.html">Class structure in ODIES</a></li>
 <li class="toctree-l1"><a class="reference internal" href="describing_whats_in_classes.html">Expected methods and attributes of classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="development_guidelines.html">Development guidelines</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Miscellaneous Thoughts</a></li>
@@ -547,7 +547,7 @@ title="Print to PDF"
               
   <section class="tex2jax_ignore mathjax_ignore" id="miscellaneous-thoughts">
 <h1>Miscellaneous Thoughts<a class="headerlink" href="#miscellaneous-thoughts" title="Permalink to this heading">#</a></h1>
-<p>This is a non-exhaustive collection of items that have come up in discussions about GreenHEART.
+<p>This is a non-exhaustive collection of items that have come up in discussions about ODIES.
 It’s meant to be a place to jot down ideas and thoughts that don’t fit neatly into the other documents.
 Most of these will become issues in the repo once they’re fleshed out a bit more.</p>
 <ul class="simple">
@@ -575,7 +575,7 @@ Most of these will become issues in the repo once they’re fleshed out a bit mo
 <li><p>Develop an example high-level flow diagram to illustrate relationships between technologies, feedstocks, and resources, once we have the definitions more fleshed out.</p></li>
 </ul>
 </li>
-<li><p><strong>Class structure within GreenHEART</strong></p>
+<li><p><strong>Class structure within ODIES</strong></p>
 <ul>
 <li><p>We should have nested inheritance for technologies that will share methods; e.g. <code class="docutils literal notranslate"><span class="pre">ConverterBaseClass</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">ElectrolyzerBaseClass</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">BERTElectrolyzerWrapper</span></code></p></li>
 </ul>
@@ -594,18 +594,18 @@ Most of these will become issues in the repo once they’re fleshed out a bit mo
 <ul>
 <li><p>Currently the hydrogen and electricity inputs are considered feedstocks</p></li>
 <li><p>We need some way for LCOH to be passed from the electrolyzer</p></li>
-<li><p><a class="reference external" href="https://github.com/kbrunik/HOPP/tree/steel-model/greenheart/simulation/technologies/steel">Here’s the EAF to DRI split out model</a></p></li>
+<li><p><a class="reference external" href="https://github.com/kbrunik/HOPP/tree/steel-model/ODIES/simulation/technologies/steel">Here’s the EAF to DRI split out model</a></p></li>
 </ul>
 </li>
 <li><p><strong>Electrolyzers</strong></p>
 <ul>
 <li><p>BERT should be the one-stop-shop for most electrolyzer models</p></li>
-<li><p>We want to have a standalone BERT config that can be passed wholesale through GreenHEART</p></li>
+<li><p>We want to have a standalone BERT config that can be passed wholesale through ODIES</p></li>
 </ul>
 </li>
 <li><p><strong>Financials</strong></p>
 <ul>
-<li><p>Very unclear how we’ll getting the timing of the financial calculations correct; there are some places in the current GreenHEART we we have a partial financial stackup, e.g. computing LCOH of a plant before passing it to a steel processing module</p></li>
+<li><p>Very unclear how we’ll getting the timing of the financial calculations correct; there are some places in the current ODIES we we have a partial financial stackup, e.g. computing LCOH of a plant before passing it to a steel processing module</p></li>
 </ul>
 </li>
 </ul>
@@ -614,7 +614,7 @@ Most of these will become issues in the repo once they’re fleshed out a bit mo
 <ul class="contains-task-list simple">
 <li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> make converters have an intermediary class (Electrolyzer example)</p></li>
 <li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> make a figure showing how this inheritance works</p></li>
-<li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> make docs online for new GreenHEART</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> make docs online for ODIES</p></li>
 <li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> make the ammonia model take in a flat hydrogen array and convert it to be time-based</p></li>
 <li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> change the ammonia model so it’s based on the amount of hydrogen produced (summed)</p></li>
 <li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> I suggest me drawing up a block diagram for these, show inputs/outputs</p></li>
@@ -629,7 +629,7 @@ Most of these will become issues in the repo once they’re fleshed out a bit mo
 <li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> investigate Kaitlin’s intern steel model</p></li>
 <li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> add a notion of a splitter; wind producing electricity to be split out for use in example 7</p></li>
 <li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> differentiate between “inputs” and “outputs” in OpenMDAO parlance and what it means for the model; inputs or outputs to the tank, for example, might not be a literal input or output in the code sense</p></li>
-<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> write a guide for how to make a technology wrapper in the current GreenHEART setup</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> write a guide for how to make a technology wrapper in the current ODIES setup</p></li>
 <li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> figure out how to have inputs and outputs defined in a clear way, including required inputs and outputs for a given technology type</p></li>
 <li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> how to handle when a technology has an input and an output of the same energy type; like a tank storing hydrogen that has some coming in and some going out; can’t have the same OM variable name so should we just append _in or _out?</p></li>
 </ul>
