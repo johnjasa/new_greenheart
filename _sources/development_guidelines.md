@@ -1,5 +1,9 @@
 # Development guidelines
 
+```{note}
+This document is a work in progress and ODIES is rapidly evolving; we'll continue to add to these guidelines as we develop the tool.
+```
+
 We've already had divergent codebases in the future due to fast-paced project needs and tight timelines.
 To make this better, we're trying to standardize the way we develop code for ODIES in a way that's beneficial for developers, does not slow progress, and is sustainable for the future.
 This document outlines the guidelines for developing code for ODIES
