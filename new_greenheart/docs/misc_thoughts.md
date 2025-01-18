@@ -17,7 +17,7 @@ Most of these will become issues in the repo once they're fleshed out a bit more
 - **Technology and Resource Flow Diagram**
     - Develop an example high-level flow diagram to illustrate relationships between technologies, feedstocks, and resources, once we have the definitions more fleshed out.
 - **Class structure within ODIES**
-	- We should have nested inheritance for technologies that will share methods; e.g. `ConverterBaseClass` -> `ElectrolyzerBaseClass` -> `BERTElectrolyzerWrapper`
+	- We should have nested inheritance for technologies that will share methods; e.g. `ConverterBaseClass` -> `ElectrolyzerPerformanceBaseClass` -> `BERTElectrolyzerWrapper`
 - **Default config handling**
 	- We should have no default values; everything should be user-provided says Chris
 - **Future technology adds**

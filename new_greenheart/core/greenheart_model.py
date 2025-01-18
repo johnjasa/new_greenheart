@@ -118,8 +118,8 @@ class GreenHEARTModel(object):
         # loop through each technology and instantiate an OpenMDAO object (assume it exists)
         # for each technology
 
-        self.technology_objects = []
         self.tech_names = []
+        self.performance_models = []
         self.cost_models = []
         self.financial_models = []
 
@@ -130,26 +130,39 @@ class GreenHEARTModel(object):
                 self.plant.add_subsystem(tech_name, feedstock_component)                
             else:
                 tech_group = self.plant.add_subsystem(tech_name, om.Group())
-
-                tech_class = supported_models[individual_tech_config['performance_model']['model']]
-
-                tech_object = tech_class(self.plant_config, individual_tech_config)
-
-                self.technology_objects.append(tech_object)
                 self.tech_names.append(tech_name)
-                tech_group.add_subsystem(tech_name, tech_object.get_performance_model(), promotes=['*'])
 
-                # Add cost model
-                cost_model = tech_object.get_cost_model()
-                self.cost_models.append(cost_model)
-                if cost_model is not None:
-                    tech_group.add_subsystem(f'{tech_name}_cost', cost_model, promotes=['*'])
+                # special HOPP handling for short-term
+                if 'hopp' in tech_name:
+                    hopp_comp = supported_models[tech_name](plant_config=self.plant_config, tech_config=individual_tech_config)
+                    tech_group.add_subsystem(tech_name, hopp_comp, promotes=['*'])
+                    self.performance_models.append(hopp_comp)
+                    self.cost_models.append(hopp_comp)
+                    self.financial_models.append(hopp_comp)
+                    continue
 
-                # Add financial model
-                financial_model = tech_object.get_financial_model()
-                self.financial_models.append(financial_model)
-                if financial_model is not None:
-                    tech_group.add_subsystem(f'{tech_name}_financial', financial_model, promotes=['*'])
+                performance_name = individual_tech_config['performance_model']['model']
+                performance_object = supported_models[f"{performance_name}_performance"]
+                tech_group.add_subsystem(f"{tech_name}_performance", performance_object(plant_config=self.plant_config, tech_config=individual_tech_config), promotes=['*'])
+                self.performance_models.append(performance_object)
+
+                cost_name = individual_tech_config['cost_model']['model']
+                cost_object = supported_models[f"{cost_name}_cost"]
+                tech_group.add_subsystem(f"{tech_name}_cost", cost_object(plant_config=self.plant_config, tech_config=individual_tech_config), promotes=['*'])
+                self.cost_models.append(cost_object)
+
+                if 'financial_model' in individual_tech_config:
+                    if 'model' in individual_tech_config['financial_model']:
+                        financial_name = individual_tech_config['financial_model']['model']
+                else:
+                    financial_name = cost_name
+                
+                try:
+                    financial_object = supported_models[f"{financial_name}_financial"]
+                    tech_group.add_subsystem(f"{tech_name}_financial", financial_object(plant_config=self.plant_config, tech_config=individual_tech_config), promotes=['*'])
+                    self.financial_models.append(financial_object)
+                except KeyError:
+                    pass
 
     def create_financial_model(self):
         if 'finance_parameters' not in self.plant_config:
@@ -251,8 +264,3 @@ class GreenHEARTModel(object):
     def post_process(self):
         self.prob.model.list_inputs(units=True)
         self.prob.model.list_outputs(units=True)
-
-        # loop through technologies and post process outputs
-        for tech_object in self.technology_objects:
-            tech_object.post_process()
-

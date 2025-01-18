@@ -9,27 +9,23 @@ from greenheart.simulation.technologies.hydrogen.electrolysis.PEM_costs_Singliti
 )
 from greenheart.tools.eco.utilities import ceildiv
 
-from new_greenheart.converters.hydrogen.electrolyzer_baseclass import ElectrolyzerBaseClass
+from new_greenheart.converters.hydrogen.electrolyzer_baseclass import ElectrolyzerPerformanceBaseClass, ElectrolyzerCostBaseClass, ElectrolyzerFinanceBaseClass
 
 
-class ElectrolyzerPerformanceModel(om.ExplicitComponent):
+class ElectrolyzerPerformanceModel(ElectrolyzerPerformanceBaseClass):
     """
     An OpenMDAO component that wraps the PEM electrolyzer model.
     Takes electricity input and outputs hydrogen and oxygen generation rates.
     """
     def initialize(self):
-        self.options.declare('config', types=dict)
-        self.options.declare('plant_life')
+        super().initialize()
 
     def setup(self):
-        # Define inputs for electricity and outputs for hydrogen and oxygen generation
-        self.add_input('electricity', val=0.0, shape_by_conn=True, copy_shape='hydrogen', units='kW')
-        self.add_output('hydrogen', val=0.0, shape_by_conn=True, copy_shape='electricity', units='kg/h')
-
-        self.add_output('total_hydrogen_produced', val=0.0, units='kg/year')
+        super().setup()
 
     def compute(self, inputs, outputs):
-        config = self.options['config']
+        config = self.options['tech_config']['details']
+        plant_life = self.options['plant_config']['plant']['plant_life']
         electrolyzer_size_mw = config["rating"]
         electrolyzer_capex_kw = config["electrolyzer_capex"]
 
@@ -71,7 +67,7 @@ class ElectrolyzerPerformanceModel(om.ExplicitComponent):
         H2_Results, h2_ts, h2_tot, power_to_electrolyzer_kw = run_h2_PEM(
             electrical_generation_timeseries=energy_to_electrolyzer_kw,
             electrolyzer_size=electrolyzer_size_mw,
-            useful_life=self.options['plant_life'],
+            useful_life=plant_life,
             n_pem_clusters=n_pem_clusters,
             pem_control_type=config["pem_control_type"],
             electrolyzer_direct_cost_kw=electrolyzer_capex_kw,
@@ -86,12 +82,12 @@ class ElectrolyzerPerformanceModel(om.ExplicitComponent):
         outputs['hydrogen'] = H2_Results["Hydrogen Hourly Production [kg/hr]"]
         outputs['total_hydrogen_produced'] = H2_Results["Sim: Total H2 Produced [kg]"]
 
-class ElectrolyzerCostModel(om.ExplicitComponent):
+class ElectrolyzerCostModel(ElectrolyzerCostBaseClass):
     """
     An OpenMDAO component that computes the cost of a PEM electrolyzer.
     """
     def initialize(self):
-        self.options.declare('config', types=dict)
+        self.options.declare('tech_config', types=dict)
         self.options.declare('plant_config', types=dict)
 
     def setup(self):
@@ -103,7 +99,7 @@ class ElectrolyzerCostModel(om.ExplicitComponent):
 
     def compute(self, inputs, outputs):
         # unpack inputs
-        config = self.options['config']
+        config = self.options['tech_config']['details']
         plant_config = self.options['plant_config']
         
         total_hydrogen_produced = float(inputs["total_hydrogen_produced"])
@@ -169,7 +165,7 @@ class ElectrolyzerCostModel(om.ExplicitComponent):
         outputs['CapEx'] = electrolyzer_total_capital_cost
         outputs['OpEx'] = electrolyzer_OM_cost
 
-class ElectrolyzerFinanceModel(om.ExplicitComponent):
+class ElectrolyzerFinanceModel(ElectrolyzerFinanceBaseClass):
     """
     Placeholder for the financial model of the PEM electrolyzer.
     """
@@ -178,45 +174,3 @@ class ElectrolyzerFinanceModel(om.ExplicitComponent):
 
     def compute(self, inputs, outputs):
         outputs['LCOH'] = 4.11  # Placeholder value
-
-class ECOPEMElectrolyzer(ElectrolyzerBaseClass):
-    """
-    Wrapper class for the PEM electrolyzer in the new_greenheart framework, inheriting from ElectrolyzerBaseClass.
-    """
-    def __init__(self, plant_config, tech_config):
-        """
-        Initialize the ECOPEMElectrolyzer.
-        """
-        super().__init__(plant_config, tech_config)
-
-    def get_performance_model(self):
-        """
-        Describes how the electrolyzer performs its function.
-
-        Returns an OpenMDAO System.
-        """
-        return ElectrolyzerPerformanceModel(config=self.tech_config['details'], plant_life=self.plant_config['plant']['plant_life'])
-
-    def get_cost_model(self):
-        """
-        Placeholder for electrolyzer cost model.
-        """
-        return ElectrolyzerCostModel(config=self.tech_config['details'], plant_config=self.plant_config)
-
-    def get_control_strategy(self):
-        """
-        Placeholder for control strategy.
-        """
-        pass
-
-    def get_financial_model(self):
-        """
-        Placeholder for financial model.
-        """
-        return ElectrolyzerFinanceModel()
-
-    def post_process(self):
-        """
-        Post-process the results from the electrolyzer simulation.
-        """
-        pass

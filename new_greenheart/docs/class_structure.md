@@ -16,8 +16,8 @@ Instead, we have an additional layer of class inheritance that helps reduce dupl
 
 Let us take a PEM electrolyzer model as an example.
 Each electrolyzer model has shared methods and attributes that would be present in any valid model.
-These methods are defined at the `ElectrolyzerBaseClass` level, which inherits from `ConverterBaseClass`.
-Any implemented electrolyzer model should inherit from `ElectrolyzerBaseClass` to make use of its already built out structure and methods.
+These methods are defined at the `ElectrolyzerPerformanceBaseClass` level, which inherits from `ConverterBaseClass`.
+Any implemented electrolyzer model should inherit from `ElectrolyzerPerformanceBaseClass` to make use of its already built out structure and methods.
 This is shown below.
 
 ![Class structure](fig_of_class_structure.png)
