@@ -28,6 +28,6 @@ plant:
 # with the reverse definition.
 # this will naturally grow as we mature the interconnected tech
 technology_interconnections: [
-  ["wind", "electrolyzer", "electricity", "cable"],
+  ["solar", "electrolyzer", "electricity", "cable"],
   # etc
 ]
