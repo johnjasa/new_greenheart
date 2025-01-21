@@ -12,17 +12,11 @@ from greenheart.tools.eco.utilities import ceildiv
 from new_greenheart.converters.hydrogen.electrolyzer_baseclass import ElectrolyzerPerformanceBaseClass, ElectrolyzerCostBaseClass, ElectrolyzerFinanceBaseClass
 
 
-class ElectrolyzerPerformanceModel(ElectrolyzerPerformanceBaseClass):
+class ECOElectrolyzerPerformanceModel(ElectrolyzerPerformanceBaseClass):
     """
     An OpenMDAO component that wraps the PEM electrolyzer model.
     Takes electricity input and outputs hydrogen and oxygen generation rates.
     """
-    def initialize(self):
-        super().initialize()
-
-    def setup(self):
-        super().setup()
-
     def compute(self, inputs, outputs):
         config = self.options['tech_config']['details']
         plant_life = self.options['plant_config']['plant']['plant_life']
@@ -82,21 +76,10 @@ class ElectrolyzerPerformanceModel(ElectrolyzerPerformanceBaseClass):
         outputs['hydrogen'] = H2_Results["Hydrogen Hourly Production [kg/hr]"]
         outputs['total_hydrogen_produced'] = H2_Results["Sim: Total H2 Produced [kg]"]
 
-class ElectrolyzerCostModel(ElectrolyzerCostBaseClass):
+class ECOElectrolyzerCostModel(ElectrolyzerCostBaseClass):
     """
     An OpenMDAO component that computes the cost of a PEM electrolyzer.
     """
-    def initialize(self):
-        self.options.declare('tech_config', types=dict)
-        self.options.declare('plant_config', types=dict)
-
-    def setup(self):
-        self.add_input('total_hydrogen_produced', val=0.0, units='kg/year')
-        self.add_input('electricity', val=0.0, shape_by_conn=True, units='kW')
-        # Define outputs: CapEx and OpEx costs
-        self.add_output('CapEx', val=0.0, units='USD', desc='Capital expenditure')
-        self.add_output('OpEx', val=0.0, units='USD/year', desc='Operational expenditure')
-
     def compute(self, inputs, outputs):
         # unpack inputs
         config = self.options['tech_config']['details']
@@ -165,12 +148,10 @@ class ElectrolyzerCostModel(ElectrolyzerCostBaseClass):
         outputs['CapEx'] = electrolyzer_total_capital_cost
         outputs['OpEx'] = electrolyzer_OM_cost
 
-class ElectrolyzerFinanceModel(ElectrolyzerFinanceBaseClass):
+class ECOElectrolyzerFinanceModel(ElectrolyzerFinanceBaseClass):
     """
     Placeholder for the financial model of the PEM electrolyzer.
     """
-    def setup(self):
-        self.add_output('LCOH', val=0.0, units='USD/kg', desc='Levelized cost of hydrogen')
 
     def compute(self, inputs, outputs):
         outputs['LCOH'] = 4.11  # Placeholder value

@@ -53,7 +53,7 @@ class HOPPComponent(om.ExplicitComponent):
                 subset_of_hopp_results = dill.load(f)
         else:
             # Run the HOPP model and get the results
-            hopp_results = run_hopp(setup_hopp(self.options['hopp_config']), self.options['plant_config']['plant']['plant_life'])
+            hopp_results = run_hopp(setup_hopp(self.options['tech_config']['performance_model']['config']), self.options['plant_config']['plant']['plant_life'])
             # Extract the subset of results we are interested in
             subset_of_hopp_results = {key: hopp_results[key] for key in keys_of_interest}
             # Cache the results for future use

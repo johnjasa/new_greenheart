@@ -16,6 +16,7 @@ technologies:
     details:
       cluster_size_mw: 1.0
       plant_life: 30
+      electrolyzer_cost: 2.
       model_parameters:
         eol_eff_percent_loss: 10
         uptime_hours_until_eol: 77600

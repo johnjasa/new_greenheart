@@ -13,6 +13,7 @@ try:
     import pyxdsm
 except ImportError:
     pyxdsm = None
+pyxdsm = None
 
 
 class GreenHEARTModel(object):
