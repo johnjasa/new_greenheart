@@ -1,6 +1,6 @@
 name: "GreenHEART_config"
 
-system_summary: "This reference hybrid plant calls PySAM directly without HOPP"
+system_summary: "This reference hybrid plant..."
 
 driver_config: "driver_config.yaml"
 technology_config: "tech_config.yaml"

@@ -9,6 +9,7 @@ from new_greenheart.converters.hopp.hopp_wrapper import HOPPComponent
 from new_greenheart.converters.ammonia.ammonia_baseclass import AmmoniaPerformanceModel, AmmoniaCostModel
 from new_greenheart.converters.steel.steel import SteelPerformanceModel, SteelCostModel
 from new_greenheart.storage.hydrogen.tank_baseclass import HydrogenTankPerformanceModel, HydrogenTankCostModel
+from new_greenheart.converters.wind.wind_plant_pysam import PYSAMWindPlantPerformanceComponent
 
 
 supported_models = {
@@ -21,6 +22,9 @@ supported_models = {
 
     'wind_plant_performance': WindPlantPerformanceComponent,
     'wind_plant_cost': WindPlantCostComponent,
+
+    'pysam_wind_plant_performance' : PYSAMWindPlantPerformanceComponent,
+
     'pem_electrolyzer_performance': ElectrolyzerPerformanceModel,
     'pem_electrolyzer_cost': ElectrolyzerCostModel,
     'pem_electrolyzer_financial': ElectrolyzerFinanceModel,
