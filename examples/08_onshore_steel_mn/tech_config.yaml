@@ -8,11 +8,15 @@ technologies:
       config: !include hopp_config.yaml
     cost_model:
       model: "hopp"
+    financial_model:
+      group: 1
   electrolyzer:
     performance_model:
       model: "eco_pem_electrolyzer"
     cost_model:
       model: "eco_pem_electrolyzer"
+    financial_model:
+      group: 1
     details:
       rating: 1160 # MW
       cluster_rating_MW: 40
@@ -31,6 +35,8 @@ technologies:
       model: "steel"
     cost_model:
       model: "steel"
+    financial_model:
+      group: 2
     details:
       capacity_factor: 0.9
       hydrogen_amount_kgpy: 73288888.

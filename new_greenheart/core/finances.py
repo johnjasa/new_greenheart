@@ -15,7 +15,7 @@ class AdjustedCapexOpexComp(om.ExplicitComponent):
         self.inflation_rate = plant_config['finance_parameters']['costing_general_inflation']
         self.cost_year = plant_config['plant']['cost_year']
 
-        for tech in tech_config['technologies']:
+        for tech in tech_config:
             self.add_input(f'capex_{tech}', val=0.0, units='USD')
             self.add_input(f'opex_{tech}', val=0.0, units='USD/year')
             self.add_output(f'capex_adjusted_{tech}', val=0.0, units='USD')
@@ -27,7 +27,7 @@ class AdjustedCapexOpexComp(om.ExplicitComponent):
     def compute(self, inputs, outputs):
         total_capex_adjusted = 0.0
         total_opex_adjusted = 0.0
-        for tech in self.options['tech_config']['technologies']:
+        for tech in self.options['tech_config']:
             capex = inputs[f'capex_{tech}']
             opex = inputs[f'opex_{tech}']
             cost_year = self.discount_years[tech]
@@ -56,14 +56,20 @@ class ProFastComp(om.ExplicitComponent):
         self.inflation_rate = plant_config['finance_parameters']['costing_general_inflation']
         self.cost_year = plant_config['plant']['cost_year']
 
-        for tech in tech_config['technologies']:
+        for tech in tech_config:
             self.add_input(f'capex_adjusted_{tech}', val=0.0, units='USD')
             self.add_input(f'opex_adjusted_{tech}', val=0.0, units='USD/year')
         
         if self.options['commodity_type'] == 'hydrogen':
             self.add_output('LCOH', val=0.0, units='USD/kg')
 
-        if 'electrolyzer' in tech_config['technologies']:
+        if self.options['commodity_type'] == 'steel':
+            self.add_output('LCOS', val=0.0, units='USD/ton')
+
+        if self.options['commodity_type'] == 'electricity':
+            self.add_output('LCOE', val=0.0, units='USD/kW/h')
+
+        if 'electrolyzer' in tech_config:
             self.add_input('total_hydrogen_produced', val=0.0, units='kg/year')
 
     def compute(self, inputs, outputs):
@@ -166,17 +172,17 @@ class ProFastComp(om.ExplicitComponent):
         pf.set_params("cash onhand", self.plant_config["finance_parameters"]["cash_onhand_months"])
 
         # ----------------------------------- Add capital and fixed items to ProFAST ----------------
-        for tech in self.tech_config['technologies']:
+        for tech in self.tech_config:
             if 'electrolyzer' in tech:
                 # electrolyzer_refurbishment_schedule = np.zeros(
                 #     self.plant_config["plant"]["plant_life"]
                 # )
                 # refurb_period = round(
-                #     self.tech_config['technologies']['electrolyzer']['details']['model_parameters']['uptime_hours_until_eol'] / (24 * 365)
+                #     self.tech_config['electrolyzer']['details']['model_parameters']['uptime_hours_until_eol'] / (24 * 365)
                 # )
                 # electrolyzer_refurbishment_schedule[
                 #     refurb_period : self.plant_config["plant"]["plant_life"] : refurb_period
-                # ] = self.tech_config['technologies']['electrolyzer']['details']["replacement_cost_percent"]
+                # ] = self.tech_config['electrolyzer']['details']["replacement_cost_percent"]
 
                 # TODO: use the refurb period calculated above. Erroring out for now,
                 # not entirely sure why.
@@ -265,7 +271,7 @@ class ProFastComp(om.ExplicitComponent):
         Note: units must be given to ProFAST in terms of dollars per unit of the primary commodity being
         produced
 
-        Note: full tech-nutral (wind) tax credits are no longer available if constructions starts after
+        Note: full tech-neutral (wind) tax credits are no longer available if constructions starts after
         Jan. 1 2034 (Jan 1. 2033 for h2 ptc)
         """
 
@@ -350,6 +356,7 @@ class ProFastComp(om.ExplicitComponent):
 
         df = pf.cash_flow_out
 
-        lcoh = sol["price"]
-
-        outputs['LCOH'] = lcoh
+        # Only hydrogen supported in the very short term
+        if self.options['commodity_type'] == 'hydrogen':
+            lcoh = sol["price"]
+            outputs['LCOH'] = lcoh

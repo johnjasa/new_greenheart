@@ -13,7 +13,6 @@ try:
     import pyxdsm
 except ImportError:
     pyxdsm = None
-pyxdsm = None
 
 
 class GreenHEARTModel(object):
@@ -152,11 +151,10 @@ class GreenHEARTModel(object):
                 tech_group.add_subsystem(f"{tech_name}_cost", cost_object(plant_config=self.plant_config, tech_config=individual_tech_config), promotes=['*'])
                 self.cost_models.append(cost_object)
 
+                financial_name = cost_name
                 if 'financial_model' in individual_tech_config:
                     if 'model' in individual_tech_config['financial_model']:
                         financial_name = individual_tech_config['financial_model']['model']
-                else:
-                    financial_name = cost_name
                 
                 try:
                     financial_object = supported_models[f"{financial_name}_financial"]
@@ -166,22 +164,53 @@ class GreenHEARTModel(object):
                     pass
 
     def create_financial_model(self):
+        """
+        Creates and configures the financial model for the plant.
+        
+        Creates financial groups based on the technology configurations
+        and adds the appropriate financial components to each group.
+        """
+
         if 'finance_parameters' not in self.plant_config:
             return
 
-        # Create a financial model group
-        financial_model = om.Group()
+        # Create a dictionary to hold financial groups
+        financial_groups = {}
 
-        # Add adjusted capex component
-        adjusted_capex_opex_comp = AdjustedCapexOpexComp(tech_config=self.technology_config, plant_config=self.plant_config)
-        financial_model.add_subsystem('adjusted_capex_opex_comp', adjusted_capex_opex_comp, promotes=['*'])
+        # Loop through each technology and add it to the appropriate financial group
+        for tech_name, individual_tech_config in self.technology_config['technologies'].items():
+            financial_group_id = individual_tech_config.get('financial_model', {}).get('group')
+            if financial_group_id is not None:
+                if financial_group_id not in financial_groups:
+                    financial_groups[financial_group_id] = {}
+                financial_groups[financial_group_id][tech_name] = individual_tech_config
 
-        # add profast component
-        profast_comp = ProFastComp(tech_config=self.technology_config, plant_config=self.plant_config)
-        financial_model.add_subsystem('profast_comp', profast_comp, promotes=['*'])
+        # If no financial groups are defined, add all technologies to a single group
+        if not financial_groups:
+            financial_groups['1'] = self.technology_config['technologies']
 
-        # Add other financial components here
-        self.plant.add_subsystem('financials', financial_model)
+        # Add each financial group to the plant
+        for group_id, tech_configs in financial_groups.items():
+            financial_group = om.Group()
+
+            # Add adjusted capex component
+            adjusted_capex_opex_comp = AdjustedCapexOpexComp(tech_config=tech_configs, plant_config=self.plant_config)
+            financial_group.add_subsystem(f'adjusted_capex_opex_comp', adjusted_capex_opex_comp, promotes=['*'])
+
+            # Add profast component
+            if 'steel' in tech_configs:
+                commodity_type = 'steel'
+            elif 'electrolyzer' in tech_configs:
+                commodity_type = 'hydrogen'
+            else:
+                commodity_type = 'electricity'
+
+            profast_comp = ProFastComp(tech_config=tech_configs, plant_config=self.plant_config, commodity_type=commodity_type)
+            financial_group.add_subsystem(f'profast_comp', profast_comp, promotes=['*'])
+
+            self.plant.add_subsystem(f'financials_group_{group_id}', financial_group)
+
+        self.financial_groups = financial_groups
 
     def connect_technologies(self):
         technology_interconnections = self.plant_config.get('technology_interconnections', [])
@@ -223,14 +252,14 @@ class GreenHEARTModel(object):
 
         # TODO: connect outputs of the technology models to the cost and financial models of the same name if the cost and financial models are not None
         if 'finance_parameters' in self.plant_config:
-            # Connect the outputs of the technology models to the larger financial model
-            # loop through all the technologies and connect their capex outputs to the financials model as `capex_{tech}`
-            for tech_name in self.tech_names:
-                self.plant.connect(f'{tech_name}.CapEx', f'financials.capex_{tech_name}')
-                self.plant.connect(f'{tech_name}.OpEx', f'financials.opex_{tech_name}')
+            # Connect the outputs of the technology models to the appropriate financial groups
+            for group_id, tech_configs in self.financial_groups.items():
+                for tech_name in tech_configs.keys():
+                    self.plant.connect(f'{tech_name}.CapEx', f'financials_group_{group_id}.capex_{tech_name}')
+                    self.plant.connect(f'{tech_name}.OpEx', f'financials_group_{group_id}.opex_{tech_name}')
 
-            if 'electrolyzer' in self.tech_names:
-                self.plant.connect('electrolyzer.total_hydrogen_produced', 'financials.total_hydrogen_produced')
+                    if 'electrolyzer' in tech_name:
+                        self.plant.connect(f'{tech_name}.total_hydrogen_produced', f'financials_group_{group_id}.total_hydrogen_produced')
         
         self.plant.options['auto_order'] = True
 

@@ -28,7 +28,8 @@ def create_xdsm_from_config(config, output_file='connections_xdsm'):
 
     # Add systems to the XDSM
     for tech in technologies.keys():
-        x.add_system(tech, FUNC, rf"\text{{{tech}}}")
+        tech_label = tech.replace('_', r'\_')
+        x.add_system(tech, FUNC, rf"\text{{{tech_label}}}")
 
     # Add connections
     for conn in config["technology_interconnections"]:
@@ -38,6 +39,8 @@ def create_xdsm_from_config(config, output_file='connections_xdsm'):
         else:
             source, destination, data, label = conn
 
+        source_label = source.replace('_', r'\_')
+        destination_label = destination.replace('_', r'\_')
         connection_label = rf"\text{{{data} {'via'} {label}}}"
 
         x.connect(source, destination, connection_label)

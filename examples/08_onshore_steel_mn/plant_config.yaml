@@ -26,7 +26,7 @@ site:
 technology_interconnections: [
   ["hopp", "electrolyzer", "electricity", "cable"],
   ["hopp", "steel", "electricity", "cable"],
-  ["electrolyzer", "steel", "LCOH"],
+  ["financials_group_1", "steel", "LCOH"],
   # etc
 ]
 
