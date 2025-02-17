@@ -4,7 +4,7 @@ from new_greenheart.transporters.cable import Cable
 from new_greenheart.transporters.pipe import Pipe
 from new_greenheart.converters.wind.wind_plant import WindPlantPerformanceComponent, WindPlantCostComponent
 from new_greenheart.converters.hydrogen.pem_electrolyzer import ElectrolyzerPerformanceModel, ElectrolyzerCostModel, ElectrolyzerFinanceModel
-from new_greenheart.converters.hydrogen.eco_tools_pem_electrolyzer import ECOElectrolyzerPerformanceModel, ECOElectrolyzerCostModel, ECOElectrolyzerFinanceModel
+from new_greenheart.converters.hydrogen.eco_tools_pem_electrolyzer import ECOElectrolyzerPerformanceModel, ECOElectrolyzerCostModel
 from new_greenheart.converters.hopp.hopp_wrapper import HOPPComponent
 from new_greenheart.converters.ammonia.ammonia_baseclass import AmmoniaPerformanceModel, AmmoniaCostModel
 from new_greenheart.converters.steel.steel import SteelPerformanceModel, SteelCostModel
@@ -34,7 +34,6 @@ supported_models = {
 
     'eco_pem_electrolyzer_performance': ECOElectrolyzerPerformanceModel,
     'eco_pem_electrolyzer_cost': ECOElectrolyzerCostModel,
-    'eco_pem_electrolyzer_financial': ECOElectrolyzerFinanceModel,
 
     'hopp': HOPPComponent,
 

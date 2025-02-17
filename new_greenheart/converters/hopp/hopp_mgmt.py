@@ -3,11 +3,12 @@ import numpy as np
 import os
 
 from hopp.simulation.technologies.sites import SiteInfo
+from hopp.simulation.technologies.layout.wind_layout_tools import create_grid
 from hopp.simulation.hopp_interface import HoppInterface
 
 
 # Function to set up the HOPP model
-def setup_hopp(hopp_config):
+def setup_hopp(hopp_config, plant_config):
     if ("desired_schedule" not in hopp_config["site"].keys() or hopp_config["site"]["desired_schedule"] == []):
         hopp_config["site"]["desired_schedule"] = [10.] * 8760
 

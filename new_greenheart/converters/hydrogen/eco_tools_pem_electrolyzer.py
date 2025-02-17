@@ -147,11 +147,3 @@ class ECOElectrolyzerCostModel(ElectrolyzerCostBaseClass):
 
         outputs['CapEx'] = electrolyzer_total_capital_cost
         outputs['OpEx'] = electrolyzer_OM_cost
-
-class ECOElectrolyzerFinanceModel(ElectrolyzerFinanceBaseClass):
-    """
-    Placeholder for the financial model of the PEM electrolyzer.
-    """
-
-    def compute(self, inputs, outputs):
-        outputs['LCOH'] = 4.11  # Placeholder value
