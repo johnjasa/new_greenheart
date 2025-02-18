@@ -1,4 +1,3 @@
-from new_greenheart.core.baseclasses.storage_base_class import StorageBaseClass
 import numpy as np
 import openmdao.api as om
 

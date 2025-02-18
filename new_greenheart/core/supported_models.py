@@ -9,6 +9,7 @@ from new_greenheart.converters.hopp.hopp_wrapper import HOPPComponent
 from new_greenheart.converters.ammonia.ammonia_baseclass import AmmoniaPerformanceModel, AmmoniaCostModel
 from new_greenheart.converters.steel.steel import SteelPerformanceModel, SteelCostModel
 from new_greenheart.storage.hydrogen.tank_baseclass import HydrogenTankPerformanceModel, HydrogenTankCostModel
+from new_greenheart.storage.hydrogen.eco_storage import H2Storage
 from new_greenheart.converters.wind.wind_plant_pysam import PYSAMWindPlantPerformanceComponent
 from new_greenheart.converters.solar.solar_pysam import PYSAMSolarPlantPerformanceComponent
 
@@ -34,6 +35,8 @@ supported_models = {
 
     'eco_pem_electrolyzer_performance': ECOElectrolyzerPerformanceModel,
     'eco_pem_electrolyzer_cost': ECOElectrolyzerCostModel,
+
+    'h2_storage': H2Storage,
 
     'hopp': HOPPComponent,
 

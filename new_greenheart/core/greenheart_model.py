@@ -133,7 +133,7 @@ class GreenHEARTModel(object):
                 self.tech_names.append(tech_name)
 
                 # special HOPP handling for short-term
-                if 'hopp' in tech_name:
+                if tech_name in ['hopp', 'h2_storage']:
                     hopp_comp = supported_models[tech_name](plant_config=self.plant_config, tech_config=individual_tech_config)
                     tech_group.add_subsystem(tech_name, hopp_comp, promotes=['*'])
                     self.performance_models.append(hopp_comp)

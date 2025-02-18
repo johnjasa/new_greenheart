@@ -3,7 +3,6 @@ import dill
 import os
 import numpy as np
 import openmdao.api as om
-from new_greenheart.core.baseclasses.converter_base_class import ConverterBaseClass
 from new_greenheart.converters.hopp.hopp_mgmt import setup_hopp, run_hopp
 
 

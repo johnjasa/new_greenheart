@@ -17,6 +17,10 @@ class ECOElectrolyzerPerformanceModel(ElectrolyzerPerformanceBaseClass):
     An OpenMDAO component that wraps the PEM electrolyzer model.
     Takes electricity input and outputs hydrogen and oxygen generation rates.
     """
+    def setup(self):
+        super().setup()
+        self.add_output('efficiency', val=0.0, desc='Average efficiency of the electrolyzer')
+
     def compute(self, inputs, outputs):
         config = self.options['tech_config']['details']
         plant_life = self.options['plant_config']['plant']['plant_life']
@@ -75,6 +79,7 @@ class ECOElectrolyzerPerformanceModel(ElectrolyzerPerformanceBaseClass):
         # Assuming `h2_results` includes hydrogen and oxygen rates per timestep
         outputs['hydrogen'] = H2_Results["Hydrogen Hourly Production [kg/hr]"]
         outputs['total_hydrogen_produced'] = H2_Results["Sim: Total H2 Produced [kg]"]
+        outputs['efficiency'] = H2_Results["Sim: Average Efficiency [%-HHV]"]
 
 class ECOElectrolyzerCostModel(ElectrolyzerCostBaseClass):
     """
@@ -144,6 +149,17 @@ class ECOElectrolyzerCostModel(ElectrolyzerCostBaseClass):
                 f"'{electrolyzer_cost_model}' was given"
             )
             raise ValueError(msg)
+
+        # print some results if desired
+        print("\nHydrogen Cost Results:")
+        print(
+            "Electrolyzer Total CAPEX $/kW: ",
+            electrolyzer_total_capital_cost / (electrolyzer_size_mw * 1e3),
+        )
+        print(
+            "Electrolyzer O&M $/kW: ",
+            electrolyzer_OM_cost / (electrolyzer_size_mw * 1e3),
+        )
 
         outputs['CapEx'] = electrolyzer_total_capital_cost
         outputs['OpEx'] = electrolyzer_OM_cost

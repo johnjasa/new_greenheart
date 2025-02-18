@@ -25,8 +25,10 @@ site:
 # this will naturally grow as we mature the interconnected tech
 technology_interconnections: [
   ["hopp", "electrolyzer", "electricity", "cable"],
-  ["hopp", "steel", "electricity", "cable"],
+  ["electrolyzer", "h2_storage", "efficiency"],
+  ["electrolyzer", "h2_storage", "hydrogen"],
   ["financials_group_1", "steel", "LCOH"],
+  ["hopp", "steel", "electricity", "cable"],
   # etc
 ]
 
@@ -70,6 +72,7 @@ finance_parameters:
     desal: 2013 # from code citation: https://www.nrel.gov/docs/fy16osti/66073.pdf
     electrolyzer: 2020 # 2020 for singlitico2021, 2016 # for simple h2 cost model in hopp (see https://www.hydrogen.energy.gov/pdfs/19009_h2_production_cost_pem_electrolysis_2019.pdf) ## 2020 # based on IRENA report https://www.irena.org/-/media/Files/IRENA/Agency/Publication/2020/Dec/IRENA_Green_hydrogen_cost_2020.pdf
     steel: 2020
+    h2_storage: 2018 # based on Papadias 2021 and HD SAM
   wind:
     expected_plant_cost: 'none'
 

@@ -33,7 +33,7 @@ def setup_hopp(hopp_config, plant_config):
 
 
 # Function to run hopp from provided inputs from setup_hopp()
-def run_hopp(hi, project_lifetime, verbose=False):
+def run_hopp(hi, project_lifetime, verbose=True):
     hi.simulate(project_life=project_lifetime)
 
     capex = 0.
