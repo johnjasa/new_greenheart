@@ -10,6 +10,7 @@ technologies:
       model: "hopp"
     financial_model:
       group: 1
+    electrolyzer_rating: 1125.165 # MW
   electrolyzer:
     performance_model:
       model: "eco_pem_electrolyzer"
