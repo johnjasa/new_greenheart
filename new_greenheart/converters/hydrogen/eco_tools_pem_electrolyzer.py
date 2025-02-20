@@ -1,3 +1,4 @@
+from attrs import define, field
 import numpy as np
 import openmdao.api as om
 from greenheart.simulation.technologies.hydrogen.electrolysis.run_h2_PEM import run_h2_PEM
@@ -9,7 +10,59 @@ from greenheart.simulation.technologies.hydrogen.electrolysis.PEM_costs_Singliti
 )
 from greenheart.tools.eco.utilities import ceildiv
 
-from new_greenheart.converters.hydrogen.electrolyzer_baseclass import ElectrolyzerPerformanceBaseClass, ElectrolyzerCostBaseClass, ElectrolyzerFinanceBaseClass
+from new_greenheart.converters.hydrogen.electrolyzer_baseclass import (
+    ElectrolyzerPerformanceBaseClass,
+    ElectrolyzerCostBaseClass,
+    ElectrolyzerFinanceBaseClass,
+)
+from new_greenheart.core.utilities import FromDictMixin
+from new_greenheart.core.validators import gt_zero, contains, range_val
+
+
+@define
+class ECOElectrolyzerPerformanceModelConfig(FromDictMixin):
+    """
+    Configuration class for the ECOElectrolyzerPerformanceModel.
+
+    Args:
+        sizing (dict): A dictionary containing the following model sizing parameters:
+            - resize_for_enduse (bool): Flag to adjust the electrolyzer based on the enduse.
+            - size_for (str): Determines the sizing strategy, either "BOL" (generous), or 
+                "EOL" (conservative).
+            - hydorgen_dmd (#TODO): #TODO
+        rating (float): The rating of the electrolyzer in MW.
+        location (str): The location of the electrolyzer; options include "onshore" or "offshore".
+        cluster_rating_MW (float): The rating of the clusters that the electrolyzer is grouped 
+            into, in MW.
+        pem_control_type (str): The control strategy to be used by the electrolyzer.
+        eol_eff_percent_loss (float): End-of-life (EOL) defined as a percent change in efficiency 
+            from beginning-of-life (BOL).
+        uptime_hours_until_eol (int): Number of "on" hours until the electrolyzer reaches EOL.
+        include_degradation_penalty (bool): Flag to include degradation of the electrolyzer due to 
+            operational hours, ramping, and on/off power cycles.
+        turndown_ratio (float): The ratio at which the electrolyzer will shut down.
+        electrolyzer_capex (int): $/kW overnight installed capital costs for a 1 MW system in
+            2022 USD/kW (DOE hydrogen program record 24005 Clean Hydrogen Production Cost Scenarios 
+            with PEM Electrolyzer Technology 05/20/24) #TODO: convet to refs
+            (https://www.hydrogen.energy.gov/docs/hydrogenprogramlibraries/pdfs/24005-clean-hydrogen-production-cost-pem-electrolyzer.pdf?sfvrsn=8cb10889_1) 
+        replacement_cost_percent (float): A percent of the electrolyzer capex that represents the 
+            replacement cost of the electrolyzer.
+        cost_model (str): The cost model used for the electrolyzer. Options include "basic", which 
+            is based on the H2a project and HFTO's program record for PEM electrolysis, and 
+            "singlitico2021", which uses cost estimates from that paper. #TODO: convert to refs
+    """
+    sizing: dict = field()
+    rating: float = field(validator=gt_zero)
+    location: str = field(validator=contains(["onshore", "offshore"]))
+    cluster_rating_MW: float = field(validator=gt_zero)
+    pem_control_type: str = field(validator=contains(["basic"]))
+    eol_eff_percent_loss: float = field(validator=gt_zero)
+    uptime_hours_until_eol: int = field(validator=gt_zero)
+    include_degradation_penalty: bool = field()
+    turndown_ratio: float = field(validator=gt_zero)
+    electrolyzer_capex: int = field(validator=gt_zero)
+    replacement_cost_percent: float = field(validator=gt_zero)
+    cost_model: str = field(validator=contains(["basic", "singlitico2021"]))
 
 
 class ECOElectrolyzerPerformanceModel(ElectrolyzerPerformanceBaseClass):
@@ -22,10 +75,12 @@ class ECOElectrolyzerPerformanceModel(ElectrolyzerPerformanceBaseClass):
         self.add_output('efficiency', val=0.0, desc='Average efficiency of the electrolyzer')
 
     def compute(self, inputs, outputs):
-        config = self.options['tech_config']['details']
+        config = ECOElectrolyzerPerformanceModelConfig.from_dict(
+            self.options['tech_config']['details']
+        )
         plant_life = self.options['plant_config']['plant']['plant_life']
-        electrolyzer_size_mw = config["rating"]
-        electrolyzer_capex_kw = config["electrolyzer_capex"]
+        electrolyzer_size_mw = config.rating
+        electrolyzer_capex_kw = config.electrolyzer_capex
 
         # # IF GRID CONNECTED
         # if plant_config["plant"]["grid_connection"]:
@@ -49,17 +104,15 @@ class ECOElectrolyzerPerformanceModel(ElectrolyzerPerformanceBaseClass):
         energy_to_electrolyzer_kw = inputs['electricity']
 
         n_pem_clusters = int(
-            ceildiv(electrolyzer_size_mw, config["cluster_rating_MW"])
+            ceildiv(electrolyzer_size_mw, config.cluster_rating_MW)
         )
 
         ## run using greensteel model
         pem_param_dict = {
-            "eol_eff_percent_loss": config["eol_eff_percent_loss"],
-            "uptime_hours_until_eol": config["uptime_hours_until_eol"],
-            "include_degradation_penalty": config[
-                "include_degradation_penalty"
-            ],
-            "turndown_ratio": config["turndown_ratio"],
+            "eol_eff_percent_loss": config.eol_eff_percent_loss,
+            "uptime_hours_until_eol": config.uptime_hours_until_eol,
+            "include_degradation_penalty": config.include_degradation_penalty,
+            "turndown_ratio": config.turndown_ratio,
         }
 
         H2_Results, h2_ts, h2_tot, power_to_electrolyzer_kw = run_h2_PEM(
@@ -67,7 +120,7 @@ class ECOElectrolyzerPerformanceModel(ElectrolyzerPerformanceBaseClass):
             electrolyzer_size=electrolyzer_size_mw,
             useful_life=plant_life,
             n_pem_clusters=n_pem_clusters,
-            pem_control_type=config["pem_control_type"],
+            pem_control_type=config.pem_control_type,
             electrolyzer_direct_cost_kw=electrolyzer_capex_kw,
             user_defined_pem_param_dictionary=pem_param_dict,
             grid_connection_scenario=grid_connection_scenario,  # if not offgrid, assumes steady h2 demand in kgphr for full year  # noqa: E501
@@ -89,7 +142,7 @@ class ECOElectrolyzerCostModel(ElectrolyzerCostBaseClass):
         # unpack inputs
         config = self.options['tech_config']['details']
         plant_config = self.options['plant_config']
-        
+
         total_hydrogen_produced = float(inputs["total_hydrogen_produced"])
         electrolyzer_size_mw = config["rating"]
         useful_life = plant_config["plant"]["plant_life"]
