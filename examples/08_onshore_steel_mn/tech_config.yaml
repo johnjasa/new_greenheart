@@ -5,7 +5,7 @@ technologies:
   hopp:
     performance_model:
       model: "hopp"
-      config: !include hopp_config.yaml
+      config: !include tech_inputs/hopp_config.yaml
     cost_model:
       model: "hopp"
     financial_model:
