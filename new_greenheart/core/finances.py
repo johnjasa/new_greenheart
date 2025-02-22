@@ -71,6 +71,7 @@ class ProFastComp(om.ExplicitComponent):
 
         if 'electrolyzer' in tech_config:
             self.add_input('total_hydrogen_produced', val=0.0, units='kg/year')
+            self.add_input('time_until_replacement', units='h')
 
     def compute(self, inputs, outputs):
         gen_inflation = self.plant_config["finance_parameters"]["profast_general_inflation"]
@@ -174,25 +175,21 @@ class ProFastComp(om.ExplicitComponent):
         # ----------------------------------- Add capital and fixed items to ProFAST ----------------
         for tech in self.tech_config:
             if 'electrolyzer' in tech:
-                # electrolyzer_refurbishment_schedule = np.zeros(
-                #     self.plant_config["plant"]["plant_life"]
-                # )
-                # refurb_period = round(
-                #     self.tech_config['electrolyzer']['details']['model_parameters']['uptime_hours_until_eol'] / (24 * 365)
-                # )
-                # electrolyzer_refurbishment_schedule[
-                #     refurb_period : self.plant_config["plant"]["plant_life"] : refurb_period
-                # ] = self.tech_config['electrolyzer']['details']["replacement_cost_percent"]
+                electrolyzer_refurbishment_schedule = np.zeros(
+                    self.plant_config["plant"]["plant_life"]
+                )
+                refurb_period = round(float(inputs['time_until_replacement'][0]) / (24 * 365))
+                electrolyzer_refurbishment_schedule[
+                    refurb_period : self.plant_config["plant"]["plant_life"] : refurb_period
+                ] = self.tech_config['electrolyzer']['details']["replacement_cost_percent"]
+                electrolyzer_refurbishment_schedule = list(electrolyzer_refurbishment_schedule)
 
-                # TODO: use the refurb period calculated above. Erroring out for now,
-                # not entirely sure why.
-                # ValueError: 'plant.financials.profast_comp' <class ProFastComp>: Error calling compute(), setting an array element with a sequence. The requested array has an inhomogeneous shape after 1 dimensions. The detected shape was (30,) + inhomogeneous part.
                 pf.add_capital_item(
                     name="Electrolysis System",
-                    cost=inputs[f'capex_adjusted_{tech}'],
+                    cost=float(inputs[f'capex_adjusted_{tech}'][0]),
                     depr_type=self.plant_config["finance_parameters"]["depreciation_method"],
-                    depr_period=self.plant_config["finance_parameters"]["depreciation_period_electrolyzer"],
-                    refurb=[0],
+                    depr_period=int(self.plant_config["finance_parameters"]["depreciation_period_electrolyzer"]),
+                    refurb=electrolyzer_refurbishment_schedule,
                 )
                 pf.add_fixed_cost(
                     name="Electrolysis System Fixed O&M Cost",

@@ -13,6 +13,7 @@ try:
     import pyxdsm
 except ImportError:
     pyxdsm = None
+pyxdsm = None
 
 
 class GreenHEARTModel(object):
@@ -260,6 +261,7 @@ class GreenHEARTModel(object):
 
                     if 'electrolyzer' in tech_name:
                         self.plant.connect(f'{tech_name}.total_hydrogen_produced', f'financials_group_{group_id}.total_hydrogen_produced')
+                        self.plant.connect(f'{tech_name}.time_until_replacement', f'financials_group_{group_id}.time_until_replacement')
         
         self.plant.options['auto_order'] = True
 

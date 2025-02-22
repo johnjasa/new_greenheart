@@ -27,12 +27,6 @@ class HOPPComponent(om.ExplicitComponent):
         self.add_output('CapEx', val=0.0, units='USD', desc='Total capital expenditures')
         self.add_output('OpEx', val=0.0, units='USD/year', desc='Total fixed operating costs')
 
-        electrolyzer_rating = None
-        if 'electrolyzer_rating' in self.options['tech_config']:
-            electrolyzer_rating = self.options['tech_config']['electrolyzer_rating']
-
-        self.hybrid_interface = setup_hopp(self.options['tech_config']['performance_model']['config'], self.options['plant_config'], electrolyzer_rating)
-
     def compute(self, inputs, outputs):
         # Create a unique hash for the current configuration to use as a cache key
         config_hash = hashlib.md5(str(self.options['tech_config']['performance_model']['config']).encode('utf-8') + str(self.options['plant_config']['plant']['plant_life']).encode('utf-8')).hexdigest()
@@ -55,6 +49,12 @@ class HOPPComponent(om.ExplicitComponent):
             with open(cache_file, 'rb') as f:
                 subset_of_hopp_results = dill.load(f)
         else:
+            electrolyzer_rating = None
+            if 'electrolyzer_rating' in self.options['tech_config']:
+                electrolyzer_rating = self.options['tech_config']['electrolyzer_rating']
+                
+            self.hybrid_interface = setup_hopp(self.options['tech_config']['performance_model']['config'], self.options['plant_config'], electrolyzer_rating)
+
             # Run the HOPP model and get the results
             hopp_results = run_hopp(self.hybrid_interface, self.options['plant_config']['plant']['plant_life'])
             # Extract the subset of results we are interested in

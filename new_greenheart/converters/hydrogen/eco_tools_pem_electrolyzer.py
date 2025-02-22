@@ -20,6 +20,7 @@ class ECOElectrolyzerPerformanceModel(ElectrolyzerPerformanceBaseClass):
     def setup(self):
         super().setup()
         self.add_output('efficiency', val=0.0, desc='Average efficiency of the electrolyzer')
+        self.add_output('time_until_replacement', val=0.0, units='h', desc='Time until replacement')
 
     def compute(self, inputs, outputs):
         config = self.options['tech_config']['details']
@@ -80,6 +81,7 @@ class ECOElectrolyzerPerformanceModel(ElectrolyzerPerformanceBaseClass):
         outputs['hydrogen'] = H2_Results["Hydrogen Hourly Production [kg/hr]"]
         outputs['total_hydrogen_produced'] = H2_Results["Sim: Total H2 Produced [kg]"]
         outputs['efficiency'] = H2_Results["Sim: Average Efficiency [%-HHV]"]
+        outputs['time_until_replacement'] = H2_Results["Time Until Replacement [hrs]"]
 
 class ECOElectrolyzerCostModel(ElectrolyzerCostBaseClass):
     """
