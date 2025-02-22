@@ -50,7 +50,7 @@ def create_xdsm_from_config(config, output_file='connections_xdsm'):
         x.connect(source, destination, connection_label)
 
     # Write the diagram to a file
-    x.write(output_file)
+    x.write(output_file, quiet=True)
     print(f"XDSM diagram written to {output_file}.tex")
 
 
