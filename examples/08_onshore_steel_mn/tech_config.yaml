@@ -5,7 +5,7 @@ technologies:
   hopp:
     performance_model:
       model: "hopp"
-      config: !include hopp_config.yaml
+      config: !include tech_inputs/hopp_config.yaml
     cost_model:
       model: "hopp"
     financial_model:
@@ -13,9 +13,9 @@ technologies:
     electrolyzer_rating: 1125.165 # MW
   electrolyzer:
     performance_model:
-      model: "eco_pem_electrolyzer"
+      model: "eco_pem_electrolyzer_performance"
     cost_model:
-      model: "eco_pem_electrolyzer"
+      model: "eco_pem_electrolyzer_cost"
     financial_model:
       group: 1
     details:
@@ -50,9 +50,9 @@ technologies:
       days: 0 #how many days worth of production we should be able to store (this is ignored if `capacity_from_max_on_turbine_storage` is set to True)
   steel:
     performance_model:
-      model: "steel"
+      model: "steel_performance"
     cost_model:
-      model: "steel"
+      model: "steel_cost"
     financial_model:
       group: 2
     details:

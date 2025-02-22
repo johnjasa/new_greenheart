@@ -1,19 +1,15 @@
-import numpy as np
+import pyxdsm
 import yaml
+
+import numpy as np
 import openmdao.api as om
 
 from new_greenheart.core.supported_models import supported_models
 from new_greenheart.core.finances import AdjustedCapexOpexComp, ProFastComp
 from new_greenheart.core.pose_optimization import PoseOptimization
-from new_greenheart.core.inputs.validation import load_yaml, load_plant_yaml, load_tech_yaml, load_driver_yaml
+from new_greenheart.core.inputs.validation import load_plant_yaml, load_tech_yaml, load_driver_yaml
 from new_greenheart.core.utilities import create_xdsm_from_config
 from new_greenheart.core.feedstocks import FeedstockComponent
-
-try:
-    import pyxdsm
-except ImportError:
-    pyxdsm = None
-pyxdsm = None
 
 
 class GreenHEARTModel(object):
@@ -39,7 +35,8 @@ class GreenHEARTModel(object):
         self.create_financial_model()
 
         # connect technologies
-        # technologies are connected within the `technology_interconnections` section of the plant config
+        # technologies are connected within the `technology_interconnections` section of the
+        # plant config
         self.connect_technologies()
 
         # create driver model
@@ -116,7 +113,7 @@ class GreenHEARTModel(object):
         self.plant = self.model.add_subsystem('plant', plant_group, promotes=['*'])
 
     def create_technology_models(self):
-        # loop through each technology and instantiate an OpenMDAO object (assume it exists)
+        # Loop through each technology and instantiate an OpenMDAO object (assume it exists)
         # for each technology
 
         self.tech_names = []
@@ -133,35 +130,61 @@ class GreenHEARTModel(object):
                 tech_group = self.plant.add_subsystem(tech_name, om.Group())
                 self.tech_names.append(tech_name)
 
-                # special HOPP handling for short-term
+                # Special HOPP handling for short-term
                 if tech_name in ['hopp', 'h2_storage']:
-                    hopp_comp = supported_models[tech_name](plant_config=self.plant_config, tech_config=individual_tech_config)
+                    hopp_comp = supported_models[tech_name](
+                        plant_config=self.plant_config, tech_config=individual_tech_config
+                    )
                     tech_group.add_subsystem(tech_name, hopp_comp, promotes=['*'])
                     self.performance_models.append(hopp_comp)
                     self.cost_models.append(hopp_comp)
                     self.financial_models.append(hopp_comp)
                     continue
 
+                # Process the technology models
                 performance_name = individual_tech_config['performance_model']['model']
-                performance_object = supported_models[f"{performance_name}_performance"]
-                tech_group.add_subsystem(f"{tech_name}_performance", performance_object(plant_config=self.plant_config, tech_config=individual_tech_config), promotes=['*'])
+                performance_object = supported_models[performance_name]
+                tech_group.add_subsystem(
+                    performance_name,
+                    performance_object(
+                        plant_config=self.plant_config,
+                        tech_config=individual_tech_config
+                    ),
+                    promotes=['*']
+                )
                 self.performance_models.append(performance_object)
 
+                # Process the cost models
                 cost_name = individual_tech_config['cost_model']['model']
-                cost_object = supported_models[f"{cost_name}_cost"]
-                tech_group.add_subsystem(f"{tech_name}_cost", cost_object(plant_config=self.plant_config, tech_config=individual_tech_config), promotes=['*'])
+                cost_object = supported_models[cost_name]
+                tech_group.add_subsystem(
+                    cost_name,
+                    cost_object(
+                        plant_config=self.plant_config,
+                        tech_config=individual_tech_config
+                    ),
+                    promotes=['*']
+                )
                 self.cost_models.append(cost_object)
 
-                financial_name = cost_name
+                # Process the financial models
+                financial_name = cost_name #TODO: Should this be a separate name?
                 if 'financial_model' in individual_tech_config:
                     if 'model' in individual_tech_config['financial_model']:
                         financial_name = individual_tech_config['financial_model']['model']
-                
-                try:
+
+                try: #TODO: migrate to explicit model naming once financial side is figured out
                     financial_object = supported_models[f"{financial_name}_financial"]
-                    tech_group.add_subsystem(f"{tech_name}_financial", financial_object(plant_config=self.plant_config, tech_config=individual_tech_config), promotes=['*'])
+                    tech_group.add_subsystem(
+                        f"{tech_name}_financial",
+                        financial_object(
+                            plant_config=self.plant_config,
+                            tech_config=individual_tech_config),
+                        promotes=['*']
+                    )
                     self.financial_models.append(financial_object)
                 except KeyError:
+                    #TODO: Is this currently a bypass until the financial portion is more concrete?
                     pass
 
     def create_financial_model(self):
@@ -195,8 +218,14 @@ class GreenHEARTModel(object):
             financial_group = om.Group()
 
             # Add adjusted capex component
-            adjusted_capex_opex_comp = AdjustedCapexOpexComp(tech_config=tech_configs, plant_config=self.plant_config)
-            financial_group.add_subsystem(f'adjusted_capex_opex_comp', adjusted_capex_opex_comp, promotes=['*'])
+            adjusted_capex_opex_comp = AdjustedCapexOpexComp(
+                tech_config=tech_configs,
+                plant_config=self.plant_config
+            )
+            financial_group.add_subsystem(
+                f'adjusted_capex_opex_comp',
+                adjusted_capex_opex_comp, promotes=['*']
+            )
 
             # Add profast component
             if 'steel' in tech_configs:
@@ -206,7 +235,11 @@ class GreenHEARTModel(object):
             else:
                 commodity_type = 'electricity'
 
-            profast_comp = ProFastComp(tech_config=tech_configs, plant_config=self.plant_config, commodity_type=commodity_type)
+            profast_comp = ProFastComp(
+                tech_config=tech_configs,
+                plant_config=self.plant_config,
+                commodity_type=commodity_type
+            )
             financial_group.add_subsystem(f'profast_comp', profast_comp, promotes=['*'])
 
             self.plant.add_subsystem(f'financials_group_{group_id}', financial_group)
@@ -236,37 +269,58 @@ class GreenHEARTModel(object):
                 self.plant.add_subsystem(connection_name, connection_component)
 
                 # Connect the source technology to the connection component
-                self.plant.connect(f'{source_tech}.{transport_item}', f'{connection_name}.{transport_item}_input')
+                self.plant.connect(
+                    f'{source_tech}.{transport_item}',
+                    f'{connection_name}.{transport_item}_input'
+                )
 
                 # Connect the connection component to the destination technology
-                self.plant.connect(f'{connection_name}.{transport_item}_output', f'{dest_tech}.{transport_item}')
+                self.plant.connect(
+                    f'{connection_name}.{transport_item}_output',
+                    f'{dest_tech}.{transport_item}'
+                )
 
             elif len(connection) == 3:
                 # connect directly from source to dest
                 source_tech, dest_tech, connected_parameter = connection
 
-                self.plant.connect(f'{source_tech}.{connected_parameter}', f'{dest_tech}.{connected_parameter}')
+                self.plant.connect(
+                    f'{source_tech}.{connected_parameter}',
+                    f'{dest_tech}.{connected_parameter}'
+                )
 
             else:
                 err_msg = f'Invalid connection: {connection}'
                 raise ValueError(err_msg)
 
-        # TODO: connect outputs of the technology models to the cost and financial models of the same name if the cost and financial models are not None
+        # TODO: connect outputs of the technology models to the cost and financial models of the
+        # same name if the cost and financial models are not None
         if 'finance_parameters' in self.plant_config:
             # Connect the outputs of the technology models to the appropriate financial groups
             for group_id, tech_configs in self.financial_groups.items():
                 for tech_name in tech_configs.keys():
-                    self.plant.connect(f'{tech_name}.CapEx', f'financials_group_{group_id}.capex_{tech_name}')
-                    self.plant.connect(f'{tech_name}.OpEx', f'financials_group_{group_id}.opex_{tech_name}')
+                    self.plant.connect(
+                        f'{tech_name}.CapEx',
+                        f'financials_group_{group_id}.capex_{tech_name}'
+                    )
+                    self.plant.connect(
+                        f'{tech_name}.OpEx',
+                        f'financials_group_{group_id}.opex_{tech_name}'
+                    )
 
                     if 'electrolyzer' in tech_name:
-                        self.plant.connect(f'{tech_name}.total_hydrogen_produced', f'financials_group_{group_id}.total_hydrogen_produced')
-                        self.plant.connect(f'{tech_name}.time_until_replacement', f'financials_group_{group_id}.time_until_replacement')
+                        self.plant.connect(
+                            f'{tech_name}.total_hydrogen_produced',
+                            f'financials_group_{group_id}.total_hydrogen_produced'
+                        )
+                        self.plant.connect(
+                            f'{tech_name}.time_until_replacement',
+                            f'financials_group_{group_id}.time_until_replacement'
+                        )
         
         self.plant.options['auto_order'] = True
 
-        if pyxdsm is not None:
-            create_xdsm_from_config(self.plant_config)
+        create_xdsm_from_config(self.plant_config)
 
     def create_driver_model(self):
         """
