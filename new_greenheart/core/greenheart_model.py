@@ -215,6 +215,17 @@ class GreenHEARTModel(object):
 
         # Add each financial group to the plant
         for group_id, tech_configs in financial_groups.items():
+            if 'steel' in tech_configs:
+                commodity_type = 'steel'
+            elif 'electrolyzer' in tech_configs:
+                commodity_type = 'hydrogen'
+            else:
+                commodity_type = 'electricity'
+
+            # Steel provides its own financials
+            if commodity_type == 'steel':
+                continue
+
             financial_group = om.Group()
 
             # Add adjusted capex component
@@ -228,13 +239,6 @@ class GreenHEARTModel(object):
             )
 
             # Add profast component
-            if 'steel' in tech_configs:
-                commodity_type = 'steel'
-            elif 'electrolyzer' in tech_configs:
-                commodity_type = 'hydrogen'
-            else:
-                commodity_type = 'electricity'
-
             profast_comp = ProFastComp(
                 tech_config=tech_configs,
                 plant_config=self.plant_config,
@@ -298,6 +302,10 @@ class GreenHEARTModel(object):
         if 'finance_parameters' in self.plant_config:
             # Connect the outputs of the technology models to the appropriate financial groups
             for group_id, tech_configs in self.financial_groups.items():
+                # Skip steel financials; it provides its own financials
+                if 'steel' in tech_configs:
+                    continue
+
                 for tech_name in tech_configs.keys():
                     self.plant.connect(
                         f'{tech_name}.CapEx',
