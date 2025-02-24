@@ -9,6 +9,6 @@ technologies:
     resource: 
       wind_speed: 9.
     performance_model:
-      model: "dummy_wind_turbine"
+      model: "dummy_wind_turbine_performance"
     cost_model:
-      model: "dummy_wind_turbine"
+      model: "dummy_wind_turbine_cost"

@@ -1,12 +1,12 @@
 name: "technology_config"
-description: "This plant has a wind turbine, just one"
+description: "This plant has wind feeding into an electrolyzer with optimization"
 
 technologies:
   wind:
     performance_model:
-      model: "wind_plant"
+      model: "wind_plant_performance"
     cost_model:
-      model: "wind_plant"
+      model: "wind_plant_cost"
     resource: 
       type: "pysam_wind"
       wind_speed: 9.
@@ -32,9 +32,9 @@ technologies:
       name: "UtilityScaleWindPlant"
   electrolyzer:
     performance_model:
-      model: "pem_electrolyzer"
+      model: "pem_electrolyzer_performance"
     cost_model:
-      model: "pem_electrolyzer"
+      model: "pem_electrolyzer_cost"
     details:
       cluster_size_mw: 1.0
       plant_life: 30

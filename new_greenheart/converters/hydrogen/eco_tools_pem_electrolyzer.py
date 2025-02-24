@@ -73,7 +73,6 @@ class ECOElectrolyzerPerformanceModel(ElectrolyzerPerformanceBaseClass):
     def setup(self):
         super().setup()
         self.add_output('efficiency', val=0.0, desc='Average efficiency of the electrolyzer')
-        self.add_output('time_until_replacement', val=0.0, units='h', desc='Time until replacement')
 
     def compute(self, inputs, outputs):
         config = ECOElectrolyzerPerformanceModelConfig.from_dict(

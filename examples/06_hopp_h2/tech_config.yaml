@@ -10,9 +10,9 @@ technologies:
       model: "hopp"
   electrolyzer:
     performance_model:
-      model: "pem_electrolyzer"
+      model: "pem_electrolyzer_performance"
     cost_model:
-      model: "pem_electrolyzer"
+      model: "pem_electrolyzer_cost"
     details:
       cluster_size_mw: 1.0
       plant_life: 30

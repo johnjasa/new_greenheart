@@ -7,9 +7,9 @@ technologies:
   # battery types.
   wind:
     performance_model:
-      model: "wind_plant"
+      model: "wind_plant_performance"
     cost_model:
-      model: "wind_plant"
+      model: "wind_plant_cost"
     resource: 
       type: "pysam_wind"
       wind_speed: 9.
@@ -35,6 +35,6 @@ technologies:
       name: "UtilityScaleWindPlant"
   electrolyzer:
     performance_model:
-      model: "dummy_electrolyzer"
+      model: "dummy_electrolyzer_performance"
     cost_model:
-      model: "dummy_electrolyzer"
+      model: "dummy_electrolyzer_cost"

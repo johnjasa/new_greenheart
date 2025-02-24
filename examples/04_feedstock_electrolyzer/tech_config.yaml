@@ -1,5 +1,5 @@
 name: "technology_config"
-description: "This plant has a wind turbine, just one"
+description: "This plant has a feedstock feeding into an electrolyzer"
 
 technologies:
   feedstocks:
@@ -10,9 +10,9 @@ technologies:
       price_units: "kWh"
   electrolyzer:
     performance_model:
-      model: "pem_electrolyzer"
+      model: "pem_electrolyzer_performance"
     cost_model:
-      model: "pem_electrolyzer"
+      model: "pem_electrolyzer_cost"
     details:
       cluster_size_mw: 100.0
       electrolyzer_cost: 2.
@@ -24,8 +24,8 @@ technologies:
         turndown_ratio: 0.1
   tank:
     performance_model:
-      model: "hydrogen_tank"
+      model: "hydrogen_tank_performance"
     cost_model:
-      model: "hydrogen_tank"
+      model: "hydrogen_tank_cost"
     details:
       total_capacity: 10.e3

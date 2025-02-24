@@ -11,6 +11,7 @@ class ElectrolyzerPerformanceBaseClass(om.ExplicitComponent):
         # Define inputs for electricity and outputs for hydrogen and oxygen generation
         self.add_input('electricity', val=0.0, shape_by_conn=True, copy_shape='hydrogen', units='kW')
         self.add_output('hydrogen', val=0.0, shape_by_conn=True, copy_shape='electricity', units='kg/h')
+        self.add_output('time_until_replacement', val=80000., units='h', desc='Time until replacement')
 
         self.add_output('total_hydrogen_produced', val=0.0, units='kg/year')
 

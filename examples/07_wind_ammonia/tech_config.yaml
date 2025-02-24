@@ -4,9 +4,9 @@ description: "This plant has a wind farm and an ammonia plant"
 technologies:
   wind:
     performance_model:
-      model: "wind_plant"
+      model: "wind_plant_performance"
     cost_model:
-      model: "wind_plant"
+      model: "wind_plant_cost"
     resource: 
       type: "pysam_wind"
       wind_speed: 9.
@@ -32,13 +32,14 @@ technologies:
       name: "UtilityScaleWindPlant"
   electrolyzer:
     performance_model:
-      model: "pem_electrolyzer"
+      model: "pem_electrolyzer_performance"
     cost_model:
-      model: "pem_electrolyzer"
+      model: "pem_electrolyzer_cost"
     details:
       cluster_size_mw: 100.0
       electrolyzer_cost: 2.
       plant_life: 30
+      replacement_cost_percent: 0.15
       model_parameters:
         eol_eff_percent_loss: 10
         uptime_hours_until_eol: 77600
@@ -56,9 +57,9 @@ technologies:
         iron_based_catalyst_cost: 23.19977341
         oxygen_cost: 0
     performance_model:
-      model: "ammonia"
+      model: "ammonia_performance"
     cost_model:
-      model: "ammonia"
+      model: "ammonia_cost"
     finances:
       plant_life: 30
       grid_prices:
