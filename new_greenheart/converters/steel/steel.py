@@ -1,4 +1,3 @@
-from new_greenheart.core.baseclasses.converter_base_class import ConverterBaseClass
 import openmdao.api as om
 import numpy as np
 from greenheart.simulation.technologies.steel.steel import run_steel_model, run_steel_cost_model, run_steel_finance_model, SteelCapacityModelConfig, SteelCostModelConfig, SteelFinanceModelConfig, Feedstocks

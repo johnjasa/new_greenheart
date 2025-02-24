@@ -1,4 +1,3 @@
-from new_greenheart.core.baseclasses.converter_base_class import ConverterBaseClass
 from hopp.simulation.technologies.wind.floris import Floris
 from hopp.simulation.technologies.wind.wind_plant import WindPlant
 from hopp.simulation.technologies.sites import SiteInfo, flatirons_site

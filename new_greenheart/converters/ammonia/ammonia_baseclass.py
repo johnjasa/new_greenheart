@@ -1,4 +1,3 @@
-from new_greenheart.core.baseclasses.converter_base_class import ConverterBaseClass
 import openmdao.api as om
 import numpy as np
 from greenheart.simulation.technologies.ammonia.ammonia import run_ammonia_model, run_ammonia_cost_model, AmmoniaCapacityModelConfig, AmmoniaCostModelConfig, Feedstocks

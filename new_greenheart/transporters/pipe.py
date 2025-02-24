@@ -1,5 +1,4 @@
 import openmdao.api as om
-from new_greenheart.core.baseclasses.transport_base_class import TransportBaseClass
 
 
 class PipeComponent(om.ExplicitComponent):
