@@ -12,6 +12,6 @@ class PipeComponent(om.ExplicitComponent):
     def compute(self, inputs, outputs):
         outputs['hydrogen_output'] = inputs['hydrogen_input']
 
-class Pipe(TransportBaseClass):
+class Pipe():
     def get_performance_model(self):
         return PipeComponent()

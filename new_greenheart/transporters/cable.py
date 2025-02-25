@@ -12,6 +12,6 @@ class CableComponent(om.ExplicitComponent):
     def compute(self, inputs, outputs):
         outputs['electricity_output'] = inputs['electricity_input']
 
-class Cable(TransportBaseClass):
+class Cable():
     def get_performance_model(self):
         return CableComponent()
