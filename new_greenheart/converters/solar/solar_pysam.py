@@ -1,7 +1,20 @@
 import PySAM.Pvwattsv8 as Pvwatts
+from attrs import define, field
+
 from hopp.simulation.technologies.resource import SolarResource
 
-from new_greenheart.converters.solar.solar_baseclass import SolarPerformanceBaseClass, SolarCostBaseClass
+from new_greenheart.converters.solar.solar_baseclass import (
+    SolarPerformanceBaseClass,
+    SolarCostBaseClass
+)
+from new_greenheart.core.utilities import BaseConfig
+
+
+@define
+class PYSAMSolarPlantPerformanceComponentConfig(BaseConfig):
+    lat: float = field()
+    lon: float = field()
+    year: float = field()
 
 
 class PYSAMSolarPlantPerformanceComponent(SolarPerformanceBaseClass):
@@ -11,13 +24,13 @@ class PYSAMSolarPlantPerformanceComponent(SolarPerformanceBaseClass):
     """
     def setup(self):
         super().setup()
+        self.config = PYSAMSolarPlantPerformanceComponentConfig(
+            self.options["plant_config"]["site"]
+        )
         self.config_name = "PVWattsSingleOwner"
         self.system_model = Pvwatts.default(self.config_name)
 
-        lat = self.options['plant_config']['site']['latitude']
-        lon = self.options['plant_config']['site']['longitude']
-        year = self.options['plant_config']['site']['year']
-        solar_resource = SolarResource(lat, lon, year)
+        solar_resource = SolarResource(self.config.lat, self.config.lon, self.config.year)
         self.system_model.value("solar_resource_data", solar_resource.data)
 
     def compute(self, inputs, outputs):

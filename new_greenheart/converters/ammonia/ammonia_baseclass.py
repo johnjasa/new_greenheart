@@ -1,6 +1,52 @@
-import openmdao.api as om
 import numpy as np
-from greenheart.simulation.technologies.ammonia.ammonia import run_ammonia_model, run_ammonia_cost_model, AmmoniaCapacityModelConfig, AmmoniaCostModelConfig, Feedstocks
+import openmdao.api as om
+from attrs import define, field
+
+from greenheart.simulation.technologies.ammonia.ammonia import run_ammonia_model, run_ammonia_cost_model, AmmoniaCapacityModelConfig
+
+from new_greenheart.core.utilities import BaseConfig
+
+
+@define
+class Feedstocks:
+    """
+    Represents the costs and consumption rates of various feedstocks and resources
+    used in ammonia production.
+
+    Attributes:
+        electricity_cost (float): Cost per MWh of electricity.
+        hydrogen_cost (float): Cost per kg of hydrogen.
+        cooling_water_cost (float): Cost per gallon of cooling water.
+        iron_based_catalyst_cost (float): Cost per kg of iron-based catalyst.
+        oxygen_cost (float): Cost per kg of oxygen.
+        electricity_consumption (float): Electricity consumption in MWh per kg of
+            ammonia production, default is 0.1207 / 1000.
+        hydrogen_consumption (float): Hydrogen consumption in kg per kg of ammonia
+            production, default is 0.197284403.
+        cooling_water_consumption (float): Cooling water consumption in gallons per
+            kg of ammonia production, default is 0.049236824.
+        iron_based_catalyst_consumption (float): Iron-based catalyst consumption in kg
+            per kg of ammonia production, default is 0.000091295354067341.
+        oxygen_byproduct (float): Oxygen byproduct in kg per kg of ammonia production,
+            default is 0.29405077250145.
+    """
+
+    electricity_cost: float = field()
+    hydrogen_cost: float = field()
+    cooling_water_cost: float = field()
+    iron_based_catalyst_cost: float = field()
+    oxygen_cost: float = field()
+    electricity_consumption: float = field(default=0.1207 / 1000)
+    hydrogen_consumption: float = field(default=0.197284403)
+    cooling_water_consumption: float = field(default=0.049236824)
+    iron_based_catalyst_consumption: float = field(default=0.000091295354067341)
+    oxygen_byproduct: float = field(default=0.29405077250145)
+
+
+@define
+class AmmoniaPerformanceModelConfig(BaseConfig):
+    plant_capacity: float = field()
+    capacity_factor: float = field()
 
 
 class AmmoniaPerformanceModel(om.ExplicitComponent):
@@ -13,15 +59,43 @@ class AmmoniaPerformanceModel(om.ExplicitComponent):
         self.options.declare('tech_config', types=dict)
 
     def setup(self):
-        self.add_input('electricity', val=0.0, shape_by_conn=True, copy_shape='hydrogen', units='kW')
+        self.config = AmmoniaPerformanceModelConfig.from_dict(
+            self.options['tech_config']['details']
+        )
+        self.add_input(
+            'electricity', val=0.0, shape_by_conn=True, copy_shape='hydrogen', units='kW'
+        )
         self.add_input('hydrogen', val=0.0, shape_by_conn=True, copy_shape='hydrogen', units='kg/h')
-        self.add_output('ammonia', val=0.0, shape_by_conn=True, copy_shape='electricity', units='kg/h')
+        self.add_output(
+            'ammonia', val=0.0, shape_by_conn=True, copy_shape='electricity', units='kg/h'
+        )
 
     def compute(self, inputs, outputs):
-        plant_capacity=self.options['tech_config']['details']['plant_capacity_kgpy']
-        capacity_factor=self.options['tech_config']['details']['capacity_factor']
-        ammonia_production_kgpy = run_ammonia_model(plant_capacity, capacity_factor)
+        ammonia_production_kgpy = run_ammonia_model(
+            self.config.plant_capacity,
+            self.config.capacity_factor,
+        )
         outputs['ammonia'] = ammonia_production_kgpy / len(inputs['electricity'])
+
+
+@define
+class AmmoniaCostModelConfig(BaseConfig):
+    """
+    Configuration inputs for the ammonia cost model, including plant capacity and
+    feedstock details.
+
+    Attributes:
+        plant_capacity_kgpy (float): Annual production capacity of the plant in kg.
+        plant_capacity_factor (float): The ratio of actual production to maximum
+            possible production over a year.
+        feedstocks (Feedstocks): An instance of the `Feedstocks` class detailing the
+            costs and consumption rates of resources used in production.
+    """
+
+    plant_capacity_kgpy: float = field()
+    plant_capacity_factor: float = field()
+    feedstocks: Feedstocks = field()
+
 
 class AmmoniaCostModel(om.ExplicitComponent):
     """

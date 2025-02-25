@@ -56,7 +56,7 @@ def create_xdsm_from_config(config, output_file='connections_xdsm'):
 
 
 @define
-class FromDictMixin:
+class BaseConfig:
     """
     A Mixin class to allow for kwargs overloading when a data class doesn't
     have a specific parameter definied. This allows passing of larger dictionaries
@@ -77,12 +77,12 @@ class FromDictMixin:
                 The `attr`-defined class.
         """
         # Check for any inputs that aren't part of the class definition
-        class_attr_names = [a.name for a in cls.__attrs_attrs__]
-        extra_args = [d for d in data if d not in class_attr_names]
-        if len(extra_args):
-            raise AttributeError(
-                f"The initialization for {cls.__name__} was given extraneous inputs: {extra_args}"
-            )
+        # class_attr_names = [a.name for a in cls.__attrs_attrs__]
+        # extra_args = [d for d in data if d not in class_attr_names]
+        # if len(extra_args):
+        #     raise AttributeError(
+        #         f"The initialization for {cls.__name__} was given extraneous inputs: {extra_args}"
+        #     )
 
         kwargs = {a.name: data[a.name] for a in cls.__attrs_attrs__ if a.name in data and a.init}
 
