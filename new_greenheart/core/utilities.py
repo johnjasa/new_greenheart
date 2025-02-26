@@ -3,9 +3,12 @@ import attrs
 import json
 import numpy as np
 from attrs import define, Attribute
-from pyxdsm.XDSM import XDSM, FUNC
 from collections import OrderedDict
 
+try:
+    from pyxdsm.XDSM import XDSM, FUNC
+except:
+    pass
 
 def create_xdsm_from_config(config, output_file='connections_xdsm'):
     """
