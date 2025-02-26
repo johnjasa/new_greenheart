@@ -1,4 +1,3 @@
-import pyxdsm
 import yaml
 
 import numpy as np
@@ -10,6 +9,11 @@ from new_greenheart.core.pose_optimization import PoseOptimization
 from new_greenheart.core.inputs.validation import load_plant_yaml, load_tech_yaml, load_driver_yaml
 from new_greenheart.core.utilities import create_xdsm_from_config
 from new_greenheart.core.feedstocks import FeedstockComponent
+
+try:
+    import pyxdsm
+except:
+    pyxdsm = None
 
 
 class GreenHEARTModel(object):
@@ -330,7 +334,8 @@ class GreenHEARTModel(object):
         
         self.plant.options['auto_order'] = True
 
-        create_xdsm_from_config(self.plant_config)
+        if xdsm is not None:
+            create_xdsm_from_config(self.plant_config)
 
     def create_driver_model(self):
         """
