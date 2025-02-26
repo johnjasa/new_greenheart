@@ -56,7 +56,6 @@ class SteelFinanceBaseClass(om.ExplicitComponent):
         self.add_input('CapEx', val=0.0, units='USD')
         self.add_input('OpEx', val=0.0, units='USD/year')
         self.add_output('NPV', val=0.0, units='USD', desc='Net present value')
-        self.add_output('LCOH', val=0.0, units='USD/kg', desc='Levelized cost of hydrogen')
 
     def compute(self, inputs, outputs):
         """
