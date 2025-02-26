@@ -334,7 +334,7 @@ class GreenHEARTModel(object):
         
         self.plant.options['auto_order'] = True
 
-        if xdsm is not None:
+        if pyxdsm is not None:
             create_xdsm_from_config(self.plant_config)
 
     def create_driver_model(self):
