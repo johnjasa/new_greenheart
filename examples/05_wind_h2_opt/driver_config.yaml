@@ -23,5 +23,5 @@ design_variables:
       units: MW
 
 objective:
-  name: steel.LCOS
-  ref: 1.
+  name: electrolyzer.total_hydrogen_produced
+  ref: -100.
