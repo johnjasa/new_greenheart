@@ -7,16 +7,16 @@ technologies:
   # battery types.
   solar:
     performance_model:
-      model: "pysam_solar_plant"
+      model: "pysam_solar_plant_performance"
     cost_model:
-      model: "wind_plant"
+      model: "wind_plant_cost"
     details:
       panel_size: 1.
   electrolyzer:
     performance_model:
-      model: "pem_electrolyzer"
+      model: "pem_electrolyzer_performance"
     cost_model:
-      model: "pem_electrolyzer"
+      model: "pem_electrolyzer_cost"
     details:
       cluster_size_mw: 100.0
       electrolyzer_cost: 2000.

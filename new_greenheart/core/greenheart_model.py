@@ -121,6 +121,8 @@ class GreenHEARTModel(object):
         self.cost_models = []
         self.financial_models = []
 
+        combined_performance_and_cost_model_technologies = ['hopp', 'h2_storage']
+
         # Create a technology group for each technology
         for tech_name, individual_tech_config in self.technology_config['technologies'].items():
             if 'feedstocks' in tech_name:
@@ -131,7 +133,7 @@ class GreenHEARTModel(object):
                 self.tech_names.append(tech_name)
 
                 # Special HOPP handling for short-term
-                if tech_name in ['hopp', 'h2_storage']:
+                if tech_name in combined_performance_and_cost_model_technologies:
                     hopp_comp = supported_models[tech_name](
                         plant_config=self.plant_config, tech_config=individual_tech_config
                     )

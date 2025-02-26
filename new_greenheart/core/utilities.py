@@ -59,7 +59,7 @@ def create_xdsm_from_config(config, output_file='connections_xdsm'):
 class BaseConfig:
     """
     A Mixin class to allow for kwargs overloading when a data class doesn't
-    have a specific parameter definied. This allows passing of larger dictionaries
+    have a specific parameter defined. This allows passing of larger dictionaries
     to a data class without throwing an error.
     """
 
@@ -94,7 +94,7 @@ class BaseConfig:
 
         if undefined:
             raise AttributeError(
-                f"The class defintion for {cls.__name__} is missing the following inputs: "
+                f"The class definition for {cls.__name__} is missing the following inputs: "
                 f"{undefined}"
             )
         return cls(**kwargs)
@@ -105,7 +105,7 @@ class BaseConfig:
         proper `Turbine` formats.
 
         Returns:
-            dict: All key, vaue pais required for class recreation.
+            dict: All key, value pairs required for class re-creation.
         """
         return attrs.asdict(self, filter=attr_hopp_filter, value_serializer=attr_serializer)
 
