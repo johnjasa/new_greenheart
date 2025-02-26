@@ -183,10 +183,6 @@ class ProFastComp(om.ExplicitComponent):
                     refurb_period : self.plant_config["plant"]["plant_life"] : refurb_period
                 ] = self.tech_config['electrolyzer']['details']["replacement_cost_percent"]
                 electrolyzer_refurbishment_schedule = list(electrolyzer_refurbishment_schedule)
-
-                # TODO: figure out why the above returns an error from ProFAST.
-                # Using this for now, knowing it's wrong.
-                # electrolyzer_refurbishment_schedule = [0]
                 
                 pf.add_capital_item(
                     name="Electrolysis System",
