@@ -18,7 +18,7 @@ technologies:
       model: "eco_pem_electrolyzer_cost"
     financial_model:
       group: 1
-    model_inputs:
+    details:
       # Shared model parameters
       rating: 1125.165 # MW
       location: "onshore"
