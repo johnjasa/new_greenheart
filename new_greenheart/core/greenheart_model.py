@@ -1,4 +1,3 @@
-import pyxdsm
 import yaml
 
 import numpy as np
@@ -10,6 +9,11 @@ from new_greenheart.core.pose_optimization import PoseOptimization
 from new_greenheart.core.inputs.validation import load_plant_yaml, load_tech_yaml, load_driver_yaml
 from new_greenheart.core.utilities import create_xdsm_from_config
 from new_greenheart.core.feedstocks import FeedstockComponent
+
+try:
+    import pyxdsm
+except:
+    pyxdsm = None
 
 
 class GreenHEARTModel(object):
@@ -121,6 +125,8 @@ class GreenHEARTModel(object):
         self.cost_models = []
         self.financial_models = []
 
+        combined_performance_and_cost_model_technologies = ['hopp', 'h2_storage']
+
         # Create a technology group for each technology
         for tech_name, individual_tech_config in self.technology_config['technologies'].items():
             if 'feedstocks' in tech_name:
@@ -131,7 +137,7 @@ class GreenHEARTModel(object):
                 self.tech_names.append(tech_name)
 
                 # Special HOPP handling for short-term
-                if tech_name in ['hopp', 'h2_storage']:
+                if tech_name in combined_performance_and_cost_model_technologies:
                     hopp_comp = supported_models[tech_name](
                         plant_config=self.plant_config, tech_config=individual_tech_config
                     )
@@ -328,7 +334,8 @@ class GreenHEARTModel(object):
         
         self.plant.options['auto_order'] = True
 
-        create_xdsm_from_config(self.plant_config)
+        if pyxdsm is not None:
+            create_xdsm_from_config(self.plant_config)
 
     def create_driver_model(self):
         """

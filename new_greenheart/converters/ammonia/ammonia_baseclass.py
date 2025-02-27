@@ -45,7 +45,7 @@ class Feedstocks:
 
 @define
 class AmmoniaPerformanceModelConfig(BaseConfig):
-    plant_capacity: float = field()
+    plant_capacity_kgpy: float = field()
     capacity_factor: float = field()
 
 
@@ -72,7 +72,7 @@ class AmmoniaPerformanceModel(om.ExplicitComponent):
 
     def compute(self, inputs, outputs):
         ammonia_production_kgpy = run_ammonia_model(
-            self.config.plant_capacity,
+            self.config.plant_capacity_kgpy,
             self.config.capacity_factor,
         )
         outputs['ammonia'] = ammonia_production_kgpy / len(inputs['electricity'])
