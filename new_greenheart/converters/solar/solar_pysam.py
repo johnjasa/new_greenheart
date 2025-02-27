@@ -30,7 +30,7 @@ class PYSAMSolarPlantPerformanceComponent(SolarPerformanceBaseClass):
         self.config_name = "PVWattsSingleOwner"
         self.system_model = Pvwatts.default(self.config_name)
 
-        solar_resource = SolarResource(self.config.lat, self.config.lon, self.config.year)
+        solar_resource = SolarResource(self.config.latitude, self.config.longitude, self.config.year)
         self.system_model.value("solar_resource_data", solar_resource.data)
 
     def compute(self, inputs, outputs):
