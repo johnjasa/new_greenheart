@@ -9,3 +9,10 @@ dependencies = [
     "jsonschema",
     "ruamel.yaml",
 ]
+
+[project.optional-dependencies]
+develop = [
+    "pytest-subtests",
+]
+
+all = ["new_greenheart[develop]"]
