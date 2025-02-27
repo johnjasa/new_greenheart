@@ -4,7 +4,8 @@ description = "new_greenheart example package"
 version = "0.1.0"
 authors = []
 dependencies = [
+    "hopp",
+    "greenheart",
     "jsonschema",
-    "pyxdsm",
     "ruamel.yaml",
 ]

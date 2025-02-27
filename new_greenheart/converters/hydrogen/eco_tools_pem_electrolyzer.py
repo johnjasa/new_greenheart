@@ -30,7 +30,7 @@ class ECOElectrolyzerPerformanceModelConfig(BaseConfig):
             - resize_for_enduse (bool): Flag to adjust the electrolyzer based on the enduse.
             - size_for (str): Determines the sizing strategy, either "BOL" (generous), or 
                 "EOL" (conservative).
-            - hydorgen_dmd (#TODO): #TODO
+            - hydrogen_dmd (#TODO): #TODO
         rating (float): The rating of the electrolyzer in MW.
         location (str): The location of the electrolyzer; options include "onshore" or "offshore".
         cluster_rating_MW (float): The rating of the clusters that the electrolyzer is grouped 
@@ -44,7 +44,7 @@ class ECOElectrolyzerPerformanceModelConfig(BaseConfig):
         turndown_ratio (float): The ratio at which the electrolyzer will shut down.
         electrolyzer_capex (int): $/kW overnight installed capital costs for a 1 MW system in
             2022 USD/kW (DOE hydrogen program record 24005 Clean Hydrogen Production Cost Scenarios 
-            with PEM Electrolyzer Technology 05/20/24) #TODO: convet to refs
+            with PEM Electrolyzer Technology 05/20/24) #TODO: convert to refs
             (https://www.hydrogen.energy.gov/docs/hydrogenprogramlibraries/pdfs/24005-clean-hydrogen-production-cost-pem-electrolyzer.pdf?sfvrsn=8cb10889_1) 
     """
     sizing: dict = field()
@@ -70,6 +70,8 @@ class ECOElectrolyzerPerformanceModel(ElectrolyzerPerformanceBaseClass):
             self.options['tech_config']['details']
         )
         self.add_output('efficiency', val=0.0, desc='Average efficiency of the electrolyzer')
+
+        self.add_input('electrolyzer_size_mw', units='MW', desc='Size of the electrolyzer in MW')
 
     def compute(self, inputs, outputs):
         plant_life = self.options['plant_config']['plant']['plant_life']
@@ -140,7 +142,7 @@ class ECOElectrolyzerCostModelConfig(BaseConfig):
         location (str): The location of the electrolyzer; options include "onshore" or "offshore".
         electrolyzer_capex (int): $/kW overnight installed capital costs for a 1 MW system in
             2022 USD/kW (DOE hydrogen program record 24005 Clean Hydrogen Production Cost Scenarios 
-            with PEM Electrolyzer Technology 05/20/24) #TODO: convet to refs
+            with PEM Electrolyzer Technology 05/20/24) #TODO: convert to refs
             (https://www.hydrogen.energy.gov/docs/hydrogenprogramlibraries/pdfs/24005-clean-hydrogen-production-cost-pem-electrolyzer.pdf?sfvrsn=8cb10889_1) 
         cost_model (str): The cost model used for the electrolyzer. Options include "basic", which 
             is based on the H2a project and HFTO's program record for PEM electrolysis, and 
