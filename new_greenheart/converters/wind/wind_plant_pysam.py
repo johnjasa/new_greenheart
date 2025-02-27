@@ -17,9 +17,18 @@ class PYSAMWindPlantPerformanceComponentConfig(BaseConfig):
 
 @define
 class PYSAMWindPlantPerformanceComponentSiteConfig(BaseConfig):
-    lat: float = field()
-    lon: float = field()
+    """Configuration class for the location of the wind plant PYSAMWindPlantPerformanceComponentSite.
+
+    Args:
+        latitude (float): Latitude of wind plant location.
+        longitude (float): Longitude of wind plant location.
+        year (float): Year for resource.
+        wind_resource_filepath (str): Path to wind resource file. Defaults to "".
+    """
+    latitude: float = field()
+    longitude: float = field()
     year: float = field()
+    wind_resource_filepath: str = field(default="")
 
 
 class PYSAMWindPlantPerformanceComponent(WindPerformanceBaseClass):
@@ -38,11 +47,12 @@ class PYSAMWindPlantPerformanceComponent(WindPerformanceBaseClass):
         self.config_name = "WindPowerSingleOwner"
         self.system_model = Windpower.default(self.config_name)
 
-        lat = self.plant_config.latitude
-        lon = self.plant_config.longitude
-        year = self.plant_config.year
+        lat = self.site_config.latitude
+        lon = self.site_config.longitude
+        year = self.site_config.year
+        resource_filepath = self.site_config.wind_resource_filepath
         hub_height = self.config.hub_height
-        wind_resource = WindResource(lat, lon, year, wind_turbine_hub_ht=hub_height)
+        wind_resource = WindResource(lat, lon, year, wind_turbine_hub_ht=hub_height, filepath=resource_filepath)
         self.system_model.value("wind_resource_data", wind_resource.data)
 
     def compute(self, inputs, outputs):
