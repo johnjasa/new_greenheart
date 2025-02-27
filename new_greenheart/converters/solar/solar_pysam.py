@@ -12,8 +12,8 @@ from new_greenheart.core.utilities import BaseConfig
 
 @define
 class PYSAMSolarPlantPerformanceComponentConfig(BaseConfig):
-    lat: float = field()
-    lon: float = field()
+    latitude: float = field()
+    longitude: float = field()
     year: float = field()
 
 
@@ -24,13 +24,13 @@ class PYSAMSolarPlantPerformanceComponent(SolarPerformanceBaseClass):
     """
     def setup(self):
         super().setup()
-        self.config = PYSAMSolarPlantPerformanceComponentConfig(
+        self.config = PYSAMSolarPlantPerformanceComponentConfig.from_dict(
             self.options["plant_config"]["site"]
         )
         self.config_name = "PVWattsSingleOwner"
         self.system_model = Pvwatts.default(self.config_name)
 
-        solar_resource = SolarResource(self.config.lat, self.config.lon, self.config.year)
+        solar_resource = SolarResource(self.config.latitude, self.config.longitude, self.config.year)
         self.system_model.value("solar_resource_data", solar_resource.data)
 
     def compute(self, inputs, outputs):
