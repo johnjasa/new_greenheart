@@ -28,8 +28,8 @@ class AdjustedCapexOpexComp(om.ExplicitComponent):
         total_capex_adjusted = 0.0
         total_opex_adjusted = 0.0
         for tech in self.options['tech_config']:
-            capex = inputs[f'capex_{tech}']
-            opex = inputs[f'opex_{tech}']
+            capex = float(inputs[f'capex_{tech}'][0])
+            opex = float(inputs[f'opex_{tech}'][0])
             cost_year = self.discount_years[tech]
             periods = self.cost_year - cost_year
             adjusted_capex = -npf.fv(self.inflation_rate, periods, 0.0, capex)
@@ -178,19 +178,15 @@ class ProFastComp(om.ExplicitComponent):
                 electrolyzer_refurbishment_schedule = np.zeros(
                     self.plant_config["plant"]["plant_life"]
                 )
-                refurb_period = round(float(inputs['time_until_replacement'][0]) / (24 * 365))
+                refurb_period = round(float(inputs['time_until_replacement']) / (24 * 365))
                 electrolyzer_refurbishment_schedule[
                     refurb_period : self.plant_config["plant"]["plant_life"] : refurb_period
                 ] = self.tech_config['electrolyzer']['details']["replacement_cost_percent"]
                 electrolyzer_refurbishment_schedule = list(electrolyzer_refurbishment_schedule)
-
-                # TODO: figure out why the above returns an error from ProFAST.
-                # Using this for now, knowing it's wrong.
-                electrolyzer_refurbishment_schedule = [0]
-
+                
                 pf.add_capital_item(
                     name="Electrolysis System",
-                    cost=float(inputs[f'capex_adjusted_{tech}'][0]),
+                    cost=float(inputs[f'capex_adjusted_{tech}']),
                     depr_type=self.plant_config["finance_parameters"]["depreciation_method"],
                     depr_period=int(self.plant_config["finance_parameters"]["depreciation_period_electrolyzer"]),
                     refurb=electrolyzer_refurbishment_schedule,
@@ -199,13 +195,13 @@ class ProFastComp(om.ExplicitComponent):
                     name="Electrolysis System Fixed O&M Cost",
                     usage=1.0,
                     unit="$/year",
-                    cost=inputs[f'opex_adjusted_{tech}'],
+                    cost=float(inputs[f'opex_adjusted_{tech}']),
                     escalation=gen_inflation,
                 )
             else:
                 pf.add_capital_item(
                     name=f"{tech} System",
-                    cost=inputs[f'capex_adjusted_{tech}'],
+                    cost=float(inputs[f'capex_adjusted_{tech}']),
                     depr_type=self.plant_config["finance_parameters"]["depreciation_method"],
                     depr_period=self.plant_config["finance_parameters"]["depreciation_period"],
                     refurb=[0],
@@ -214,7 +210,7 @@ class ProFastComp(om.ExplicitComponent):
                     name=f"{tech} O&M Cost",
                     usage=1.0,
                     unit="$/year",
-                    cost=inputs[f'opex_adjusted_{tech}'],
+                    cost=float(inputs[f'opex_adjusted_{tech}']),
                     escalation=gen_inflation,
                 )
 
