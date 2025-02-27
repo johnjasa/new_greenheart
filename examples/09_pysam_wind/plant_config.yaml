@@ -7,6 +7,8 @@ site:
   elevation_m: 439.0
   time_zone: -5
   year: 2013
+  wind_resource_filepath: "weather/wind/47.5_-93.0_windtoolkit_2013_60min_100m_120m.srw"
+  solar_resource_filepath: "weather/solar/47.5_-93.0_psmv3_60_2013.csv"
 
   # array of polygons defining boundaries with x/y coords
   boundaries: [
@@ -28,6 +30,6 @@ plant:
 # with the reverse definition.
 # this will naturally grow as we mature the interconnected tech
 technology_interconnections: [
-  ["solar", "electrolyzer", "electricity", "cable"],
+  ["wind", "electrolyzer", "electricity", "cable"],
   # etc
 ]
