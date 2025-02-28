@@ -4,11 +4,15 @@ from attrs import define, field
 
 from greenheart.simulation.technologies.ammonia.ammonia import run_ammonia_model, run_ammonia_cost_model, AmmoniaCapacityModelConfig
 
-from new_greenheart.core.utilities import BaseConfig
+from new_greenheart.core.utilities import (
+    BaseConfig,
+    merge_shared_cost_inputs,
+    merge_shared_performance_inputs
+)
 
 
 @define
-class Feedstocks:
+class Feedstocks(BaseConfig):
     """
     Represents the costs and consumption rates of various feedstocks and resources
     used in ammonia production.
@@ -46,7 +50,7 @@ class Feedstocks:
 @define
 class AmmoniaPerformanceModelConfig(BaseConfig):
     plant_capacity_kgpy: float = field()
-    capacity_factor: float = field()
+    plant_capacity_factor: float = field()
 
 
 class AmmoniaPerformanceModel(om.ExplicitComponent):
@@ -60,7 +64,7 @@ class AmmoniaPerformanceModel(om.ExplicitComponent):
 
     def setup(self):
         self.config = AmmoniaPerformanceModelConfig.from_dict(
-            self.options['tech_config']['details']
+            merge_shared_performance_inputs(self.options['tech_config']['model_inputs'])
         )
         self.add_input(
             'electricity', val=0.0, shape_by_conn=True, copy_shape='hydrogen', units='kW'
@@ -73,7 +77,7 @@ class AmmoniaPerformanceModel(om.ExplicitComponent):
     def compute(self, inputs, outputs):
         ammonia_production_kgpy = run_ammonia_model(
             self.config.plant_capacity_kgpy,
-            self.config.capacity_factor,
+            self.config.plant_capacity_factor,
         )
         outputs['ammonia'] = ammonia_production_kgpy / len(inputs['electricity'])
 
@@ -88,13 +92,12 @@ class AmmoniaCostModelConfig(BaseConfig):
         plant_capacity_kgpy (float): Annual production capacity of the plant in kg.
         plant_capacity_factor (float): The ratio of actual production to maximum
             possible production over a year.
-        feedstocks (Feedstocks): An instance of the `Feedstocks` class detailing the
+        feedstocks (dict): A dictionary that is passed to the `Feedstocks` class detailing the
             costs and consumption rates of resources used in production.
     """
-
     plant_capacity_kgpy: float = field()
     plant_capacity_factor: float = field()
-    feedstocks: Feedstocks = field()
+    feedstocks: dict = field(converter=Feedstocks.from_dict)
 
 
 class AmmoniaCostModel(om.ExplicitComponent):
@@ -115,12 +118,8 @@ class AmmoniaCostModel(om.ExplicitComponent):
         self.add_output('variable_cost_in_startup_year', val=0.0, units='USD', desc='Variable costs')
         self.add_output('credits_byproduct', val=0.0, units='USD', desc='Byproduct credits')
 
-        tech_config = self.options['tech_config']
-
-        self.cost_config = AmmoniaCostModelConfig(
-            plant_capacity_factor=tech_config['details']['capacity_factor'],
-            feedstocks=Feedstocks(**tech_config['details']['feedstocks']),
-            plant_capacity_kgpy=tech_config['details']['plant_capacity_kgpy'],
+        self.cost_config = AmmoniaCostModelConfig.from_dict(
+            merge_shared_cost_inputs(self.options['tech_config']['model_inputs'])
         )
 
     def compute(self, inputs, outputs):

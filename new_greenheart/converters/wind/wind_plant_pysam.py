@@ -7,16 +7,20 @@ from new_greenheart.converters.wind.wind_plant_baseclass import (
     WindPerformanceBaseClass,
     WindCostBaseClass
 )
-from new_greenheart.core.utilities import BaseConfig
+from new_greenheart.core.utilities import (
+    BaseConfig,
+    merge_shared_cost_inputs,
+    merge_shared_performance_inputs
+)
 
 
 @define
-class PYSAMWindPlantPerformanceComponentConfig(BaseConfig):
+class PYSAMWindPlantPerformanceModelConfig(BaseConfig):
     hub_height: float = field()
 
 
 @define
-class PYSAMWindPlantPerformanceComponentSiteConfig(BaseConfig):
+class PYSAMWindPlantPerformanceModelSiteConfig(BaseConfig):
     """Configuration class for the location of the wind plant PYSAMWindPlantPerformanceComponentSite.
 
     Args:
@@ -31,18 +35,18 @@ class PYSAMWindPlantPerformanceComponentSiteConfig(BaseConfig):
     wind_resource_filepath: str = field(default="")
 
 
-class PYSAMWindPlantPerformanceComponent(WindPerformanceBaseClass):
+class PYSAMWindPlantPerformanceModel(WindPerformanceBaseClass):
     """
     An OpenMDAO component that wraps a WindPlant model.
     It takes wind parameters as input and outputs power generation data.
     """
     def setup(self):
         super().setup()
-        self.config = PYSAMWindPlantPerformanceComponentConfig.from_dict(
-            self.options['tech_config']['details']
+        self.config = PYSAMWindPlantPerformanceModelConfig.from_dict(
+            merge_shared_performance_inputs(self.options['tech_config']['model_inputs'])
         )
-        self.site_config = PYSAMWindPlantPerformanceComponentSiteConfig.from_dict(
-            self.options['plant_config']['site']
+        self.site_config = PYSAMWindPlantPerformanceModelSiteConfig.from_dict(
+            self.options['plant_config']['site'], strict=False
         )
         self.config_name = "WindPowerSingleOwner"
         self.system_model = Windpower.default(self.config_name)

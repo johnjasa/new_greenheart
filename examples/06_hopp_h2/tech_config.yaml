@@ -5,7 +5,7 @@ technologies:
   hopp:
     performance_model:
       model: "hopp"
-      config: !include hopp_config.yaml
+      config: !include tech_inputs/hopp_config.yaml
     cost_model:
       model: "hopp"
   electrolyzer:
@@ -13,12 +13,15 @@ technologies:
       model: "pem_electrolyzer_performance"
     cost_model:
       model: "pem_electrolyzer_cost"
-    details:
-      cluster_size_mw: 1.0
-      plant_life: 30
-      electrolyzer_cost: 2.
-      model_parameters:
+    model_inputs:
+      shared_parameters:
+        cluster_size_mw: 1.0
+      performance_parameters:
+        plant_life: 30
         eol_eff_percent_loss: 10
         uptime_hours_until_eol: 77600
         include_degradation_penalty: True
         turndown_ratio: 0.1
+      cost_parameters:
+        electrolyzer_cost: 2.
+        

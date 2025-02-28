@@ -7,11 +7,15 @@ from new_greenheart.converters.solar.solar_baseclass import (
     SolarPerformanceBaseClass,
     SolarCostBaseClass
 )
-from new_greenheart.core.utilities import BaseConfig
+from new_greenheart.core.utilities import (
+    BaseConfig,
+    merge_shared_performance_inputs,
+    merge_shared_cost_inputs
+)
 
 
 @define
-class PYSAMSolarPlantPerformanceComponentConfig(BaseConfig):
+class PYSAMSolarPlantPerformanceModelSiteConfig(BaseConfig):
     """Configuration class for the location of the solar pv plant PYSAMSolarPlantPerformanceComponentSite.
 
     Args:
@@ -26,20 +30,25 @@ class PYSAMSolarPlantPerformanceComponentConfig(BaseConfig):
     solar_resource_filepath: str = field(default="")
 
 
-class PYSAMSolarPlantPerformanceComponent(SolarPerformanceBaseClass):
+class PYSAMSolarPlantPerformanceModel(SolarPerformanceBaseClass):
     """
     An OpenMDAO component that wraps a SolarPlant model.
     It takes solar parameters as input and outputs power generation data.
     """
     def setup(self):
         super().setup()
-        self.config = PYSAMSolarPlantPerformanceComponentConfig.from_dict(
+        self.config = PYSAMSolarPlantPerformanceModelSiteConfig.from_dict(
             self.options["plant_config"]["site"]
         )
         self.config_name = "PVWattsSingleOwner"
         self.system_model = Pvwatts.default(self.config_name)
 
-        solar_resource = SolarResource(lat=self.config.latitude, lon=self.config.longitude, year=self.config.year,filepath=self.config.solar_resource_filepath)
+        solar_resource = SolarResource(
+            lat=self.config.latitude,
+            lon=self.config.longitude,
+            year=self.config.year,
+            filepath=self.config.solar_resource_filepath
+        )
 
         self.system_model.value("solar_resource_data", solar_resource.data)
 
