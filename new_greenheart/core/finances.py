@@ -181,7 +181,7 @@ class ProFastComp(om.ExplicitComponent):
                 refurb_period = round(float(inputs['time_until_replacement']) / (24 * 365))
                 electrolyzer_refurbishment_schedule[
                     refurb_period : self.plant_config["plant"]["plant_life"] : refurb_period
-                ] = self.tech_config['electrolyzer']['details']["replacement_cost_percent"]
+                ] = self.tech_config['electrolyzer']['model_inputs']["financial_parameters"]["replacement_cost_percent"]
                 electrolyzer_refurbishment_schedule = list(electrolyzer_refurbishment_schedule)
                 
                 pf.add_capital_item(
