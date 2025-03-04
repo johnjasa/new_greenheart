@@ -57,6 +57,48 @@ def create_xdsm_from_config(config, output_file='connections_xdsm'):
     print(f"XDSM diagram written to {output_file}.tex")
 
 
+def merge_inputs(dict1, dict2):
+    """Merges two dictionaries and raises ValueError if duplicate keys exist."""
+    common_keys = dict1.keys() & dict2.keys()
+    if common_keys:
+        raise ValueError(
+            f"Duplicate parameters found: {', '.join(common_keys)}. "
+            f"Please define parameters only once in the shared, performance, and cost dictionaries."
+        )
+    return {**dict1, **dict2}
+
+
+def merge_shared_performance_inputs(config):
+    """Merges two dictionaries and raises ValueError if duplicate keys exist."""
+    if "performance_parameters" in config.keys() and "shared_parameters" in config.keys():
+        common_keys = config["performance_parameters"].keys() & config["shared_parameters"].keys()
+        if common_keys:
+            raise ValueError(
+                f"Duplicate parameters found: {', '.join(common_keys)}. "
+                f"Please define parameters only once in the shared and performance dictionaries."
+            )
+        return {**config["performance_parameters"], **config["shared_parameters"]}
+    elif "shared_parameters" not in config.keys():
+        return config["performance_parameters"]
+    else:
+        return config["shared_parameters"]
+
+
+def merge_shared_cost_inputs(config):
+    """Merges two dictionaries and raises ValueError if duplicate keys exist."""
+    if "cost_parameters" in config.keys() and "shared_parameters" in config.keys():
+        common_keys = config["cost_parameters"].keys() & config["shared_parameters"].keys()
+        if common_keys:
+            raise ValueError(
+                f"Duplicate parameters found: {', '.join(common_keys)}. "
+                f"Please define parameters only once in the shared and cost dictionaries."
+            )
+        return {**config["cost_parameters"], **config["shared_parameters"]}
+    elif "shared_parameters" not in config.keys():
+        return config["cost_parameters"]
+    else:
+        return config["shared_parameters"]
+
 
 @define
 class BaseConfig:
@@ -67,7 +109,7 @@ class BaseConfig:
     """
 
     @classmethod
-    def from_dict(cls, data: dict):
+    def from_dict(cls, data: dict, strict=True):
         """Maps a data dictionary to an `attr`-defined class.
 
         TODO: Add an error to ensure that either none or all the parameters are passed in
@@ -75,17 +117,21 @@ class BaseConfig:
         Args:
             data : dict
                 The data dictionary to be mapped.
+            strict: bool
+                A flag enabling strict parameter processing, meaning that no extra parameters
+                    may be passed in or an AttributeError will be raised.
         Returns:
             cls
                 The `attr`-defined class.
         """
         # Check for any inputs that aren't part of the class definition
-        # class_attr_names = [a.name for a in cls.__attrs_attrs__]
-        # extra_args = [d for d in data if d not in class_attr_names]
-        # if len(extra_args):
-        #     raise AttributeError(
-        #         f"The initialization for {cls.__name__} was given extraneous inputs: {extra_args}"
-        #     )
+        if strict is True:
+            class_attr_names = [a.name for a in cls.__attrs_attrs__]
+            extra_args = [d for d in data if d not in class_attr_names]
+            if len(extra_args):
+                raise AttributeError(
+                    f"The initialization for {cls.__name__} was given extraneous inputs: {extra_args}"
+                )
 
         kwargs = {a.name: data[a.name] for a in cls.__attrs_attrs__ if a.name in data and a.init}
 
@@ -112,10 +158,12 @@ class BaseConfig:
         """
         return attrs.asdict(self, filter=attr_hopp_filter, value_serializer=attr_serializer)
 
+
 def attr_serializer(inst: type, field: Attribute, value: Any):
     if isinstance(value, np.ndarray):
         return value.tolist()
     return value
+
 
 def attr_hopp_filter(inst: Attribute, value: Any) -> bool:
     if inst.init is False:

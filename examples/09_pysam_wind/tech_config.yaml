@@ -17,19 +17,26 @@ technologies:
       model: "pysam_wind_plant_performance"
     cost_model:
       model: "wind_plant_cost"
-    details:
-      hub_height: 115.0
+    model_inputs:
+      performance_parameters:
+        hub_height: 115.0
+      cost_parameters:
+        num_turbines: 20
+        turbine_rating_kw: 3000.0
+        cost_per_kw: 1500.0
   electrolyzer:
     performance_model:
       model: "pem_electrolyzer_performance"
     cost_model:
       model: "pem_electrolyzer_cost"
-    details:
-      cluster_size_mw: 100.0
-      electrolyzer_cost: 2000.
-      plant_life: 30
-      model_parameters:
+    model_inputs:
+      shared_parameters:
+        cluster_size_mw: 100.0
+      performance_parameters:
+        plant_life: 30
         eol_eff_percent_loss: 10
         uptime_hours_until_eol: 77600
         include_degradation_penalty: True
         turndown_ratio: 0.1
+      cost_parameters:
+        electrolyzer_cost: 2000.
