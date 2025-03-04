@@ -19,4 +19,4 @@ all = ["new_greenheart[develop]"]
 
 
 [tool.setuptools.package-data]
-new_greenheart = ["*.yaml"]
+"new_greenheart" = ["*.yaml"]
