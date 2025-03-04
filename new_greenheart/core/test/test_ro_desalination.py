@@ -8,10 +8,12 @@ from new_greenheart.converters.desalination.desalination import (
 
 def test_brackish_performance(subtests):
     tech_config = {
-        "details": {
-            "freshwater_kg_per_hour": 10000,
-            "salinity": "brackish",
-            "freshwater_density": 997
+        "model_inputs": {
+            "performance_parameters": {
+                "freshwater_kg_per_hour": 10000,
+                "salinity": "brackish",
+                "freshwater_density": 997,
+            },
         }
     }
 
@@ -35,10 +37,12 @@ def test_brackish_performance(subtests):
 
 def test_seawater_performance(subtests):
     tech_config = {
-        "details": {
-            "freshwater_kg_per_hour": 10000,
-            "salinity": "seawater",
-            "freshwater_density": 997
+        "model_inputs": {
+            "performance_parameters": {
+                "freshwater_kg_per_hour": 10000,
+                "salinity": "seawater",
+                "freshwater_density": 997,
+            },
         }
     }
 
@@ -62,9 +66,11 @@ def test_seawater_performance(subtests):
 
 def test_ro_desalination_cost(subtests):
     tech_config = {
-        "details": {
-            "freshwater_kg_per_hour": 10000,
-            "freshwater_density": 997
+        "model_inputs": {
+            "cost_parameters": {
+                "freshwater_kg_per_hour": 10000,
+                "freshwater_density": 997,
+            },
         }
     }
 

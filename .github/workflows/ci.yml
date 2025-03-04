@@ -28,7 +28,7 @@ jobs:
           touch .env
       - name: Run tests
         run: |
-          testflo .
+          pytest .
       - name: Lint with flake8
         run: |
           # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
