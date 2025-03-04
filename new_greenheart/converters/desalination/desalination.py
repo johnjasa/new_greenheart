@@ -14,33 +14,33 @@ from new_greenheart.core.utilities import (
 from new_greenheart.core.validators import gt_zero, contains
 
 @define
-class ReverseOsmosisDesalinationPerformanceModelConfig(BaseConfig):
+class ReverseOsmosisPerformanceModelConfig(BaseConfig):
     """Configuration class for the ReverseOsmosisDesalinationPerformanceModel.
 
     Args:
         freshwater_kg_per_hour (float): Desalination plant capacity represented as maximum freshwater requirements of system [kg/hr]
-        freshwater_density (float): Density of the output freshwater [kg/m**3]. Default = 997.
         salinity (str): "seawater" >18,000 ppm or "brackish" <18,000 ppm
+        freshwater_density (float): Density of the output freshwater [kg/m**3]. Default = 997.
     """
     freshwater_kg_per_hour: float = field(validator=gt_zero)
-    freshwater_density: float = field(validator=gt_zero, default=997)
     salinity: str = field(validator=contains(["seawater", "brackish"]))
+    freshwater_density: float = field(validator=gt_zero, default=997)
 
 class ReverseOsmosisPerformanceModel(DesalinationPerformanceBaseClass):
     """
-    An OpenMDAO component that computes the performance of a revese osmosis desalination system.
+    An OpenMDAO component that computes the performance of a reverse osmosis desalination system.
     Takes plantcapacitykgph input and outputs fresh water and electricity required.
     """
     def setup(self):
         super().setup()
-        self.config = ReverseOsmosisDesalinationPerformanceModelConfig.from_dict(
+        self.config = ReverseOsmosisPerformanceModelConfig.from_dict(
             merge_shared_performance_inputs(self.options['tech_config']['model_inputs'])
         )
         self.add_output('electricity', val=0.0, units='kW', desc='Electricity required to run desalination plant')
         self.add_output('feedwater', val=0.0, units='m**3/h', desc='Feedwater flow rate')
 
     def compute(self, inputs, outputs):
-        freshwater_m3_per_hr = inputs['reshwater_kg_per_hr'] / inputs['freshwater_density']
+        freshwater_m3_per_hr = self.config.freshwater_kg_per_hour/ self.config.freshwater_density
 
         if self.config.salinity == "seawater":
             # SWRO: Sea Water Reverse Osmosis, water >18,000 ppm
@@ -55,8 +55,8 @@ class ReverseOsmosisPerformanceModel(DesalinationPerformanceBaseClass):
             # https://www.sciencedirect.com/science/article/pii/S0011916417321057
             desal_power = freshwater_m3_per_hr * energy_conversion_factor
 
-        elif self.config.salinity == "brackish":
-            # BWRO: Brakish water Reverse Osmosis, water < 18,000 ppm
+        if self.config.salinity == "brackish":
+            # BWRO: Brackish water Reverse Osmosis, water < 18,000 ppm
             # Water recovery
             recovery_ratio = 0.75  # https://www.usbr.gov/research/dwpr/reportpdfs/report072.pdf
             feedwater_m3_per_hr = freshwater_m3_per_hr / recovery_ratio
@@ -85,14 +85,14 @@ class ReverseOsmosisPerformanceModel(DesalinationPerformanceBaseClass):
             Voltage Codes
             460 or 480v/ 3ph/ 60 Hz
             """
-            desal_mass_kg = freshwater_m3_per_hr * 346.7  # [kg]
-            desal_size_m2 = freshwater_m3_per_hr * 0.467  # [m^2]
+        desal_mass_kg = freshwater_m3_per_hr * 346.7  # [kg]
+        desal_size_m2 = freshwater_m3_per_hr * 0.467  # [m^2]
 
-            outputs['water'] = freshwater_m3_per_hr
-            outputs['electricity'] = desal_power
-            outputs['feedwater'] = feedwater_m3_per_hr
-            outputs['mass'] = desal_mass_kg
-            outputs['footprint'] = desal_size_m2
+        outputs['water'] = freshwater_m3_per_hr
+        outputs['electricity'] = desal_power
+        outputs['feedwater'] = feedwater_m3_per_hr
+        outputs['mass'] = desal_mass_kg
+        outputs['footprint'] = desal_size_m2
 
 
 @define
@@ -119,9 +119,9 @@ class ReverseOsmosisCostModel(DesalinationCostBaseClass):
     def compute(self, inputs, outputs):
         """Cost reference: https://www.nrel.gov/docs/fy16osti/66073.pdf
         """
-        desal_capex = 32894 * (inputs['freshwater_density'] * inputs['freshwater_kg_per_hour'] / 3600)  # [USD]
+        desal_capex = 32894 * (self.config.freshwater_kg_per_hour / 3600)  # [USD]
 
-        desal_opex = 4841 * (inputs['freshwater_density'] * inputs['freshwater_kg_per_hour'] / 3600)  # [USD/yr]
+        desal_opex = 4841 * (self.config.freshwater_kg_per_hour / 3600)  # [USD/yr]
 
         outputs['CapEx'] = desal_capex
         outputs['OpEx'] = desal_opex

@@ -7,9 +7,10 @@ class DesalinationPerformanceBaseClass(om.ExplicitComponent):
         self.options.declare('tech_config', types=dict)
 
     def setup(self):
-        self.add_input('electricity', val=0.0, shape_by_conn=True, copy_shape='water', units='kW')
-        self.add_output('water', val=0.0, shape_by_conn=True, copy_shape='electricity',units='m**3/h')
-
+        self.add_output('water', val=0.0, units='m**3/h',desc='Fresh water')
+        self.add_output('mass', val=0.0, units='kg', desc='Mass of desalination system')
+        self.add_output('footprint', val=0.0, units='m**2', desc='Footprint of desalination system')
+        
     def compute(self, inputs, outputs):
         """
         Computation for the OM component.
@@ -28,9 +29,6 @@ class DesalinationCostBaseClass(om.ExplicitComponent):
     def setup(self):
         # Inputs for cost model configuration
         self.add_input('plant_capacity_kgph', val=0.0, units='kg/h', desc='Desired freshwater flow rate')
-        self.add_output('water', val=0.0, units='m**3/h',desc='Fresh water')
-        self.add_output('mass', val=0.0, units='kg', desc='Mass of desalination system')
-        self.add_output('footprint', val=0.0, units='m**2', desc='Footprint of desalination system')
         self.add_output('CapEx', val=0.0, units='USD', desc='Total capital expenditures')
         self.add_output('OpEx', val=0.0, units='USD/year', desc='Total fixed operating costs')
 

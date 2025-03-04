@@ -19,14 +19,16 @@ jobs:
         env:
           SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL: True
         run: |
+          sudo apt-get update && sudo apt-get install -y libglpk-dev glpk-utils coinor-cbc
           python -m pip install --upgrade pip
+          pip install pytest-subtests
           pip install -e .
       - name: Create env file
         run: |
           touch .env
       - name: Run tests
         run: |
-          testflo .
+          pytest .
       - name: Lint with flake8
         run: |
           # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
