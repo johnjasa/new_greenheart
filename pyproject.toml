@@ -17,3 +17,9 @@ develop = [
 
 all = ["new_greenheart[develop]"]
 
+
+[tool.setuptools.packages.find]
+where = ["new_greenheart"]
+
+[tool.setuptools.package-data]
+"*" = ["*.yaml"]
