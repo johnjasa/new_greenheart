@@ -44,8 +44,10 @@ def test_electrolyzer_refurb_results():
 
     tech_config = {
         "electrolyzer": {
-            "details": {
-                "replacement_cost_percent": 0.1,
+            "model_inputs": {
+                "financial_parameters": {
+                    "replacement_cost_percent": 0.1,
+                }
             }
         },
     }

@@ -16,7 +16,11 @@ from new_greenheart.converters.hydrogen.electrolyzer_baseclass import (
     ElectrolyzerCostBaseClass,
     ElectrolyzerFinanceBaseClass,
 )
-from new_greenheart.core.utilities import BaseConfig
+from new_greenheart.core.utilities import (
+    BaseConfig,
+    merge_shared_performance_inputs,
+    merge_shared_cost_inputs
+)
 from new_greenheart.core.validators import gt_zero, contains, range_val
 
 
@@ -67,7 +71,7 @@ class ECOElectrolyzerPerformanceModel(ElectrolyzerPerformanceBaseClass):
     def setup(self):
         super().setup()
         self.config = ECOElectrolyzerPerformanceModelConfig.from_dict(
-            self.options['tech_config']['details']
+            merge_shared_performance_inputs(self.options["tech_config"]["model_inputs"])
         )
         self.add_output('efficiency', val=0.0, desc='Average efficiency of the electrolyzer')
 
@@ -161,7 +165,7 @@ class ECOElectrolyzerCostModel(ElectrolyzerCostBaseClass):
     def setup(self):
         super().setup()
         self.config = ECOElectrolyzerCostModelConfig.from_dict(
-            self.options['tech_config']['details']
+            merge_shared_cost_inputs(self.options["tech_config"]["model_inputs"])
         )
 
     def compute(self, inputs, outputs):
