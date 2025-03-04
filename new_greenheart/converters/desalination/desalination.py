@@ -23,12 +23,12 @@ class ReverseOsmosisPerformanceModelConfig(BaseConfig):
         freshwater_density (float): Density of the output freshwater [kg/m**3]. Default = 997.
     """
     freshwater_kg_per_hour: float = field(validator=gt_zero)
-    freshwater_density: float = field(validator=gt_zero, default=997)
     salinity: str = field(validator=contains(["seawater", "brackish"]))
+    freshwater_density: float = field(validator=gt_zero, default=997)
 
 class ReverseOsmosisPerformanceModel(DesalinationPerformanceBaseClass):
     """
-    An OpenMDAO component that computes the performance of a revese osmosis desalination system.
+    An OpenMDAO component that computes the performance of a reverse osmosis desalination system.
     Takes plantcapacitykgph input and outputs fresh water and electricity required.
     """
     def setup(self):
@@ -56,7 +56,7 @@ class ReverseOsmosisPerformanceModel(DesalinationPerformanceBaseClass):
             desal_power = freshwater_m3_per_hr * energy_conversion_factor
 
         if self.config.salinity == "brackish":
-            # BWRO: Brakish water Reverse Osmosis, water < 18,000 ppm
+            # BWRO: Brackish water Reverse Osmosis, water < 18,000 ppm
             # Water recovery
             recovery_ratio = 0.75  # https://www.usbr.gov/research/dwpr/reportpdfs/report072.pdf
             feedwater_m3_per_hr = freshwater_m3_per_hr / recovery_ratio
