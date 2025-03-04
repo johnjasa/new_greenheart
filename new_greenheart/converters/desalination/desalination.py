@@ -6,7 +6,11 @@ from new_greenheart.converters.desalination.desalination_baseclass import (
     DesalinationFinanceBaseClass
 )
 
-from new_greenheart.core.utilities import BaseConfig
+from new_greenheart.core.utilities import (
+    BaseConfig,
+    merge_shared_performance_inputs,
+    merge_shared_cost_inputs
+)
 from new_greenheart.core.validators import gt_zero, contains
 
 @define
@@ -19,8 +23,8 @@ class ReverseOsmosisPerformanceModelConfig(BaseConfig):
         freshwater_density (float): Density of the output freshwater [kg/m**3]. Default = 997.
     """
     freshwater_kg_per_hour: float = field(validator=gt_zero)
+    freshwater_density: float = field(validator=gt_zero, default=997)
     salinity: str = field(validator=contains(["seawater", "brackish"]))
-    freshwater_density: float = field(validator=gt_zero,default=997)
 
 class ReverseOsmosisPerformanceModel(DesalinationPerformanceBaseClass):
     """
@@ -30,7 +34,7 @@ class ReverseOsmosisPerformanceModel(DesalinationPerformanceBaseClass):
     def setup(self):
         super().setup()
         self.config = ReverseOsmosisPerformanceModelConfig.from_dict(
-            self.options['tech_config']['details']
+            merge_shared_performance_inputs(self.options['tech_config']['model_inputs'])
         )
         self.add_output('electricity', val=0.0, units='kW', desc='Electricity required to run desalination plant')
         self.add_output('feedwater', val=0.0, units='m**3/h', desc='Feedwater flow rate')
@@ -109,7 +113,7 @@ class ReverseOsmosisCostModel(DesalinationCostBaseClass):
     def setup(self):
         super().setup()
         self.config = ReverseOsmosisCostModelConfig.from_dict(
-            self.options['tech_config']['details']
+            merge_shared_cost_inputs(self.options['tech_config']['model_inputs'])
         )
 
     def compute(self, inputs, outputs):

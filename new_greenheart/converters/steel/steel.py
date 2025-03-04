@@ -17,7 +17,11 @@ from new_greenheart.converters.steel.steel_baseclass import (
     SteelCostBaseClass,
     SteelFinanceBaseClass
 )
-from new_greenheart.core.utilities import BaseConfig
+from new_greenheart.core.utilities import (
+    BaseConfig,
+    merge_shared_performance_inputs,
+    merge_shared_cost_inputs
+)
 from new_greenheart.core.validators import gt_zero, contains, range_val
 
 
@@ -37,7 +41,9 @@ class SteelPerformanceModel(SteelPerformanceBaseClass):
 
     def setup(self):
         super().setup()
-        self.config = SteelPerformanceModelConfig.from_dict(self.options['tech_config']['details'])
+        self.config = SteelPerformanceModelConfig.from_dict(
+            merge_shared_performance_inputs(self.options["tech_config"]["model_inputs"])
+        )
 
     def compute(self, inputs, outputs):
         steel_production_mtpy = run_steel_model(
@@ -76,7 +82,7 @@ class SteelCostAndFinancialModel(SteelCostBaseClass):
     def setup(self):
         super().setup()
         self.config = SteelCostAndFinancialModelConfig.from_dict(
-            self.options['tech_config']['details']
+            merge_shared_cost_inputs(self.options["tech_config"]["model_inputs"])
         )
         # TODO Bring the steel cost model config and feedstock classes into new greenheart
         self.cost_config = SteelCostModelConfig(
