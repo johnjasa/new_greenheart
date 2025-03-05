@@ -1,7 +1,7 @@
 import openmdao.api as om
 
 
-class CableComponent(om.ExplicitComponent):
+class CablePerformanceModel(om.ExplicitComponent):
     """
     Pass-through cable with no losses.
     """
@@ -11,7 +11,3 @@ class CableComponent(om.ExplicitComponent):
 
     def compute(self, inputs, outputs):
         outputs['electricity_output'] = inputs['electricity_input']
-
-class Cable():
-    def get_performance_model(self):
-        return CableComponent()

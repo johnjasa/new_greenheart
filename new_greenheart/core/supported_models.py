@@ -2,6 +2,7 @@ from new_greenheart.converters.wind.dummy_wind_turbine import DummyPlantPerforma
 from new_greenheart.converters.hydrogen.dummy_electrolyzer import DummyElectrolyzerPerformanceModel, DummyElectrolyzerCostModel
 from new_greenheart.transporters.cable import Cable
 from new_greenheart.transporters.pipe import Pipe
+from new_greenheart.transporters.power_combiner import CombinerPerformanceModel
 from new_greenheart.converters.wind.wind_plant import WindPlantPerformanceModel, WindPlantCostModel
 from new_greenheart.converters.hydrogen.pem_electrolyzer import ElectrolyzerPerformanceModel, ElectrolyzerCostModel, ElectrolyzerFinanceModel
 from new_greenheart.converters.hydrogen.eco_tools_pem_electrolyzer import ECOElectrolyzerPerformanceModel, ECOElectrolyzerCostModel
@@ -51,8 +52,9 @@ supported_models = {
     'steel_cost': SteelCostAndFinancialModel,
 
     # Transport
-    'cable': Cable,
-    'pipe': Pipe,
+    'cable': CablePerformanceModel,
+    'pipe': PipePerformanceModel,
+    'combiner': CombinerPerformance,
 
     # Storage
     'hydrogen_tank_performance': HydrogenTankPerformanceModel,

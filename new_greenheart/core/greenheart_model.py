@@ -259,7 +259,7 @@ class GreenHEARTModel(object):
     def connect_technologies(self):
         technology_interconnections = self.plant_config.get('technology_interconnections', [])
 
-        self.transport_objects = []
+        combiner_counts = {}
 
         # loop through each linkage and instantiate an OpenMDAO object (assume it exists) for
         # the connection type (e.g. cable, pipeline, etc)
@@ -271,18 +271,29 @@ class GreenHEARTModel(object):
                 connection_name = f'{source_tech}_to_{dest_tech}_{transport_type}'
 
                 # Create the transport object
-                transport_object = supported_models[transport_type]()
-                self.transport_objects.append(transport_object)
-                connection_component = transport_object.get_performance_model()
+                connection_component = supported_models[transport_type]()
 
                 # Add the connection component to the model
                 self.plant.add_subsystem(connection_name, connection_component)
 
-                # Connect the source technology to the connection component
-                self.plant.connect(
-                    f'{source_tech}.{transport_item}',
-                    f'{connection_name}.{transport_item}_input'
-                )
+                # Check if the transport type is a combiner
+                if 'combiner' in dest_tech:
+                    # Connect the source technology to the connection component with specific input names
+                    if dest_tech not in combiner_counts:
+                        combiner_counts[dest_tech] = 1
+                    else:
+                        combiner_counts[dest_tech] += 1
+
+                    self.plant.connect(
+                        f'{source_tech}.{transport_item}',
+                        f'{connection_name}.electricity_input{combiner_counts[dest_tech]}'
+                    )
+                else:
+                    # Connect the source technology to the connection component
+                    self.plant.connect(
+                        f'{source_tech}.{transport_item}',
+                        f'{connection_name}.{transport_item}_input'
+                    )
 
                 # Connect the connection component to the destination technology
                 self.plant.connect(
