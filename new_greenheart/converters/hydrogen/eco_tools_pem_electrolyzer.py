@@ -131,7 +131,7 @@ class ECOElectrolyzerPerformanceModel(ElectrolyzerPerformanceBaseClass):
 
         # Assuming `h2_results` includes hydrogen and oxygen rates per timestep
         outputs['hydrogen'] = H2_Results["Hydrogen Hourly Production [kg/hr]"]
-        outputs['total_hydrogen_produced'] = H2_Results["Sim: Total H2 Produced [kg]"]
+        outputs['total_hydrogen_produced'] = H2_Results["Life: Annual H2 production [kg/year]"]
         outputs['efficiency'] = H2_Results["Sim: Average Efficiency [%-HHV]"]
         outputs['time_until_replacement'] = H2_Results["Time Until Replacement [hrs]"]
 
