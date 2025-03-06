@@ -1,6 +1,6 @@
-# ODIES planning
+# H2Integrate planning
 
-## Docs for ODIES
+## Docs for H2Integrate
 
 https://johnjasa.github.io/new_greenheart/intro.html
 
@@ -15,9 +15,9 @@ pip install -e .
 
 at the top level of this repo.
 Then you can try running any one of the to ensure your installation was successful.
-Currently, all necessary packages for this repo are already dependencies of either HOPP or ODIES.
+Currently, all necessary packages for this repo are already dependencies of either HOPP or H2Integrate.
 
-If you don't want to modify your existing environments, you can create a new conda environment, install the development versions of HOPP and ODIES, then install this package.
+If you don't want to modify your existing environments, you can create a new conda environment, install the development versions of HOPP and H2Integrate, then install this package.
 
 ## Examples currently included
 
@@ -49,8 +49,8 @@ It's a simple optimization problem, but this shows how we can add a driver to th
 
 ### 06_hopp_h2
 
-This example introduces HOPP as a single block in the ODIES paradigm.
-This isn't where we want to be in the end of this ODIES reformulation, but it is an important stepping stone as it allows us to focus on the rest of the framework and non-HOPP technologies while treating HOPP as a monolith.
+This example introduces HOPP as a single block in the H2Integrate paradigm.
+This isn't where we want to be in the end of this H2Integrate reformulation, but it is an important stepping stone as it allows us to focus on the rest of the framework and non-HOPP technologies while treating HOPP as a monolith.
 
 ### 07_wind_ammonia
 
