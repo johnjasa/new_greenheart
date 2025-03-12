@@ -54,7 +54,7 @@ supported_models = {
     # Transport
     'cable': CablePerformanceModel,
     'pipe': PipePerformanceModel,
-    'combiner': CombinerPerformanceModel,
+    'combiner_performance': CombinerPerformanceModel,
 
     # Storage
     'hydrogen_tank_performance': HydrogenTankPerformanceModel,

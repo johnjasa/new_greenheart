@@ -29,7 +29,6 @@ class PYSAMSolarPlantPerformanceModelSiteConfig(BaseConfig):
     year: float = field()
     solar_resource_filepath: str = field(default="")
 
-
 class PYSAMSolarPlantPerformanceModel(SolarPerformanceBaseClass):
     """
     An OpenMDAO component that wraps a SolarPlant model.
@@ -38,7 +37,7 @@ class PYSAMSolarPlantPerformanceModel(SolarPerformanceBaseClass):
     def setup(self):
         super().setup()
         self.config = PYSAMSolarPlantPerformanceModelSiteConfig.from_dict(
-            self.options["plant_config"]["site"]
+            self.options["plant_config"]["site"], strict=False
         )
         self.config_name = "PVWattsSingleOwner"
         self.system_model = Pvwatts.default(self.config_name)

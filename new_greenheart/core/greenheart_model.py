@@ -161,37 +161,38 @@ class GreenHEARTModel(object):
                 self.performance_models.append(performance_object)
 
                 # Process the cost models
-                cost_name = individual_tech_config['cost_model']['model']
-                cost_object = supported_models[cost_name]
-                tech_group.add_subsystem(
-                    cost_name,
-                    cost_object(
-                        plant_config=self.plant_config,
-                        tech_config=individual_tech_config
-                    ),
-                    promotes=['*']
-                )
-                self.cost_models.append(cost_object)
+                if 'cost_model' in individual_tech_config:
+                    cost_name = individual_tech_config['cost_model']['model']
+                    cost_object = supported_models[cost_name]
+                    tech_group.add_subsystem(
+                        cost_name,
+                        cost_object(
+                            plant_config=self.plant_config,
+                            tech_config=individual_tech_config
+                        ),
+                        promotes=['*']
+                    )
+                    self.cost_models.append(cost_object)
 
                 # Process the financial models
-                financial_name = cost_name #TODO: Should this be a separate name?
                 if 'financial_model' in individual_tech_config:
+                    financial_name = cost_name #TODO: Should this be a separate name?
                     if 'model' in individual_tech_config['financial_model']:
                         financial_name = individual_tech_config['financial_model']['model']
 
-                try: #TODO: migrate to explicit model naming once financial side is figured out
-                    financial_object = supported_models[f"{financial_name}_financial"]
-                    tech_group.add_subsystem(
-                        f"{tech_name}_financial",
-                        financial_object(
-                            plant_config=self.plant_config,
-                            tech_config=individual_tech_config),
-                        promotes=['*']
-                    )
-                    self.financial_models.append(financial_object)
-                except KeyError:
-                    #TODO: Is this currently a bypass until the financial portion is more concrete?
-                    pass
+                    try: #TODO: migrate to explicit model naming once financial side is figured out
+                        financial_object = supported_models[f"{financial_name}_financial"]
+                        tech_group.add_subsystem(
+                            f"{tech_name}_financial",
+                            financial_object(
+                                plant_config=self.plant_config,
+                                tech_config=individual_tech_config),
+                            promotes=['*']
+                        )
+                        self.financial_models.append(financial_object)
+                    except KeyError:
+                        #TODO: Is this currently a bypass until the financial portion is more concrete?
+                        pass
 
     def create_financial_model(self):
         """
@@ -276,6 +277,12 @@ class GreenHEARTModel(object):
                 # Add the connection component to the model
                 self.plant.add_subsystem(connection_name, connection_component)
 
+                # Connect the source technology to the connection component
+                self.plant.connect(
+                    f'{source_tech}.{transport_item}',
+                    f'{connection_name}.{transport_item}_input'
+                )
+
                 # Check if the transport type is a combiner
                 if 'combiner' in dest_tech:
                     # Connect the source technology to the connection component with specific input names
@@ -284,22 +291,18 @@ class GreenHEARTModel(object):
                     else:
                         combiner_counts[dest_tech] += 1
 
+                    # Connect the connection component to the destination technology
                     self.plant.connect(
-                        f'{source_tech}.{transport_item}',
-                        f'{connection_name}.electricity_input{combiner_counts[dest_tech]}'
+                        f'{connection_name}.{transport_item}_output',
+                        f'{dest_tech}.electricity_input{combiner_counts[dest_tech]}'
                     )
+                    
                 else:
-                    # Connect the source technology to the connection component
+                    # Connect the connection component to the destination technology
                     self.plant.connect(
-                        f'{source_tech}.{transport_item}',
-                        f'{connection_name}.{transport_item}_input'
+                        f'{connection_name}.{transport_item}_output',
+                        f'{dest_tech}.{transport_item}'
                     )
-
-                # Connect the connection component to the destination technology
-                self.plant.connect(
-                    f'{connection_name}.{transport_item}_output',
-                    f'{dest_tech}.{transport_item}'
-                )
 
             elif len(connection) == 3:
                 # connect directly from source to dest
