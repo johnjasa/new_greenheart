@@ -66,6 +66,7 @@ class H2Storage(om.ExplicitComponent):
                 "Sim: Average Efficiency [%-HHV]" : inputs["efficiency"],
             }
             (
+                hydrogen_demand_kgphr,
                 hydrogen_storage_capacity_kg,
                 hydrogen_storage_duration_hr,
                 hydrogen_storage_soc,
